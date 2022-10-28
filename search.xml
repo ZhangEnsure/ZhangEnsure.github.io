@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>迁移学习</title>
+      <link href="/2022/10/28/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/"/>
+      <url>/2022/10/28/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/</url>
+      
+        <content type="html"><![CDATA[<h1>迁移学习与fine tuning</h1><p>这里记录一下在 bilibili up同济子豪兄<a href="https://www.bilibili.com/video/BV1K7411W7So/?p=10">迁移学习视频</a>笔记。迁移学习是指，把他人已经训练好的模型，泛化到我们自己的数据集上，也就是训练一个 CNN 网络并不是非要需要大量的数据集。</p><img src="https://s3.bmp.ovh/imgs/2022/10/28/6b104ba4d3b3be43.jpg" class='img-fluid' style="width:600px; margin:auto; display:block"/><p>当我们的数据集比较小，而且与 ImageNet 数据集的数据分布十分相像（例如我们的数据集也是动物、生活用品），而不是特殊场景（例如工业钢轨缺陷检测）时，我们可以仅修改分类器的最后一层并训练更新其参数，同时冻结其他所有的层（保留结构和参数），</p><p>当我们的数据集很大，数据分布相似，我们可以解冻分类器的 FC 层，冻结特征提取网络，最后更新解冻层的参数即可。</p><p>当我们的数据集很大，但是数据很不相似，例如医疗数据的诊断，我们需要往前训练更多的层，同时预训练权重可以是 ImageNet 数据集上已有的权重，在我们自己的数据集上更新我们的参数权重。</p><p>常见的可供迁移学习的优秀主干网络取下。也就是说，无论是 ImageNet 还是皮肤癌图像分类等等问题，我们认为，以下这些主干网络提取到的特征都是通用的，我们借助提取到的通用的特征之后，在分类器上做处理。<br><img src="https://s3.bmp.ovh/imgs/2022/10/28/e55dfbcb8ae61bd1.jpg" class='img-fluid' style="width:600px; margin:auto; display:block"/></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 学习 </tag>
+            
+            <tag> 机器学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>动态规划</title>
       <link href="/2022/10/27/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
       <url>/2022/10/27/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
