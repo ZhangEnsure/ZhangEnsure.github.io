@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ASR相关模型 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在该ASR模型的灵活组合方案中，ASR、VAD、PUNC是三类功能独立但可协同工作的核心模型，分别解决语音处理流程中的“核心识别”“语音检测”“标点补全”问题，具体作用及应用场景拆解如下： 一、ASR模型：语音识别的“核心引擎”全称：Automatic Speech Recognition（自动语音识别）核心作用：将人类语音信号（音频）直接转换为文本，是语音转文字的“核心执行模块”，也是整个组合方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ASR相关模型">
+<meta property="og:url" content="http://example.com/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在该ASR模型的灵活组合方案中，ASR、VAD、PUNC是三类功能独立但可协同工作的核心模型，分别解决语音处理流程中的“核心识别”“语音检测”“标点补全”问题，具体作用及应用场景拆解如下： 一、ASR模型：语音识别的“核心引擎”全称：Automatic Speech Recognition（自动语音识别）核心作用：将人类语音信号（音频）直接转换为文本，是语音转文字的“核心执行模块”，也是整个组合方">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-10-14T08:13:50.000Z">
+<meta property="article:modified_time" content="2025-10-14T08:14:15.451Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ASR相关模型",
+  "url": "http://example.com/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-10-14T08:13:50.000Z",
+  "dateModified": "2025-10-14T08:14:15.451Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ASR相关模型',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">ASR相关模型</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">ASR相关模型</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-10-14T08:13:50.000Z" title="Created 2025-10-14 16:13:50">2025-10-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-10-14T08:14:15.451Z" title="Updated 2025-10-14 16:14:15">2025-10-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>在该ASR模型的灵活组合方案中，ASR、VAD、PUNC是三类功能独立但可协同工作的核心模型，分别解决语音处理流程中的“核心识别”“语音检测”“标点补全”问题，具体作用及应用场景拆解如下：</p>
+<h3 id="一、ASR模型：语音识别的“核心引擎”"><a href="#一、ASR模型：语音识别的“核心引擎”" class="headerlink" title="一、ASR模型：语音识别的“核心引擎”"></a>一、ASR模型：语音识别的“核心引擎”</h3><p><strong>全称</strong>：Automatic Speech Recognition（自动语音识别）<br><strong>核心作用</strong>：将<strong>人类语音信号（音频）直接转换为文本</strong>，是语音转文字的“核心执行模块”，也是整个组合方案的基础。</p>
+<h4 id="关键细节："><a href="#关键细节：" class="headerlink" title="关键细节："></a>关键细节：</h4><ol>
+<li><p><strong>核心能力</strong>  </p>
+<ul>
+<li>处理输入的音频数据（无论是原始文件、URL还是已解析的数值数组），通过声学模型、语言模型（可选）的协同，将音频中的语音内容映射为对应的文字（如将“你好，今天天气不错”的语音转为文字）。  </li>
+<li>该教程中的ASR模型基于“Paraformer-large”架构（非自回归模型），特点是<strong>识别速度快、准确率高</strong>，在AISHELL-1、WenetSpeech等中文数据集上达到SOTA（当前最优）性能（如AISHELL-1测试集无LM时CER仅1.95%，CER越低识别越准）。</li>
+</ul>
+</li>
+<li><p><strong>适用场景</strong><br>所有需要“语音转文字”的基础场景，如录音文件转写、语音输入、会议纪要初稿生成等。</p>
+</li>
+<li><p><strong>独立使用性</strong><br>可单独调用（不搭配VAD和PUNC），直接输出“无标点、无语音片段划分”的纯文字结果（如“你好今天天气不错”）。</p>
+</li>
+</ol>
+<h3 id="二、VAD模型：语音与非语音的“智能过滤器”"><a href="#二、VAD模型：语音与非语音的“智能过滤器”" class="headerlink" title="二、VAD模型：语音与非语音的“智能过滤器”"></a>二、VAD模型：语音与非语音的“智能过滤器”</h3><p><strong>全称</strong>：Voice Activity Detection（语音活动检测）<br><strong>核心作用</strong>：从音频中<strong>区分“有效语音片段”和“非语音片段”</strong>（非语音包括静音、背景噪音、咳嗽声、环境杂音等），本质是“筛选出值得ASR识别的内容”。</p>
+<h4 id="关键细节：-1"><a href="#关键细节：-1" class="headerlink" title="关键细节："></a>关键细节：</h4><ol>
+<li><p><strong>核心能力</strong>  </p>
+<ul>
+<li>输出“语音片段的时间戳”：标记音频中“何时开始有语音”“何时结束”（如某10秒音频中，仅2-7秒是有效语音，VAD会返回这一时间段的起止时间）。  </li>
+<li>过滤无效信息：避免ASR对“静音&#x2F;噪音”进行无意义识别（如避免将静音识别为空白文字，或把背景噪音误识别为乱码），减少ASR的计算量，同时提升最终文本的“纯净度”。  </li>
+<li>该教程中推荐的VAD模型是“speech_fsmn_vad_zh-cn-16k-common-pytorch”，专为中文场景优化，适配16kHz采样率的音频。</li>
+</ul>
+</li>
+<li><p><strong>适用场景</strong>  </p>
+<ul>
+<li>长音频处理（如几小时的会议录音）：快速定位有效语音片段，避免ASR浪费资源处理静音。  </li>
+<li>实时语音交互（如智能音箱）：仅在用户说话时启动ASR，减少待机时的算力消耗。  </li>
+<li>噪音环境下的识别（如办公室、街道）：过滤环境杂音，提升ASR对“有效语音”的识别准确率。</li>
+</ul>
+</li>
+<li><p><strong>与ASR的协同逻辑</strong><br>VAD先“预处理”音频，筛选出有效语音片段后，再将这些片段传给ASR进行识别，而非让ASR处理完整的“语音+噪音”音频。例如：<br>原始音频（10秒）→ VAD筛选（2-7秒为有效语音）→ ASR仅识别2-7秒片段 → 输出对应文字。</p>
+</li>
+</ol>
+<h3 id="三、PUNC模型：文本格式的“自动排版器”"><a href="#三、PUNC模型：文本格式的“自动排版器”" class="headerlink" title="三、PUNC模型：文本格式的“自动排版器”"></a>三、PUNC模型：文本格式的“自动排版器”</h3><p><strong>全称</strong>：Punctuation Restoration（标点恢复&#x2F;补全）<br><strong>核心作用</strong>：为ASR输出的“无标点纯文字”<strong>自动添加符合语法的标点符号</strong>（如逗号、句号、问号、感叹号等），让文本更易读，符合人类正常的阅读习惯。</p>
+<h4 id="关键细节：-2"><a href="#关键细节：-2" class="headerlink" title="关键细节："></a>关键细节：</h4><ol>
+<li><p><strong>核心能力</strong>  </p>
+<ul>
+<li>基于语义和语法逻辑补全标点：并非随机添加，而是通过模型学习中文表达习惯（如“今天天气好 我们去公园”会被补全为“今天天气好，我们去公园。”）。  </li>
+<li>支持多语言标点（该教程模型以中文为主，也可处理中英文混合文本，如“那今天的会就到这里吧 happy new year 明年见”→“那今天的会就到这里吧。Happy New Year，明年见。”）。  </li>
+<li>该教程中推荐的PUNC模型是“punc_ct-transformer_zh-cn-common-vocab272727-pytorch”，基于Transformer架构，标点添加准确率高。</li>
+</ul>
+</li>
+<li><p><strong>适用场景</strong>  </p>
+<ul>
+<li>长文本转写（如会议纪要、采访录音）：无标点的长文本难以断句，添加标点后可快速划分语义单元。  </li>
+<li>语音输入场景（如手机语音打字）：用户说话时通常不包含“说标点”的动作，PUNC可自动补全，避免用户手动添加。</li>
+</ul>
+</li>
+<li><p><strong>与ASR的协同逻辑</strong><br>ASR先输出“无标点文本”，PUNC再对该文本进行后处理，补充标点。例如：<br>ASR输出 → “你好今天天气不错我们去看电影吧”<br>PUNC处理后 → “你好，今天天气不错，我们去看电影吧。”</p>
+</li>
+</ol>
+<h3 id="三者组合逻辑与典型场景示例"><a href="#三者组合逻辑与典型场景示例" class="headerlink" title="三者组合逻辑与典型场景示例"></a>三者组合逻辑与典型场景示例</h3><p>三类模型可根据需求自由搭配，核心组合逻辑及场景如下：</p>
+<table>
+<thead>
+<tr>
+<th>组合方案</th>
+<th>核心功能</th>
+<th>典型场景</th>
+<th>输出结果示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>仅ASR</td>
+<td>基础语音转文字（无标点、无去噪）</td>
+<td>短语音快速识别（如指令）</td>
+<td>“你好今天天气不错”</td>
+</tr>
+<tr>
+<td>ASR + VAD</td>
+<td>语音转文字（过滤静音&#x2F;噪音）</td>
+<td>噪音环境下的长音频转写</td>
+<td>（仅识别有效语音）“今天天气不错”</td>
+</tr>
+<tr>
+<td>ASR + PUNC</td>
+<td>语音转文字（自动补标点）</td>
+<td>语音输入写文档</td>
+<td>“你好，今天天气不错。”</td>
+</tr>
+<tr>
+<td>ASR + VAD + PUNC</td>
+<td>语音转文字（去噪+补标点+时间戳）</td>
+<td>会议录音完整转写</td>
+<td>（2-3秒）“你好，今天天气不错。”</td>
+</tr>
+</tbody></table>
+<p>简言之，VAD解决“识别什么内容”（筛选有效语音），ASR解决“内容转成什么文字”（核心识别），PUNC解决“文字如何更易读”（补全标点），三者协同可覆盖从“原始音频”到“高质量文本”的完整处理流程。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/">http://example.com/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/10/13/Jetson-Conda%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" title="Jetson Conda环境配置"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Jetson Conda环境配置</div></div><div class="info-2"><div class="info-item-1">Jetson安装conda环境须知一、背景在新建 conda 环境时避免全局包（系统级、用户级包）的干扰，核心是让 conda 环境完全 “独立”，不读取外部路径的包。 二、方案2.1 conda新创建包的方式 新建环境时添加 –no-default-packages（可选，进一步精简）默认情况下，conda 会安装 pip、setuptools 等基础包（必要且无害）。若想极致纯净（仅保留 Python），可添加此参数：  1conda create -n dev python=3.10 --no-default-packages -y ⚠️ 注意：此参数会跳过 pip 等工具，需手动安装：conda install pip -y  激活环境后立即设置 “屏蔽全局包” 的环境变量每次激活环境后，通过 PYTHONNOUSERSITE 禁止 Python 加载用户级全局包（~&#x2F;.local&#x2F;lib&#x2F;pythonX.X&#x2F;site-packages）：  1234# 激活环境conda activate dev# 禁止加载用户级全局包（仅当前终...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81ASR%E6%A8%A1%E5%9E%8B%EF%BC%9A%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB%E7%9A%84%E2%80%9C%E6%A0%B8%E5%BF%83%E5%BC%95%E6%93%8E%E2%80%9D"><span class="toc-number">1.</span> <span class="toc-text">一、ASR模型：语音识别的“核心引擎”</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%BB%86%E8%8A%82%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">关键细节：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81VAD%E6%A8%A1%E5%9E%8B%EF%BC%9A%E8%AF%AD%E9%9F%B3%E4%B8%8E%E9%9D%9E%E8%AF%AD%E9%9F%B3%E7%9A%84%E2%80%9C%E6%99%BA%E8%83%BD%E8%BF%87%E6%BB%A4%E5%99%A8%E2%80%9D"><span class="toc-number">2.</span> <span class="toc-text">二、VAD模型：语音与非语音的“智能过滤器”</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%BB%86%E8%8A%82%EF%BC%9A-1"><span class="toc-number">2.1.</span> <span class="toc-text">关键细节：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81PUNC%E6%A8%A1%E5%9E%8B%EF%BC%9A%E6%96%87%E6%9C%AC%E6%A0%BC%E5%BC%8F%E7%9A%84%E2%80%9C%E8%87%AA%E5%8A%A8%E6%8E%92%E7%89%88%E5%99%A8%E2%80%9D"><span class="toc-number">3.</span> <span class="toc-text">三、PUNC模型：文本格式的“自动排版器”</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%BB%86%E8%8A%82%EF%BC%9A-2"><span class="toc-number">3.1.</span> <span class="toc-text">关键细节：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E8%80%85%E7%BB%84%E5%90%88%E9%80%BB%E8%BE%91%E4%B8%8E%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF%E7%A4%BA%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text">三者组合逻辑与典型场景示例</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/" title="ASR相关模型">ASR相关模型</a><time datetime="2025-10-14T08:13:50.000Z" title="Created 2025-10-14 16:13:50">2025-10-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/13/Jetson-Conda%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" title="Jetson Conda环境配置">Jetson Conda环境配置</a><time datetime="2025-10-13T06:40:15.000Z" title="Created 2025-10-13 14:40:15">2025-10-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/13/hello-world/" title="Hello World">Hello World</a><time datetime="2025-10-13T06:29:03.700Z" title="Created 2025-10-13 14:29:03">2025-10-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
