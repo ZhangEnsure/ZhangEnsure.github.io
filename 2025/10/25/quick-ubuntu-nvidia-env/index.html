@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>quick ubuntu nvidia env | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Ubuntu 20.04 环境配置实践NVIDIA Driver通过 Ubuntu 官方的显卡驱动管理工具，自动检测当前系统硬件（显卡型号），并列出推荐安装的 NVIDIA 驱动版本（包括闭源驱动和开源驱动）。 12sudo apt install ubuntu-drivers-common  # 先安装驱动管理工具（若未安装）ubuntu-drivers list # 展示可用的驱动  为了使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="quick ubuntu nvidia env">
+<meta property="og:url" content="http://example.com/2025/10/25/quick-ubuntu-nvidia-env/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Ubuntu 20.04 环境配置实践NVIDIA Driver通过 Ubuntu 官方的显卡驱动管理工具，自动检测当前系统硬件（显卡型号），并列出推荐安装的 NVIDIA 驱动版本（包括闭源驱动和开源驱动）。 12sudo apt install ubuntu-drivers-common  # 先安装驱动管理工具（若未安装）ubuntu-drivers list # 展示可用的驱动  为了使用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-10-25T08:16:26.000Z">
+<meta property="article:modified_time" content="2025-10-28T08:42:01.894Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "quick ubuntu nvidia env",
+  "url": "http://example.com/2025/10/25/quick-ubuntu-nvidia-env/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-10-25T08:16:26.000Z",
+  "dateModified": "2025-10-28T08:42:01.894Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/10/25/quick-ubuntu-nvidia-env/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'quick ubuntu nvidia env',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">quick ubuntu nvidia env</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">quick ubuntu nvidia env</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-10-25T08:16:26.000Z" title="Created 2025-10-25 16:16:26">2025-10-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-10-28T08:42:01.894Z" title="Updated 2025-10-28 16:42:01">2025-10-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Ubuntu-20-04-环境配置实践"><a href="#Ubuntu-20-04-环境配置实践" class="headerlink" title="Ubuntu 20.04 环境配置实践"></a>Ubuntu 20.04 环境配置实践</h1><h2 id="NVIDIA-Driver"><a href="#NVIDIA-Driver" class="headerlink" title="NVIDIA Driver"></a>NVIDIA Driver</h2><p>通过 Ubuntu 官方的显卡驱动管理工具，自动检测当前系统硬件（显卡型号），并列出推荐安装的 NVIDIA 驱动版本（包括闭源驱动和开源驱动）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ubuntu-drivers-common  <span class="comment"># 先安装驱动管理工具（若未安装）</span></span><br><span class="line">ubuntu-drivers list <span class="comment"># 展示可用的驱动</span></span><br></pre></td></tr></table></figure>
+
+<p>为了使用 OpenGL 等功能，建议 Ubuntu 20.04 可以直接安装 nvidia-driver-535（非服务器版本）</p>
+<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><ol>
+<li>卸载残余驱动</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update &amp;&amp; <span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"><span class="built_in">sudo</span> apt remove --purge nvidia-*  <span class="comment"># 卸载旧驱动（如有）</span></span><br><span class="line"><span class="built_in">sudo</span> reboot  <span class="comment"># 重启后再安装新驱动</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>安装</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install nvidia-driver-535 nvidia-utils-535</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> reboot <span class="comment"># 重启</span></span><br><span class="line"></span><br><span class="line">nvidia-smi <span class="comment"># 查看驱动</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="CUDA-Toolkit-安装"><a href="#CUDA-Toolkit-安装" class="headerlink" title="CUDA Toolkit 安装"></a>CUDA Toolkit 安装</h2><p>export PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;bin:$PATH<br>export LD_LIBRARY_PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;lib64:$LD_LIBRARY_PATH</p>
+<p>建议安装 12.1，这里是安装了 12.0</p>
+<p>(<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-12-0-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_local">https://developer.nvidia.com/cuda-12-0-0-download-archive?target_os=Linux&amp;target_arch=x86_64&amp;Distribution=Ubuntu&amp;target_version=20.04&amp;target_type=deb_local</a>)</p>
+<p><a target="_blank" rel="noopener" href="https://developer.nvidia.com/rdp/cudnn-archive">https://developer.nvidia.com/rdp/cudnn-archive</a></p>
+<p>export PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;bin:$PATH<br>export LD_LIBRARY_PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;lib64:$LD_LIBRARY_PATH</p>
+<h2 id="CUDNN-安装"><a href="#CUDNN-安装" class="headerlink" title="CUDNN 安装"></a>CUDNN 安装</h2><p>cp 之后</p>
+<p>sudo apt-cache search libcudnn</p>
+<p>通过以下命令列出仓库中可用的 cuDNN 包，获取准确名称：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-cache search libcudnn</span><br></pre></td></tr></table></figure>
+
+<p>针对 cuDNN 8.9.7 版本，输出应包含：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libcudnn8 - cuDNN runtime libraries</span><br><span class="line">libcudnn8-dev - cuDNN development libraries and headers</span><br><span class="line">libcudnn8-samples - cuDNN samples</span><br></pre></td></tr></table></figure>
+
+<p>如果没有搜索到，则是 cuDNN 本地仓库的 GPG 密钥未被 apt 正确信任，或仓库配置未同步到 apt 缓存。即使已复制密钥文件，仍需手动完成密钥注册和缓存更新，具体解决步骤如下：</p>
+<ol>
+<li>重新导入 GPG 密钥（关键：让 apt 信任该密钥）<br>仅复制密钥文件到 &#x2F;usr&#x2F;share&#x2F;keyrings&#x2F; 不够，需通过 apt-key 或 gpg 命令将密钥注册到 apt 的信任列表中：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 cuDNN 本地仓库目录（确认密钥文件存在）</span></span><br><span class="line"><span class="built_in">cd</span> /var/cudnn-local-repo-ubuntu2004-8.9.7.29/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>方法1：用 apt-key 导入密钥（兼容性强），若提示 “OK”，说明密钥导入成功。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-key add cudnn-local-30472A84-keyring.gpg</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>方法2：若 apt-key 提示废弃，用 gpg 导入（适用于新版本 Ubuntu）</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/cudnn-local-30472A84-keyring.gpg cudnn-local-30472A84-keyring.gpg</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>强制更新 apt 缓存（让 apt 识别本地仓库）<br>密钥导入后，必须更新 apt 缓存，才能加载 cuDNN 本地仓库的包信息：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br></pre></td></tr></table></figure>
+
+<p>执行时需关注输出：若出现 Get:1 file:&#x2F;var&#x2F;cudnn-local-repo-ubuntu2004-8.9.7.29 InRelease [1,572 B] 或 Hit:xxx file:&#x2F;var&#x2F;cudnn-local-repo-ubuntu2004-8.9.7.29 InRelease，说明本地仓库已被 apt 识别。</p>
+<ol start="3">
+<li>再次搜索 libcudnn 包</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-cache search libcudnn</span><br></pre></td></tr></table></figure>
+<p>此时应正常显示 cuDNN 相关包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libcudnn8 - cuDNN runtime libraries</span><br><span class="line">libcudnn8-dev - cuDNN development libraries and headers</span><br><span class="line">libcudnn8-samples - cuDNN samples</span><br></pre></td></tr></table></figure>
+
+<p>安装 cuDNN 核心包（必装）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install -y libcudnn8 libcudnn8-dev</span><br></pre></td></tr></table></figure>
+
+<p>若需要示例代码，可额外安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install -y libcudnn8-samples</span><br></pre></td></tr></table></figure>
+<p>验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /usr/include/cudnn_version.h | grep CUDNN_MAJOR -A 2</span><br></pre></td></tr></table></figure>
+
+<p>若输出 CUDNN_MAJOR 8、CUDNN_MINOR 9、CUDNN_PATCHLEVEL 7，则说明安装成功，与你的 CUDA 12.0 兼容。</p>
+<h2 id="安装-Miniconda"><a href="#安装-Miniconda" class="headerlink" title="安装 Miniconda"></a>安装 Miniconda</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载</span></span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 赋予执行权限</span></span><br><span class="line"><span class="built_in">chmod</span> +x Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行安装脚本</span></span><br><span class="line">./Miniconda3-latest-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+
+<p>可能需要配置环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 编辑 .bashrc 配置文件</span></span><br><span class="line">vim ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 在文件末尾添加以下内容（Miniconda 安装路径）</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;/home/ubuntu/miniconda3/bin:<span class="variable">$PATH</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Pytorch"><a href="#Pytorch" class="headerlink" title="Pytorch"></a>Pytorch</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/10/25/quick-ubuntu-nvidia-env/">http://example.com/2025/10/25/quick-ubuntu-nvidia-env/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/10/24/Ubuntu-TigerVNC%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE/" title="Ubuntu TigerVNC远程连接配置"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Ubuntu TigerVNC远程连接配置</div></div><div class="info-2"><div class="info-item-1">在租赁的 Ubuntu 服务器上配置 TigerVNC 实现远程登录，可按以下步骤操作，结合你的环境和需求优化： 一、安装 TigerVNC 服务器 先更新系统包列表： 1sudo apt update  安装 TigerVNC 核心组件（包含服务器和 Xorg 扩展，确保 GLX 支持）： 1sudo apt install tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer  tigervnc-standalone-server：VNC 服务器主程序 tigervnc-xorg-extension：提供 GLX 扩展支持（解决图形加速问题，尤其适合 IsaacGym 等需要 OpenGL 的场景） tigervnc-viewer：可选，用于服务器本地测试连接    二、初始化 VNC 密码首次使用需设置远程登录密码（客户端连接时使用）： 1vncpasswd  输入密码（建议 8 位以内，超过部分会被截断） 选择是否设置“仅查看”密码（按需选择，一般选 n 即可）  三、配置 VNC 启动参数（...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ubuntu-20-04-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.</span> <span class="toc-text">Ubuntu 20.04 环境配置实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NVIDIA-Driver"><span class="toc-number">1.1.</span> <span class="toc-text">NVIDIA Driver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.1.1.</span> <span class="toc-text">安装步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CUDA-Toolkit-%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">CUDA Toolkit 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CUDNN-%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.</span> <span class="toc-text">CUDNN 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Miniconda"><span class="toc-number">1.4.</span> <span class="toc-text">安装 Miniconda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pytorch"><span class="toc-number">1.5.</span> <span class="toc-text">Pytorch</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/quick-ubuntu-nvidia-env/" title="quick ubuntu nvidia env">quick ubuntu nvidia env</a><time datetime="2025-10-25T08:16:26.000Z" title="Created 2025-10-25 16:16:26">2025-10-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/24/Ubuntu-TigerVNC%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE/" title="Ubuntu TigerVNC远程连接配置">Ubuntu TigerVNC远程连接配置</a><time datetime="2025-10-24T03:03:05.000Z" title="Created 2025-10-24 11:03:05">2025-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/24/ubuntu%E5%B8%B8%E7%94%A8/" title="ubuntu更换系统镜像">ubuntu更换系统镜像</a><time datetime="2025-10-24T03:01:11.000Z" title="Created 2025-10-24 11:01:11">2025-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/18/jetson%E5%BC%80%E5%8F%91%E5%8F%82%E8%80%83/" title="jetson开发参考">jetson开发参考</a><time datetime="2025-10-18T02:21:20.000Z" title="Created 2025-10-18 10:21:20">2025-10-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/14/ASR%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B/" title="ASR相关模型">ASR相关模型</a><time datetime="2025-10-14T08:13:50.000Z" title="Created 2025-10-14 16:13:50">2025-10-14</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
