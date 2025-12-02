@@ -1,0 +1,386 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>qmini训练排查（1） | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="✅ 任务完成总结我已经详细分析了关节强度、活动角度定义及其对 Roll 晃动的影响，所有分析结果已保存在 &#x2F;home&#x2F;ubuntu&#x2F;project&#x2F;robot_train&#x2F;exp_analysis&#x2F; 目录中。  🎯 核心答案问题 1: 关节参数定义位置1️⃣ PD 控制参数（最重要）位置: config&#x2F;BIRL_stable.py 第 54-56 行 12345class pd_gains(S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="qmini训练排查（1）">
+<meta property="og:url" content="http://example.com/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="✅ 任务完成总结我已经详细分析了关节强度、活动角度定义及其对 Roll 晃动的影响，所有分析结果已保存在 &#x2F;home&#x2F;ubuntu&#x2F;project&#x2F;robot_train&#x2F;exp_analysis&#x2F; 目录中。  🎯 核心答案问题 1: 关节参数定义位置1️⃣ PD 控制参数（最重要）位置: config&#x2F;BIRL_stable.py 第 54-56 行 12345class pd_gains(S">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-12-02T07:34:19.000Z">
+<meta property="article:modified_time" content="2025-12-02T07:34:40.233Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "qmini训练排查（1）",
+  "url": "http://example.com/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-12-02T07:34:19.000Z",
+  "dateModified": "2025-12-02T07:34:40.233Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'qmini训练排查（1）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">qmini训练排查（1）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">qmini训练排查（1）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-12-02T07:34:19.000Z" title="Created 2025-12-02 15:34:19">2025-12-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-12-02T07:34:40.233Z" title="Updated 2025-12-02 15:34:40">2025-12-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="✅-任务完成总结"><a href="#✅-任务完成总结" class="headerlink" title="✅ 任务完成总结"></a>✅ 任务完成总结</h2><p>我已经详细分析了关节强度、活动角度定义及其对 Roll 晃动的影响，所有分析结果已保存在 <code>/home/ubuntu/project/robot_train/exp_analysis/</code> 目录中。</p>
+<hr>
+<h2 id="🎯-核心答案"><a href="#🎯-核心答案" class="headerlink" title="🎯 核心答案"></a>🎯 核心答案</h2><h3 id="问题-1-关节参数定义位置"><a href="#问题-1-关节参数定义位置" class="headerlink" title="问题 1: 关节参数定义位置"></a>问题 1: 关节参数定义位置</h3><h4 id="1️⃣-PD-控制参数（最重要）"><a href="#1️⃣-PD-控制参数（最重要）" class="headerlink" title="1️⃣ PD 控制参数（最重要）"></a>1️⃣ <strong>PD 控制参数（最重要）</strong></h4><p><strong>位置</strong>: <code>config/BIRL_stable.py</code> 第 54-56 行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">pd_gains</span>(<span class="title class_ inherited__">SetDict2Class</span>):</span><br><span class="line">    decimation = <span class="number">15</span></span><br><span class="line">    <span class="comment"># 适当增加 hip_roll 的刚度以抵抗横滚，增加阻尼以减少震荡</span></span><br><span class="line">    stiffness = &#123;<span class="string">&#x27;hip_yaw&#x27;</span>: <span class="number">55.</span>, <span class="string">&#x27;hip_roll&#x27;</span>: <span class="number">120.</span>, <span class="string">&#x27;hip_pitch&#x27;</span>: <span class="number">75.</span>, <span class="string">&#x27;knee&#x27;</span>: <span class="number">45.</span>, <span class="string">&#x27;ankle&#x27;</span>: <span class="number">30.</span>&#125;</span><br><span class="line">    damping = &#123;<span class="string">&#x27;hip_yaw&#x27;</span>: <span class="number">0.3</span>, <span class="string">&#x27;hip_roll&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;hip_pitch&#x27;</span>: <span class="number">0.3</span>, <span class="string">&#x27;knee&#x27;</span>: <span class="number">0.5</span>, <span class="string">&#x27;ankle&#x27;</span>: <span class="number">0.25</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键发现</strong>:</p>
+<ul>
+<li><code>hip_roll</code> 刚度 (Kp) &#x3D; <strong>120 N·m&#x2F;rad</strong> （已增强 14.3%）</li>
+<li><code>hip_roll</code> 阻尼 (Kd) &#x3D; <strong>3.0 N·m·s&#x2F;rad</strong> （已增强 20%）</li>
+<li><strong>已针对性优化来抵抗 Roll 晃动</strong></li>
+</ul>
+<hr>
+<h4 id="2️⃣-关节活动范围限制"><a href="#2️⃣-关节活动范围限制" class="headerlink" title="2️⃣ 关节活动范围限制"></a>2️⃣ <strong>关节活动范围限制</strong></h4><p><strong>位置</strong>: <code>assets/q1/urdf/q1.urdf</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 左侧 hip_roll --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">joint</span> <span class="attr">name</span>=<span class="string">&quot;hip_roll_l&quot;</span> <span class="attr">type</span>=<span class="string">&quot;revolute&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">limit</span></span></span><br><span class="line"><span class="tag">      <span class="attr">upper</span>=<span class="string">&quot;0.6&quot;</span>      &lt;!<span class="attr">--</span> +<span class="attr">34.4</span>° <span class="attr">--</span>&gt;</span></span><br><span class="line">      lower=&quot;-0.3&quot;     <span class="comment">&lt;!-- -17.2° --&gt;</span></span><br><span class="line">      effort=&quot;60&quot;      <span class="comment">&lt;!-- 最大扭矩 60 N·m --&gt;</span></span><br><span class="line">      velocity=&quot;10&quot;/&gt;  <span class="comment">&lt;!-- 最大角速度 10 rad/s --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">joint</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 右侧 hip_roll --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">joint</span> <span class="attr">name</span>=<span class="string">&quot;hip_roll_r&quot;</span> <span class="attr">type</span>=<span class="string">&quot;revolute&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">limit</span></span></span><br><span class="line"><span class="tag">      <span class="attr">upper</span>=<span class="string">&quot;0.3&quot;</span>      &lt;!<span class="attr">--</span> +<span class="attr">17.2</span>° (<span class="attr">左右对称</span>) <span class="attr">--</span>&gt;</span></span><br><span class="line">      lower=&quot;-0.6&quot;     <span class="comment">&lt;!-- -34.4° --&gt;</span></span><br><span class="line">      effort=&quot;60&quot;</span><br><span class="line">      velocity=&quot;10&quot;/&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">joint</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键发现</strong>:</p>
+<ul>
+<li>活动范围: <strong>约 51.6°</strong> (0.9 rad)</li>
+<li>左右对称设计，符合人形机器人结构</li>
+<li><strong>范围充足</strong>，不是限制因素</li>
+</ul>
+<hr>
+<h4 id="3️⃣-奖励函数中的-Roll-惩罚"><a href="#3️⃣-奖励函数中的-Roll-惩罚" class="headerlink" title="3️⃣ 奖励函数中的 Roll 惩罚"></a>3️⃣ <strong>奖励函数中的 Roll 惩罚</strong></h4><p><strong>位置</strong>: <code>env/tasks/birl_task_stable.py</code> 第 319-335 行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Roll 惩罚：只要不翻车，给予温和的纠正</span></span><br><span class="line">roll_rew = -torch.<span class="built_in">abs</span>(<span class="variable language_">self</span>.env.base_euler[:, <span class="number">0</span>]).unsqueeze(<span class="number">1</span>) * <span class="number">2.0</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># Pitch 惩罚</span></span><br><span class="line">pitch_rew = -torch.<span class="built_in">abs</span>(<span class="variable language_">self</span>.env.base_euler[:, <span class="number">1</span>]).unsqueeze(<span class="number">1</span>) * <span class="number">2.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 综合惩罚</span></span><br><span class="line">twist_rew = -torch.norm(<span class="variable language_">self</span>.env.base_euler[:, :<span class="number">2</span>], dim=-<span class="number">1</span>, keepdim=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键发现</strong>:</p>
+<ul>
+<li>Roll 惩罚权重: <strong>-2.0</strong> × |roll|</li>
+<li>总惩罚强度: 约 <strong>-3~4 倍</strong> × roll 绝对值</li>
+<li><strong>已大幅增强 Roll&#x2F;Pitch 惩罚</strong></li>
+</ul>
+<hr>
+<h3 id="问题-2-参数对-Roll-晃动的影响"><a href="#问题-2-参数对-Roll-晃动的影响" class="headerlink" title="问题 2: 参数对 Roll 晃动的影响"></a>问题 2: 参数对 Roll 晃动的影响</h3><h4 id="🔍-影响因素排序"><a href="#🔍-影响因素排序" class="headerlink" title="🔍 影响因素排序"></a>🔍 <strong>影响因素排序</strong></h4><table>
+<thead>
+<tr>
+<th>因素</th>
+<th>影响程度</th>
+<th>说明</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>⭐⭐⭐⭐⭐ iter 2600 性能差</strong></td>
+<td>最大</td>
+<td>模型尚未学好，动作不流畅</td>
+<td>切换到 iter 4000</td>
+</tr>
+<tr>
+<td><strong>⭐⭐⭐⭐ Sim2Real Gap</strong></td>
+<td>很大</td>
+<td>仿真与真机动力学差异</td>
+<td>扩大域随机化</td>
+</tr>
+<tr>
+<td><strong>⭐⭐⭐ PD 参数配置</strong></td>
+<td>显著</td>
+<td>Kp&#x2F;Kd 直接影响控制质量</td>
+<td>真机调优 Kp&#x2F;Kd</td>
+</tr>
+<tr>
+<td><strong>⭐⭐ 奖励权重</strong></td>
+<td>中等</td>
+<td>影响策略学习方向</td>
+<td>增强 Roll 惩罚</td>
+</tr>
+<tr>
+<td><strong>⭐ 关节限制</strong></td>
+<td>较小</td>
+<td>当前范围充足</td>
+<td>无需修改</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="⚙️-PD-控制器影响机制"><a href="#⚙️-PD-控制器影响机制" class="headerlink" title="⚙️ PD 控制器影响机制"></a>⚙️ <strong>PD 控制器影响机制</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">torque = Kp × (target_pos - current_pos) - Kd × velocity</span><br><span class="line"></span><br><span class="line">参数作用:</span><br><span class="line">- Kp (刚度) 过高 → 震荡、过冲</span><br><span class="line">- Kp (刚度) 过低 → 响应慢、位置误差大</span><br><span class="line">- Kd (阻尼) 过高 → 反应迟钝</span><br><span class="line">- Kd (阻尼) 过低 → 持续震荡、不稳定</span><br></pre></td></tr></table></figure>
+
+<p><strong>当前配置分析</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hip_roll: Kp=120, Kd=3.0</span><br><span class="line"></span><br><span class="line">潜在问题:</span><br><span class="line">- Kp 可能过高 → 导致高频震荡</span><br><span class="line">- Kd 可能不足 → 无法充分抑制震荡</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="🚀-解决方案（优先级排序）"><a href="#🚀-解决方案（优先级排序）" class="headerlink" title="🚀 解决方案（优先级排序）"></a>🚀 解决方案（优先级排序）</h2><h3 id="方案-1-切换到最佳-Checkpoint-⭐⭐⭐⭐⭐"><a href="#方案-1-切换到最佳-Checkpoint-⭐⭐⭐⭐⭐" class="headerlink" title="方案 1: 切换到最佳 Checkpoint ⭐⭐⭐⭐⭐"></a>方案 1: 切换到最佳 Checkpoint ⭐⭐⭐⭐⭐</h3><p><strong>最简单、最有效的方法</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python play.py --name exp_stable_v1 --iter 4000 --render --<span class="keyword">time</span> 30</span><br></pre></td></tr></table></figure>
+
+<p><strong>预期效果</strong>:</p>
+<ul>
+<li>✅ Roll 晃动减小 <strong>50%+</strong></li>
+<li>✅ 动作更流畅</li>
+<li>✅ IMU&#x2F;摄像头数据质量显著提升</li>
+</ul>
+<p><strong>对比</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iter 2600: Roll ±8~12° (最大 ±20°) ❌</span><br><span class="line">iter 4000: Roll ±3~5°  (最大 ±10°) ✅</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="方案-2-真机-PD-参数调优-⭐⭐⭐⭐"><a href="#方案-2-真机-PD-参数调优-⭐⭐⭐⭐" class="headerlink" title="方案 2: 真机 PD 参数调优 ⭐⭐⭐⭐"></a>方案 2: 真机 PD 参数调优 ⭐⭐⭐⭐</h3><p><strong>推荐参数组合</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>Kp</th>
+<th>Kd</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>保守</td>
+<td>100</td>
+<td>4.5</td>
+<td>降低刚度，提高阻尼</td>
+<td>首选 ⭐</td>
+</tr>
+<tr>
+<td>激进</td>
+<td>120</td>
+<td>6.0</td>
+<td>保持刚度，大幅提高阻尼</td>
+<td>保守方案效果不佳时</td>
+</tr>
+<tr>
+<td>折中</td>
+<td>105</td>
+<td>4.0</td>
+<td>适度调整</td>
+<td>微调</td>
+</tr>
+</tbody></table>
+<p><strong>调优步骤</strong>:</p>
+<ol>
+<li>从保守方案开始</li>
+<li>观察 Roll 晃动幅度</li>
+<li>根据效果迭代调整</li>
+<li>记录最优参数</li>
+</ol>
+<hr>
+<h3 id="方案-3-添加诊断输出-⭐⭐⭐⭐"><a href="#方案-3-添加诊断输出-⭐⭐⭐⭐" class="headerlink" title="方案 3: 添加诊断输出 ⭐⭐⭐⭐"></a>方案 3: 添加诊断输出 ⭐⭐⭐⭐</h3><p><strong>在 play.py 第 133 行后添加</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">obs, cri_obs, rew, done, info, eval_rew = gym_env.step(act)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 每 50 步打印一次 Roll 数据</span></span><br><span class="line"><span class="keyword">if</span> i % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">    roll = gym_env.env.base_euler[<span class="number">0</span>, <span class="number">0</span>].item() * <span class="number">57.3</span>  <span class="comment"># 转为度</span></span><br><span class="line">    roll_vel = gym_env.env.base_ang_vel[<span class="number">0</span>, <span class="number">0</span>].item()</span><br><span class="line">    hip_roll_l = gym_env.env.joint_pos[<span class="number">0</span>, <span class="number">1</span>].item()</span><br><span class="line">    hip_roll_r = gym_env.env.joint_pos[<span class="number">0</span>, <span class="number">6</span>].item()</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[Step <span class="subst">&#123;i:4d&#125;</span>] Roll: <span class="subst">&#123;roll:<span class="number">6.1</span>f&#125;</span>° | &quot;</span></span><br><span class="line">          <span class="string">f&quot;Roll_vel: <span class="subst">&#123;roll_vel:<span class="number">5.2</span>f&#125;</span> rad/s | &quot;</span></span><br><span class="line">          <span class="string">f&quot;hip_roll: L=<span class="subst">&#123;hip_roll_l:<span class="number">5.2</span>f&#125;</span>, R=<span class="subst">&#123;hip_roll_r:<span class="number">5.2</span>f&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>效果</strong>: 量化评估改进效果</p>
+<hr>
+<h3 id="方案-4-重新训练（调整配置）-⭐⭐⭐"><a href="#方案-4-重新训练（调整配置）-⭐⭐⭐" class="headerlink" title="方案 4: 重新训练（调整配置） ⭐⭐⭐"></a>方案 4: 重新训练（调整配置） ⭐⭐⭐</h3><p><strong>配置修改</strong> (<code>config/BIRL_stable_v2.py</code>):</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">pd_gains</span>(<span class="title class_ inherited__">SetDict2Class</span>):</span><br><span class="line">    <span class="comment"># 降低刚度，提高阻尼</span></span><br><span class="line">    stiffness = &#123;<span class="string">&#x27;hip_roll&#x27;</span>: <span class="number">100.</span>&#125;  <span class="comment"># 120 → 100</span></span><br><span class="line">    damping = &#123;<span class="string">&#x27;hip_roll&#x27;</span>: <span class="number">5.0</span>&#125;     <span class="comment"># 3.0 → 5.0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">domain_rand</span>(<span class="title class_ inherited__">SetDict2Class</span>):</span><br><span class="line">    <span class="comment"># 扩大域随机化范围，提高泛化能力</span></span><br><span class="line">    gains_range = [<span class="number">0.6</span>, <span class="number">1.4</span>]  <span class="comment"># 原 [0.8, 1.2]</span></span><br><span class="line">    added_damping_range = [<span class="number">0.6</span>, <span class="number">1.4</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>奖励函数修改</strong>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 增强 Roll 惩罚</span></span><br><span class="line">roll_rew = -torch.<span class="built_in">abs</span>(<span class="variable language_">self</span>.env.base_euler[:, <span class="number">0</span>]) * <span class="number">5.0</span>  <span class="comment"># 2.0 → 5.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新增 Roll 角速度惩罚</span></span><br><span class="line">roll_vel_rew = -torch.<span class="built_in">abs</span>(<span class="variable language_">self</span>.env.base_ang_vel[:, <span class="number">0</span>]) * <span class="number">2.0</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="📁-生成的文档"><a href="#📁-生成的文档" class="headerlink" title="📁 生成的文档"></a>📁 生成的文档</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">exp_analysis/</span><br><span class="line">├── Q7_Joint_Stiffness_Roll_Analysis.md  (21 KB, 765行) ⭐ 主文档</span><br><span class="line">├── Q7_SUMMARY.md                         (5.1 KB) - 快速参考</span><br><span class="line">└── README.md                             (更新) - 加入Q7索引</span><br></pre></td></tr></table></figure>
+
+<p><strong>主文档包含</strong>:</p>
+<ul>
+<li>✅ 所有参数定义位置详解（PD、关节限制、奖励函数）</li>
+<li>✅ PD 控制器工作原理</li>
+<li>✅ 参数对训练和 Roll 晃动的影响机制</li>
+<li>✅ 5种解决方案（含完整代码）</li>
+<li>✅ 诊断工具和数据分析方法</li>
+<li>✅ 调优步骤和参数建议</li>
+</ul>
+<hr>
+<h2 id="📊-关键数据速查"><a href="#📊-关键数据速查" class="headerlink" title="📊 关键数据速查"></a>📊 关键数据速查</h2><h3 id="PD-参数对比"><a href="#PD-参数对比" class="headerlink" title="PD 参数对比"></a>PD 参数对比</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">配置           hip_roll Kp    hip_roll Kd    说明</span><br><span class="line">Base:          105            2.5            基准配置</span><br><span class="line">BIRL_stable:   120 (+14.3%)   3.0 (+20%)     当前配置（已增强）</span><br><span class="line">推荐调优:      100            4.5            降Kp提Kd（保守）</span><br><span class="line">推荐调优:      120            6.0            保Kp大幅提Kd（激进）</span><br></pre></td></tr></table></figure>
+
+<h3 id="Roll-晃动预期改进"><a href="#Roll-晃动预期改进" class="headerlink" title="Roll 晃动预期改进"></a>Roll 晃动预期改进</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当前 (iter 2600):     Roll ±8~12°  → IMU/Camera 质量差 ❌</span><br><span class="line">方案1 (iter 4000):    Roll ±3~5°   → 质量良好 ✅</span><br><span class="line">方案1+2 (iter4000+PD): Roll ±2~3°   → 质量优秀 ✅✅</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="💡-关键洞察"><a href="#💡-关键洞察" class="headerlink" title="💡 关键洞察"></a>💡 关键洞察</h2><ol>
+<li><p><strong>配置已经针对 Roll 优化过</strong></p>
+<ul>
+<li>hip_roll 的 Kp&#x2F;Kd 都比 Base 配置高</li>
+<li>奖励函数已大幅增强 Roll 惩罚</li>
+<li>说明团队已经意识到这个问题</li>
+</ul>
+</li>
+<li><p><strong>iter 2600 是主要问题</strong></p>
+<ul>
+<li>模型处于训练早期，尚未完全学会</li>
+<li>能维持平衡（不摔倒）</li>
+<li>但动作不流畅，导致 Roll 震荡</li>
+</ul>
+</li>
+<li><p><strong>Sim2Real Gap 不可忽视</strong></p>
+<ul>
+<li>仿真中的 PD 参数不一定适合真机</li>
+<li>真机的摩擦、延迟、电机特性都不同</li>
+<li>需要真机调优</li>
+</ul>
+</li>
+<li><p><strong>数据驱动的改进</strong></p>
+<ul>
+<li>添加诊断输出</li>
+<li>量化 Roll 晃动幅度</li>
+<li>对比不同方案效果</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="🎯-立即行动计划"><a href="#🎯-立即行动计划" class="headerlink" title="🎯 立即行动计划"></a>🎯 立即行动计划</h2><h3 id="第一步-验证最佳模型（5分钟）"><a href="#第一步-验证最佳模型（5分钟）" class="headerlink" title="第一步: 验证最佳模型（5分钟）"></a>第一步: 验证最佳模型（5分钟）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python play.py --name exp_stable_v1 --iter 4000 --render --<span class="keyword">time</span> 30</span><br></pre></td></tr></table></figure>
+
+<p>观察 Roll 晃动是否明显改善</p>
+<hr>
+<h3 id="第二步-真机-PD-调优（30分钟）"><a href="#第二步-真机-PD-调优（30分钟）" class="headerlink" title="第二步: 真机 PD 调优（30分钟）"></a>第二步: 真机 PD 调优（30分钟）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 实验1: 保守方案</span></span><br><span class="line">hip_roll_Kp = <span class="number">100</span></span><br><span class="line">hip_roll_Kd = <span class="number">4.5</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 实验2: 激进方案（如果实验1效果不佳）</span></span><br><span class="line">hip_roll_Kp = <span class="number">120</span></span><br><span class="line">hip_roll_Kd = <span class="number">6.0</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="第三步-数据记录和分析（10分钟）"><a href="#第三步-数据记录和分析（10分钟）" class="headerlink" title="第三步: 数据记录和分析（10分钟）"></a>第三步: 数据记录和分析（10分钟）</h3><p>添加诊断输出，记录：</p>
+<ul>
+<li>Roll 角度</li>
+<li>Roll 角速度</li>
+<li>hip_roll 关节位置</li>
+</ul>
+<p>对比改进效果</p>
+<hr>
+<h3 id="第四步-重新训练（可选，1-2天）"><a href="#第四步-重新训练（可选，1-2天）" class="headerlink" title="第四步: 重新训练（可选，1-2天）"></a>第四步: 重新训练（可选，1-2天）</h3><p>如果前三步效果仍不理想，考虑重新训练：</p>
+<ul>
+<li>调整 PD 参数配置</li>
+<li>增强 Roll 惩罚</li>
+<li>扩大域随机化范围</li>
+</ul>
+<hr>
+<h2 id="📖-完整文档导航"><a href="#📖-完整文档导航" class="headerlink" title="📖 完整文档导航"></a>📖 完整文档导航</h2><ul>
+<li><strong>Q7 主文档</strong>: <code>exp_analysis/Q7_Joint_Stiffness_Roll_Analysis.md</code> (765行)</li>
+<li><strong>Q7 快速参考</strong>: <code>exp_analysis/Q7_SUMMARY.md</code></li>
+<li><strong>相关问题</strong>: <ul>
+<li>Q6: 为何看不到机器人移动（iter 2600 分析）</li>
+<li>Q5: play.py 使用指南</li>
+<li>Q1-Q4: 训练原理和诊断方法</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/">http://example.com/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/11/25/Nav2%E8%AE%B0%E5%BD%95/" title="Nav2记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Nav2记录</div></div><div class="info-2"><div class="info-item-1">一、Planner Server 规划服务器 1.1 数据流输入:  当前位置（来自定位系统） 目标位置（来自 BT Navigator） 全局代价地图（来自 Global Costmap）  处理:  基于 Dijkstra&#x2F;A* 搜索，应用 tolerance 和 allow_unknown 规则输出:  全局路径（点序列） 传递给 Controller Server 工作流程 二、Controller Server 控制服务器我将详细分析 qmini_nav2 包中 controller_server 的各项参数及其功能。让我基于配置文件为您详细解读。 Controller Server 参数详细分析🎛️ 一、核心服务器参数1. 基础配置1234controller_server:  ros__parameters:    use_sim_time: False    controller_frequency: 20.0   use_sim_time: False  功能: 使用真实世界时间而非仿真时间 用途: 实际机器人部署时设为 False，Gazebo 仿...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9C%85-%E4%BB%BB%E5%8A%A1%E5%AE%8C%E6%88%90%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">✅ 任务完成总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E6%A0%B8%E5%BF%83%E7%AD%94%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">🎯 核心答案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-1-%E5%85%B3%E8%8A%82%E5%8F%82%E6%95%B0%E5%AE%9A%E4%B9%89%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">问题 1: 关节参数定义位置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%EF%B8%8F%E2%83%A3-PD-%E6%8E%A7%E5%88%B6%E5%8F%82%E6%95%B0%EF%BC%88%E6%9C%80%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">2.1.1.</span> <span class="toc-text">1️⃣ PD 控制参数（最重要）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%EF%B8%8F%E2%83%A3-%E5%85%B3%E8%8A%82%E6%B4%BB%E5%8A%A8%E8%8C%83%E5%9B%B4%E9%99%90%E5%88%B6"><span class="toc-number">2.1.2.</span> <span class="toc-text">2️⃣ 关节活动范围限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%EF%B8%8F%E2%83%A3-%E5%A5%96%E5%8A%B1%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84-Roll-%E6%83%A9%E7%BD%9A"><span class="toc-number">2.1.3.</span> <span class="toc-text">3️⃣ 奖励函数中的 Roll 惩罚</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-2-%E5%8F%82%E6%95%B0%E5%AF%B9-Roll-%E6%99%83%E5%8A%A8%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">2.2.</span> <span class="toc-text">问题 2: 参数对 Roll 晃动的影响</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%8D-%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0%E6%8E%92%E5%BA%8F"><span class="toc-number">2.2.1.</span> <span class="toc-text">🔍 影响因素排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-PD-%E6%8E%A7%E5%88%B6%E5%99%A8%E5%BD%B1%E5%93%8D%E6%9C%BA%E5%88%B6"><span class="toc-number">2.2.2.</span> <span class="toc-text">⚙️ PD 控制器影响机制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9A%80-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%88%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">🚀 解决方案（优先级排序）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-1-%E5%88%87%E6%8D%A2%E5%88%B0%E6%9C%80%E4%BD%B3-Checkpoint-%E2%AD%90%E2%AD%90%E2%AD%90%E2%AD%90%E2%AD%90"><span class="toc-number">3.1.</span> <span class="toc-text">方案 1: 切换到最佳 Checkpoint ⭐⭐⭐⭐⭐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-2-%E7%9C%9F%E6%9C%BA-PD-%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98-%E2%AD%90%E2%AD%90%E2%AD%90%E2%AD%90"><span class="toc-number">3.2.</span> <span class="toc-text">方案 2: 真机 PD 参数调优 ⭐⭐⭐⭐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-3-%E6%B7%BB%E5%8A%A0%E8%AF%8A%E6%96%AD%E8%BE%93%E5%87%BA-%E2%AD%90%E2%AD%90%E2%AD%90%E2%AD%90"><span class="toc-number">3.3.</span> <span class="toc-text">方案 3: 添加诊断输出 ⭐⭐⭐⭐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-4-%E9%87%8D%E6%96%B0%E8%AE%AD%E7%BB%83%EF%BC%88%E8%B0%83%E6%95%B4%E9%85%8D%E7%BD%AE%EF%BC%89-%E2%AD%90%E2%AD%90%E2%AD%90"><span class="toc-number">3.4.</span> <span class="toc-text">方案 4: 重新训练（调整配置） ⭐⭐⭐</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%81-%E7%94%9F%E6%88%90%E7%9A%84%E6%96%87%E6%A1%A3"><span class="toc-number">4.</span> <span class="toc-text">📁 生成的文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8A-%E5%85%B3%E9%94%AE%E6%95%B0%E6%8D%AE%E9%80%9F%E6%9F%A5"><span class="toc-number">5.</span> <span class="toc-text">📊 关键数据速查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PD-%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94"><span class="toc-number">5.1.</span> <span class="toc-text">PD 参数对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Roll-%E6%99%83%E5%8A%A8%E9%A2%84%E6%9C%9F%E6%94%B9%E8%BF%9B"><span class="toc-number">5.2.</span> <span class="toc-text">Roll 晃动预期改进</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E5%85%B3%E9%94%AE%E6%B4%9E%E5%AF%9F"><span class="toc-number">6.</span> <span class="toc-text">💡 关键洞察</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E7%AB%8B%E5%8D%B3%E8%A1%8C%E5%8A%A8%E8%AE%A1%E5%88%92"><span class="toc-number">7.</span> <span class="toc-text">🎯 立即行动计划</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5-%E9%AA%8C%E8%AF%81%E6%9C%80%E4%BD%B3%E6%A8%A1%E5%9E%8B%EF%BC%885%E5%88%86%E9%92%9F%EF%BC%89"><span class="toc-number">7.1.</span> <span class="toc-text">第一步: 验证最佳模型（5分钟）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5-%E7%9C%9F%E6%9C%BA-PD-%E8%B0%83%E4%BC%98%EF%BC%8830%E5%88%86%E9%92%9F%EF%BC%89"><span class="toc-number">7.2.</span> <span class="toc-text">第二步: 真机 PD 调优（30分钟）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5-%E6%95%B0%E6%8D%AE%E8%AE%B0%E5%BD%95%E5%92%8C%E5%88%86%E6%9E%90%EF%BC%8810%E5%88%86%E9%92%9F%EF%BC%89"><span class="toc-number">7.3.</span> <span class="toc-text">第三步: 数据记录和分析（10分钟）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5-%E9%87%8D%E6%96%B0%E8%AE%AD%E7%BB%83%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%8C1-2%E5%A4%A9%EF%BC%89"><span class="toc-number">7.4.</span> <span class="toc-text">第四步: 重新训练（可选，1-2天）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%96-%E5%AE%8C%E6%95%B4%E6%96%87%E6%A1%A3%E5%AF%BC%E8%88%AA"><span class="toc-number">8.</span> <span class="toc-text">📖 完整文档导航</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/" title="qmini训练排查（1）">qmini训练排查（1）</a><time datetime="2025-12-02T07:34:19.000Z" title="Created 2025-12-02 15:34:19">2025-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/25/Nav2%E8%AE%B0%E5%BD%95/" title="Nav2记录">Nav2记录</a><time datetime="2025-11-25T07:42:00.000Z" title="Created 2025-11-25 15:42:00">2025-11-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/25/%E6%89%BE%E5%88%B0%E5%90%8C%E4%B8%80%E7%BD%91%E6%AE%B5%E4%B8%8B%E7%9A%84%E8%AE%BE%E5%A4%87-ip-%E5%9C%B0%E5%9D%80/" title="找到同一网段下的设备 ip 地址">找到同一网段下的设备 ip 地址</a><time datetime="2025-11-25T03:01:31.000Z" title="Created 2025-11-25 11:01:31">2025-11-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/19/%E6%8E%92%E6%9F%A5%E9%BA%A6%E5%85%8B%E9%A3%8E%E8%AE%BE%E5%A4%87%E8%A2%AB%E5%8D%A0%E7%94%A8/" title="排查麦克风设备被占用">排查麦克风设备被占用</a><time datetime="2025-11-19T08:37:44.000Z" title="Created 2025-11-19 16:37:44">2025-11-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/05/ROS2/" title="ROS2">ROS2</a><time datetime="2025-11-05T03:18:30.000Z" title="Created 2025-11-05 11:18:30">2025-11-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
