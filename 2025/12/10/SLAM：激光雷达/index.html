@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SLAM：激光雷达 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="科普文，参考自：https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;aDQpB8Qz9wC1EgniXuCSkg 激光雷达 Lidar 如何应用于 SLAM一、Lidar SLAM（是什么）利用激光雷达使机器人在未知环境中构建地图的同时，实时确定自身在该地图中位置的技术。 激光雷达的传感器可以实现发送激光脉冲，同时测量脉冲碰到物体后反射回来所需的时间，通过分析返回的激光信息，Lidar SLAM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SLAM：激光雷达">
+<meta property="og:url" content="http://example.com/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="科普文，参考自：https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;aDQpB8Qz9wC1EgniXuCSkg 激光雷达 Lidar 如何应用于 SLAM一、Lidar SLAM（是什么）利用激光雷达使机器人在未知环境中构建地图的同时，实时确定自身在该地图中位置的技术。 激光雷达的传感器可以实现发送激光脉冲，同时测量脉冲碰到物体后反射回来所需的时间，通过分析返回的激光信息，Lidar SLAM">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-12-10T02:32:43.000Z">
+<meta property="article:modified_time" content="2025-12-10T06:32:37.724Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SLAM：激光雷达",
+  "url": "http://example.com/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-12-10T02:32:43.000Z",
+  "dateModified": "2025-12-10T06:32:37.724Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SLAM：激光雷达',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">SLAM：激光雷达</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">SLAM：激光雷达</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-12-10T02:32:43.000Z" title="Created 2025-12-10 10:32:43">2025-12-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-12-10T06:32:37.724Z" title="Updated 2025-12-10 14:32:37">2025-12-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>科普文，参考自：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/aDQpB8Qz9wC1EgniXuCSkg">https://mp.weixin.qq.com/s/aDQpB8Qz9wC1EgniXuCSkg</a></p>
+<h1 id="激光雷达-Lidar-如何应用于-SLAM"><a href="#激光雷达-Lidar-如何应用于-SLAM" class="headerlink" title="激光雷达 Lidar 如何应用于 SLAM"></a>激光雷达 Lidar 如何应用于 SLAM</h1><h2 id="一、Lidar-SLAM（是什么）"><a href="#一、Lidar-SLAM（是什么）" class="headerlink" title="一、Lidar SLAM（是什么）"></a>一、Lidar SLAM（是什么）</h2><p>利用激光雷达使机器人在未知环境中构建地图的同时，实时确定自身在该地图中位置的技术。</p>
+<p>激光雷达的传感器可以实现发送激光脉冲，同时测量脉冲碰到物体后反射回来所需的时间，<br>通过分析返回的激光信息，Lidar SLAM系统可以生成代表环境的高精度三维点云，<br>并利用这些信息估算机器人在地图中的位置和朝向。</p>
+<p>大部分 SLAM 包含两个主要模块：</p>
+<ul>
+<li>模块 1：测距模块。即进行环境感知的传感器，包括声呐、激光雷达扫描仪、IMU、摄像头及其他图像传感器。</li>
+<li>模块 2：数据提取模块。<strong>从测距设备收集的传感数据中提取信息，并据此识别未知环境中的地标特征</strong>。一个正常运行的SLAM系统需要机器人（或载体）、测距设备、数据提取软件以及其他硬件、软件或处理技术之间持续协同工作。</li>
+</ul>
+<h2 id="二、Lidar-SLAM-工作原理"><a href="#二、Lidar-SLAM-工作原理" class="headerlink" title="二、Lidar SLAM 工作原理"></a>二、Lidar SLAM 工作原理</h2><h3 id="2-1-SLAM基本原理"><a href="#2-1-SLAM基本原理" class="headerlink" title="2.1 SLAM基本原理"></a>2.1 SLAM基本原理</h3><p>SLAM的核心思想是让机器人或自主系统在探索未知环境的同时，构建该环境的地图，并确定自身在所生成地图中的位置。这一目标通过融合来自多种传感器（如激光雷达、摄像头和惯性测量单元IMU）的数据来实现，从而估算机器人的运动轨迹及环境中地标的位置。</p>
+<p>SLAM算法通常包含两个主要步骤：</p>
+<ul>
+<li>预测步骤。预测步骤（又称运动更新或里程计更新）根据机器人先前的位置及其传感器提供的运动信息，估算其新位置；</li>
+<li>校正步骤。校正步骤（又称观测更新或传感器更新）则利用环境中的测量数据（例如激光雷达检测到的地标的距离）对预测位置进行修正。</li>
+</ul>
+<h3 id="2-2-Lidar-作用"><a href="#2-2-Lidar-作用" class="headerlink" title="2.2 Lidar 作用"></a>2.2 Lidar 作用</h3><p>激光雷达传感器在SLAM系统中扮演着至关重要的角色，能够提供高精度、高分辨率的环境数据。这些传感器发射激光脉冲，脉冲遇到物体后反射回传感器，系统通过计算激光往返时间来测量与物体之间的距离。<strong>激光雷达可生成密集的三维点云——即一组在三维空间中表示环境物体表面的点。</strong></p>
+<p><code>能干嘛</code>：可以使用激光雷达生成地图，地图可以采用多种形式表示：例如占据栅格地图，其中每个栅格单元表示该位置被物体占据的概率；或点云地图，其中环境中的物体位置以三维空间中的点集形式呈现。</p>
+<p><code>怎么用</code>：为了估计机器人的位姿，SLAM算法利用激光雷达数据识别并跟踪环境中的地标。<strong>通过将观测到的地标与地图中已存储的地标进行比对，算法可确定机器人相对于地图的位置和朝向</strong>。这一过程通常涉及寻找最佳变换矩阵，使当前观测的激光雷达数据与已有地图对齐，常用技术包括迭代最近点算法（ICP）或其他优化算法。随着机器人不断探索环境并采集新的激光雷达数据，地图会持续更新，机器人的位姿也随之不断优化。</p>
+<h3 id="2-3-Lidar-参数规格"><a href="#2-3-Lidar-参数规格" class="headerlink" title="2.3 Lidar 参数规格"></a>2.3 Lidar 参数规格</h3><ul>
+<li>探测距离与分辨率：更长的探测距离使SLAM系统能在更远处检测和建图物体，这对高速行驶的自动驾驶车辆尤为重要。高分辨率激光雷达可提供更精细的点云，有助于识别环境中更小或更复杂的地标。</li>
+<li>视场角（Field of View, FoV）：激光雷达的视场角决定了单次扫描所能覆盖的环境空间范围。宽视场角使SLAM系统能映射更大区域，并从不同角度检测物体，这对于需要全面感知周围环境的应用（如自动驾驶中的碰撞规避或大型室内空间建图）尤为关键。例如，InnovizOne固态激光雷达提供73度水平视场角和20度垂直视场角，能捕捉广阔的环境视野，非常适合城市道路驾驶或复杂室内环境等需要全方位感知的场景。</li>
+<li>更新频率与延迟：更高的更新频率可使SLAM系统更频繁地获取环境快照，从而更准确地反映环境变化。低延迟的激光雷达能近乎实时地提供环境数据，这对需要快速决策的应用（如高速自动驾驶中的障碍物检测与避让）至关重要。</li>
+</ul>
+<h2 id="三、主流算法"><a href="#三、主流算法" class="headerlink" title="三、主流算法"></a>三、主流算法</h2><h3 id="3-1-GMapping"><a href="#3-1-GMapping" class="headerlink" title="3.1 GMapping"></a>3.1 GMapping</h3><p>GMapping 是一种基于Rao-Blackwellized粒子滤波器（RBPF）的经典激光雷达SLAM实现。该算法采用栅格地图表示环境，并通过扫描匹配（scan matching）将激光雷达扫描数据与已有地图对齐。GMapping 能在小规模和大规模环境中均提供准确的地图构建与定位结果。</p>
+<p>GMapping 采用自适应重采样策略，根据机器人位姿估计的不确定性动态调整滤波器中粒子的数量，从而在计算效率与鲁棒性之间取得良好平衡。该算法已广泛应用于机器人领域，包括自主导航、室内建图和移动机器人定位等。</p>
+<h3 id="3-2-Hector-SLAM"><a href="#3-2-Hector-SLAM" class="headerlink" title="3.2 Hector SLAM"></a>3.2 Hector SLAM</h3><p>Hector SLAM 是一种不依赖里程计数据的激光雷达SLAM算法，适用于没有轮式编码器或其他运动传感器的平台。该算法同样使用栅格地图表示，并采用多分辨率方法处理不同精度级别的激光雷达数据，从而高效应对大规模环境。</p>
+<p>Hector SLAM 的核心是一种快速扫描匹配技术，通过连续激光扫描之间的对齐来估计机器人的运动。此外，算法还集成了回环检测与优化机制，用于校正长时间运行中累积的位姿漂移。Hector SLAM 已成功应用于多种平台，包括空中飞行器、地面机器人，甚至手持式激光雷达扫描设备。</p>
+<h3 id="3-3-Cartographer"><a href="#3-3-Cartographer" class="headerlink" title="3.3 Cartographer"></a>3.3 Cartographer</h3><p>Cartographer 是由谷歌开发的一款通用且可扩展的激光雷达SLAM算法，支持2D与3D建图，并可融合多种传感器数据，包括激光雷达、惯性测量单元（IMU）和里程计信息。该算法结合局部与全局优化技术，以生成一致且精确的环境地图。</p>
+<p>在局部优化阶段，Cartographer 利用实时扫描匹配估计机器人位姿，并更新当前正在构建的子地图（submap）。</p>
+<p>在全局优化阶段，则采用位姿图优化（pose graph optimization）技术校正漂移，确保地图的全局一致性。Cartographer 已广泛应用于室内建图、自主导航以及大规模室外测绘项目等多种场景。</p>
+<h3 id="3-4-LOAM（Lidar-Odometry-and-Mapping）"><a href="#3-4-LOAM（Lidar-Odometry-and-Mapping）" class="headerlink" title="3.4 LOAM（Lidar Odometry and Mapping）"></a>3.4 LOAM（Lidar Odometry and Mapping）</h3><p>LOAM 是一种专为高分辨率激光雷达设计的实时3D激光雷达SLAM算法。该算法将激光雷达数据分解为两个部分：低分辨率部分用于估计机器人里程计（即运动轨迹），高分辨率部分则用于构建环境的精细地图。</p>
+<p>LOAM 采用多线程架构高效处理激光雷达数据。算法首先从扫描数据中提取特征（如边缘和平面），然后在连续帧之间匹配这些特征以估计机器人运动，最终利用该运动估计构建详细的3D环境地图。LOAM 已成功应用于自动驾驶汽车、无人机和各类机器人平台，在多种复杂环境中展现出卓越的鲁棒性与精度。</p>
+<h2 id="四、挑战与局限"><a href="#四、挑战与局限" class="headerlink" title="四、挑战与局限"></a>四、挑战与局限</h2><ol>
+<li>计算复杂度高。激光雷达SLAM算法，尤其是处理大规模环境或高分辨率数据时，计算开销巨大。这不仅对实时性构成压力，也对硬件提出较高要求。有时需针对特定平台或应用对算法进行优化，才能满足性能需求。</li>
+<li>动态环境处理困难。多数SLAM算法假设环境静态，但现实场景常包含行人、车辆等动态物体。如何有效区分动静态目标并动态更新地图，仍是技术难点。</li>
+<li>回环检测与全局一致性。在大尺度或长时间任务中，实现全局一致性是一大挑战。回环检测（即识别机器人返回已访问位置）因激光数据维度高、存在“感知混淆”（不同地点外观相似）等问题而尤为困难。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/">http://example.com/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/12/04/gy-26/" title="gy-26"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">gy-26</div></div><div class="info-2"><div class="info-item-1">123456789101112131415161718192021import smbus2import timeI2C_ADDR = 0x70bus = smbus2.SMBus(1)  # Jetson 的 I2C1def read_heading():    # 发送测量命令（可选，有些模块自动更新）    bus.write_byte_data(I2C_ADDR, 0x00, 0x31)    time.sleep(0.1)    # 读取高8位和低8位    high = bus.read_byte_data(I2C_ADDR, 0x01)    low  = bus.read_byte_data(I2C_ADDR, 0x02)    angle_raw = (high &lt;&lt; 8) | low  # 合成16位    angle_deg = angle_raw / 10.0   # 转为度    return angle_degwhile True:    print(f&quot;Heading: &#123;read_heading():.1f&#125...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE-Lidar-%E5%A6%82%E4%BD%95%E5%BA%94%E7%94%A8%E4%BA%8E-SLAM"><span class="toc-number">1.</span> <span class="toc-text">激光雷达 Lidar 如何应用于 SLAM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Lidar-SLAM%EF%BC%88%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">一、Lidar SLAM（是什么）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Lidar-SLAM-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">二、Lidar SLAM 工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-SLAM%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 SLAM基本原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Lidar-%E4%BD%9C%E7%94%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 Lidar 作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Lidar-%E5%8F%82%E6%95%B0%E8%A7%84%E6%A0%BC"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 Lidar 参数规格</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%BB%E6%B5%81%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">三、主流算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-GMapping"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 GMapping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Hector-SLAM"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 Hector SLAM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Cartographer"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 Cartographer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-LOAM%EF%BC%88Lidar-Odometry-and-Mapping%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 LOAM（Lidar Odometry and Mapping）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%8C%91%E6%88%98%E4%B8%8E%E5%B1%80%E9%99%90"><span class="toc-number">1.4.</span> <span class="toc-text">四、挑战与局限</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/" title="SLAM：激光雷达">SLAM：激光雷达</a><time datetime="2025-12-10T02:32:43.000Z" title="Created 2025-12-10 10:32:43">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/04/gy-26/" title="gy-26">gy-26</a><time datetime="2025-12-04T11:58:16.000Z" title="Created 2025-12-04 19:58:16">2025-12-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/02/qmini%E8%AE%AD%E7%BB%83%E6%8E%92%E6%9F%A5%EF%BC%881%EF%BC%89/" title="qmini训练排查（1）">qmini训练排查（1）</a><time datetime="2025-12-02T07:34:19.000Z" title="Created 2025-12-02 15:34:19">2025-12-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/25/Nav2%E8%AE%B0%E5%BD%95/" title="Nav2记录">Nav2记录</a><time datetime="2025-11-25T07:42:00.000Z" title="Created 2025-11-25 15:42:00">2025-11-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/25/%E6%89%BE%E5%88%B0%E5%90%8C%E4%B8%80%E7%BD%91%E6%AE%B5%E4%B8%8B%E7%9A%84%E8%AE%BE%E5%A4%87-ip-%E5%9C%B0%E5%9D%80/" title="找到同一网段下的设备 ip 地址">找到同一网段下的设备 ip 地址</a><time datetime="2025-11-25T03:01:31.000Z" title="Created 2025-11-25 11:01:31">2025-11-25</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
