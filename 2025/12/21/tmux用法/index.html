@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>tmux用法 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Tmux 使用指南Tmux (Terminal Multiplexer) 是一个强大的终端多路复用器,功能类似于 Screen 但更现代化。它允许你在一个终端窗口中管理多个会话、窗口和窗格。 基础概念Tmux 有三个层级结构:  Session (会话): 一组窗口的集合,可以detach&#x2F;attach Window (窗口): 类似于浏览器的标签页 Pane (窗格): 在一个窗口中分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tmux用法">
+<meta property="og:url" content="http://example.com/2025/12/21/tmux%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Tmux 使用指南Tmux (Terminal Multiplexer) 是一个强大的终端多路复用器,功能类似于 Screen 但更现代化。它允许你在一个终端窗口中管理多个会话、窗口和窗格。 基础概念Tmux 有三个层级结构:  Session (会话): 一组窗口的集合,可以detach&#x2F;attach Window (窗口): 类似于浏览器的标签页 Pane (窗格): 在一个窗口中分">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-12-21T03:07:48.000Z">
+<meta property="article:modified_time" content="2025-12-21T03:07:52.104Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "tmux用法",
+  "url": "http://example.com/2025/12/21/tmux%E7%94%A8%E6%B3%95/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-12-21T03:07:48.000Z",
+  "dateModified": "2025-12-21T03:07:52.104Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/12/21/tmux%E7%94%A8%E6%B3%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'tmux用法',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">tmux用法</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">tmux用法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-12-21T03:07:48.000Z" title="Created 2025-12-21 11:07:48">2025-12-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-12-21T03:07:52.104Z" title="Updated 2025-12-21 11:07:52">2025-12-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Tmux-使用指南"><a href="#Tmux-使用指南" class="headerlink" title="Tmux 使用指南"></a>Tmux 使用指南</h1><p><strong>Tmux</strong> (Terminal Multiplexer) 是一个强大的终端多路复用器,功能类似于 Screen 但更现代化。它允许你在一个终端窗口中管理多个会话、窗口和窗格。</p>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>Tmux 有三个层级结构:</p>
+<ul>
+<li><strong>Session (会话)</strong>: 一组窗口的集合,可以detach&#x2F;attach</li>
+<li><strong>Window (窗口)</strong>: 类似于浏览器的标签页</li>
+<li><strong>Pane (窗格)</strong>: 在一个窗口中分割出的区域</li>
+</ul>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="会话管理"><a href="#会话管理" class="headerlink" title="会话管理"></a>会话管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建新会话</span></span><br><span class="line">tmux new -s my_session</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建会话并指定名称(推荐)</span></span><br><span class="line">tmux new -s training_session</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出所有会话</span></span><br><span class="line">tmux <span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接到已存在的会话</span></span><br><span class="line">tmux attach -t my_session</span><br><span class="line"><span class="comment"># 或简写</span></span><br><span class="line">tmux a -t my_session</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分离当前会话(从会话内部按快捷键)</span></span><br><span class="line">Ctrl+B, D</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从外部分离某个会话</span></span><br><span class="line">tmux detach -s my_session</span><br><span class="line"></span><br><span class="line"><span class="comment"># 杀死会话</span></span><br><span class="line">tmux kill-session -t my_session</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重命名会话</span></span><br><span class="line">tmux rename-session -t old_name new_name</span><br></pre></td></tr></table></figure>
+
+<h3 id="窗口管理-在-Tmux-会话内"><a href="#窗口管理-在-Tmux-会话内" class="headerlink" title="窗口管理 (在 Tmux 会话内)"></a>窗口管理 (在 Tmux 会话内)</h3><p>所有快捷键都需要先按 <strong>前缀键 <code>Ctrl+B</code></strong>,然后再按相应的命令键:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建新窗口</span></span><br><span class="line">Ctrl+B, C</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到下一个窗口</span></span><br><span class="line">Ctrl+B, N</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到上一个窗口</span></span><br><span class="line">Ctrl+B, P</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到指定编号的窗口</span></span><br><span class="line">Ctrl+B, 0-9</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出所有窗口</span></span><br><span class="line">Ctrl+B, W</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重命名当前窗口</span></span><br><span class="line">Ctrl+B, ,</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭当前窗口</span></span><br><span class="line">Ctrl+B, &amp;</span><br><span class="line"><span class="comment"># 或直接输入</span></span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="窗格管理-分屏"><a href="#窗格管理-分屏" class="headerlink" title="窗格管理 (分屏)"></a>窗格管理 (分屏)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 水平分割窗格(上下分屏)</span></span><br><span class="line">Ctrl+B, <span class="string">&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 垂直分割窗格(左右分屏)</span></span><br><span class="line"><span class="string">Ctrl+B, %</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 在窗格间切换</span></span><br><span class="line"><span class="string">Ctrl+B, 方向键(↑↓←→)</span></span><br><span class="line"><span class="string"># 或</span></span><br><span class="line"><span class="string">Ctrl+B, O  # 循环切换</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 关闭当前窗格</span></span><br><span class="line"><span class="string">Ctrl+B, X</span></span><br><span class="line"><span class="string"># 或</span></span><br><span class="line"><span class="string">exit</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 显示窗格编号</span></span><br><span class="line"><span class="string">Ctrl+B, Q</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 调整窗格大小</span></span><br><span class="line"><span class="string">Ctrl+B, Ctrl+方向键</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 切换窗格布局</span></span><br><span class="line"><span class="string">Ctrl+B, Space</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 将当前窗格全屏/恢复</span></span><br><span class="line"><span class="string">Ctrl+B, Z</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="在训练项目中的典型使用场景"><a href="#在训练项目中的典型使用场景" class="headerlink" title="在训练项目中的典型使用场景"></a>在训练项目中的典型使用场景</h2><h3 id="场景-1-长时间训练任务"><a href="#场景-1-长时间训练任务" class="headerlink" title="场景 1: 长时间训练任务"></a>场景 1: 长时间训练任务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 创建训练会话</span></span><br><span class="line">tmux new -s robot_training</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 启动训练</span></span><br><span class="line"><span class="built_in">cd</span> /home/ubuntu/project/robot_train</span><br><span class="line">python train.py --config config/BIRL_stable_new_reward.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 分离会话(按快捷键)</span></span><br><span class="line">Ctrl+B, D</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 随时重新连接查看进度</span></span><br><span class="line">tmux attach -t robot_training</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 训练完成后删除会话</span></span><br><span class="line">tmux kill-session -t robot_training</span><br></pre></td></tr></table></figure>
+
+<h3 id="场景-2-多任务监控"><a href="#场景-2-多任务监控" class="headerlink" title="场景 2: 多任务监控"></a>场景 2: 多任务监控</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建会话</span></span><br><span class="line">tmux new -s monitoring</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割成多个窗格</span></span><br><span class="line"><span class="comment"># 窗格1: 运行训练</span></span><br><span class="line">python train.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 水平分割</span></span><br><span class="line">Ctrl+B, <span class="string">&quot;</span></span><br><span class="line"><span class="string"># 窗格2: 监控GPU</span></span><br><span class="line"><span class="string">watch -n 1 nvidia-smi</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 垂直分割</span></span><br><span class="line"><span class="string">Ctrl+B, %</span></span><br><span class="line"><span class="string"># 窗格3: 查看日志</span></span><br><span class="line"><span class="string">tail -f logs/training.log</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="场景-3-多个实验并行"><a href="#场景-3-多个实验并行" class="headerlink" title="场景 3: 多个实验并行"></a>场景 3: 多个实验并行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建会话</span></span><br><span class="line">tmux new -s experiments</span><br><span class="line"></span><br><span class="line"><span class="comment"># 窗口1: 实验A</span></span><br><span class="line">python train.py --config config/BIRL_stable.py</span><br><span class="line">Ctrl+B, C  <span class="comment"># 创建新窗口</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 窗口2: 实验B</span></span><br><span class="line">python train.py --config config/BIRL_stable_new_reward.py</span><br><span class="line">Ctrl+B, C  <span class="comment"># 再创建新窗口</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 窗口3: 监控</span></span><br><span class="line">./monitor_gpu.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在窗口间切换</span></span><br><span class="line">Ctrl+B, 0  <span class="comment"># 切换到窗口0</span></span><br><span class="line">Ctrl+B, 1  <span class="comment"># 切换到窗口1</span></span><br><span class="line">Ctrl+B, 2  <span class="comment"># 切换到窗口2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="高级功能"><a href="#高级功能" class="headerlink" title="高级功能"></a>高级功能</h2><h3 id="复制模式-滚动查看历史输出"><a href="#复制模式-滚动查看历史输出" class="headerlink" title="复制模式 (滚动查看历史输出)"></a>复制模式 (滚动查看历史输出)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入复制模式</span></span><br><span class="line">Ctrl+B, [</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在复制模式中:</span></span><br><span class="line"><span class="comment"># - 使用方向键或 PageUp/PageDown 滚动</span></span><br><span class="line"><span class="comment"># - 按 Space 开始选择</span></span><br><span class="line"><span class="comment"># - 按 Enter 复制选中内容</span></span><br><span class="line"><span class="comment"># - 按 Q 退出复制模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 粘贴复制的内容</span></span><br><span class="line">Ctrl+B, ]</span><br></pre></td></tr></table></figure>
+
+<h3 id="同步窗格-同时在多个窗格执行相同命令"><a href="#同步窗格-同时在多个窗格执行相同命令" class="headerlink" title="同步窗格 (同时在多个窗格执行相同命令)"></a>同步窗格 (同时在多个窗格执行相同命令)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启同步</span></span><br><span class="line">Ctrl+B, :</span><br><span class="line">setw synchronize-panes on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭同步</span></span><br><span class="line">Ctrl+B, :</span><br><span class="line">setw synchronize-panes off</span><br></pre></td></tr></table></figure>
+
+<h3 id="保存和恢复会话-需要插件"><a href="#保存和恢复会话-需要插件" class="headerlink" title="保存和恢复会话 (需要插件)"></a>保存和恢复会话 (需要插件)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 tpm (Tmux Plugin Manager)</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 ~/.tmux.conf 中添加:</span></span><br><span class="line"><span class="comment"># set -g @plugin &#x27;tmux-plugins/tmux-resurrect&#x27;</span></span><br><span class="line"><span class="comment"># set -g @plugin &#x27;tmux-plugins/tmux-continuum&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存会话</span></span><br><span class="line">Ctrl+B, Ctrl+S</span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复会话</span></span><br><span class="line">Ctrl+B, Ctrl+R</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置文件-tmux-conf"><a href="#配置文件-tmux-conf" class="headerlink" title="配置文件 (~&#x2F;.tmux.conf)"></a>配置文件 (~&#x2F;.tmux.conf)</h2><p>推荐的基础配置:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置前缀键为 Ctrl+A (可选,更顺手)</span></span><br><span class="line"><span class="comment"># set -g prefix C-a</span></span><br><span class="line"><span class="comment"># unbind C-b</span></span><br><span class="line"><span class="comment"># bind C-a send-prefix</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 鼠标支持</span></span><br><span class="line"><span class="built_in">set</span> -g mouse on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 窗口编号从1开始</span></span><br><span class="line"><span class="built_in">set</span> -g base-index 1</span><br><span class="line">setw -g pane-base-index 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更友好的分屏快捷键</span></span><br><span class="line"><span class="built_in">bind</span> | split-window -h</span><br><span class="line"><span class="built_in">bind</span> - split-window -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 vim 风格的窗格切换</span></span><br><span class="line"><span class="built_in">bind</span> h select-pane -L</span><br><span class="line"><span class="built_in">bind</span> j select-pane -D</span><br><span class="line"><span class="built_in">bind</span> k select-pane -U</span><br><span class="line"><span class="built_in">bind</span> l select-pane -R</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新加载配置</span></span><br><span class="line"><span class="built_in">bind</span> r source-file ~/.tmux.conf \; display <span class="string">&quot;Config reloaded!&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加历史缓冲区大小</span></span><br><span class="line"><span class="built_in">set</span> -g history-limit 10000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 状态栏美化</span></span><br><span class="line"><span class="built_in">set</span> -g status-bg colour235</span><br><span class="line"><span class="built_in">set</span> -g status-fg colour136</span><br></pre></td></tr></table></figure>
+
+<p>应用配置:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 tmux 会话内重新加载配置</span></span><br><span class="line">tmux source-file ~/.tmux.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="Tmux-vs-Screen-对比"><a href="#Tmux-vs-Screen-对比" class="headerlink" title="Tmux vs Screen 对比"></a>Tmux vs Screen 对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Tmux</th>
+<th>Screen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>窗格分割</td>
+<td>✅ 原生支持</td>
+<td>❌ 需要补丁</td>
+</tr>
+<tr>
+<td>配置方式</td>
+<td>更灵活</td>
+<td>较简单</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>更好</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>社区活跃度</td>
+<td>🔥 活跃</td>
+<td>维护中</td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td>中等</td>
+<td>简单</td>
+</tr>
+</tbody></table>
+<h2 id="快速参考卡"><a href="#快速参考卡" class="headerlink" title="快速参考卡"></a>快速参考卡</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">会话操作:</span><br><span class="line">  tmux new -s &lt;name&gt;     创建会话</span><br><span class="line">  tmux ls                列出会话</span><br><span class="line">  tmux a -t &lt;name&gt;       连接会话</span><br><span class="line">  Ctrl+B, D              分离会话</span><br><span class="line"></span><br><span class="line">窗口操作:</span><br><span class="line">  Ctrl+B, C              创建窗口</span><br><span class="line">  Ctrl+B, N              下一个窗口</span><br><span class="line">  Ctrl+B, P              上一个窗口</span><br><span class="line">  Ctrl+B, 0-9            切换到指定窗口</span><br><span class="line"></span><br><span class="line">窗格操作:</span><br><span class="line">  Ctrl+B, &quot;              水平分割</span><br><span class="line">  Ctrl+B, %              垂直分割</span><br><span class="line">  Ctrl+B, 方向键          切换窗格</span><br><span class="line">  Ctrl+B, Z              全屏/恢复</span><br><span class="line"></span><br><span class="line">其他:</span><br><span class="line">  Ctrl+B, [              复制模式/滚动</span><br><span class="line">  Ctrl+B, ?              显示所有快捷键</span><br></pre></td></tr></table></figure>
+
+<h2 id="实用技巧"><a href="#实用技巧" class="headerlink" title="实用技巧"></a>实用技巧</h2><ol>
+<li><strong>结合脚本自动化</strong>: 创建脚本自动设置工作环境</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">tmux new-session -d -s dev</span><br><span class="line">tmux send-keys -t dev <span class="string">&#x27;cd /home/ubuntu/project/robot_train&#x27;</span> C-m</span><br><span class="line">tmux split-window -h -t dev</span><br><span class="line">tmux send-keys -t dev <span class="string">&#x27;watch -n 1 nvidia-smi&#x27;</span> C-m</span><br><span class="line">tmux attach -t dev</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p><strong>会话持久化</strong>: 即使SSH断开,会话依然运行</p>
+</li>
+<li><p><strong>团队协作</strong>: 多人可以同时连接同一个会话(结对编程)</p>
+</li>
+</ol>
+<p>Tmux 是开发和训练深度学习模型的必备工具,特别适合需要长时间运行的任务!</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/12/21/tmux%E7%94%A8%E6%B3%95/">http://example.com/2025/12/21/tmux%E7%94%A8%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/12/11/ros2-setpy-py%E8%AF%A6%E8%A7%A3/" title="ros2 setpy.py详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">ros2 setpy.py详解</div></div><div class="info-2"><div class="info-item-1">setup.py 内容分析一般setup.py基本内容如下： 12345678910111213141516171819202122232425262728293031323334from setuptools import find_packages, setupimport osfrom glob import globpackage_name = &#x27;qmini_nav2&#x27;setup(    name=package_name,    version=&#x27;0.0.0&#x27;,    packages=find_packages(exclude=[&#x27;test&#x27;]),    data_files=[        (&#x27;share/ament_index/resource_index/packages&#x27;,            [&#x27;resource/&#x27; + package_name]),        (&#x27;share/&#x27; + package_name, [&#x27;pa...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tmux-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="toc-number">1.</span> <span class="toc-text">Tmux 使用指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">基础概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.2.</span> <span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">会话管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86-%E5%9C%A8-Tmux-%E4%BC%9A%E8%AF%9D%E5%86%85"><span class="toc-number">1.2.2.</span> <span class="toc-text">窗口管理 (在 Tmux 会话内)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%97%E6%A0%BC%E7%AE%A1%E7%90%86-%E5%88%86%E5%B1%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">窗格管理 (分屏)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E8%AE%AD%E7%BB%83%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%85%B8%E5%9E%8B%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.</span> <span class="toc-text">在训练项目中的典型使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-1-%E9%95%BF%E6%97%B6%E9%97%B4%E8%AE%AD%E7%BB%83%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.3.1.</span> <span class="toc-text">场景 1: 长时间训练任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-2-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E7%9B%91%E6%8E%A7"><span class="toc-number">1.3.2.</span> <span class="toc-text">场景 2: 多任务监控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF-3-%E5%A4%9A%E4%B8%AA%E5%AE%9E%E9%AA%8C%E5%B9%B6%E8%A1%8C"><span class="toc-number">1.3.3.</span> <span class="toc-text">场景 3: 多个实验并行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="toc-number">1.4.</span> <span class="toc-text">高级功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%A8%A1%E5%BC%8F-%E6%BB%9A%E5%8A%A8%E6%9F%A5%E7%9C%8B%E5%8E%86%E5%8F%B2%E8%BE%93%E5%87%BA"><span class="toc-number">1.4.1.</span> <span class="toc-text">复制模式 (滚动查看历史输出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E7%AA%97%E6%A0%BC-%E5%90%8C%E6%97%B6%E5%9C%A8%E5%A4%9A%E4%B8%AA%E7%AA%97%E6%A0%BC%E6%89%A7%E8%A1%8C%E7%9B%B8%E5%90%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">1.4.2.</span> <span class="toc-text">同步窗格 (同时在多个窗格执行相同命令)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D%E4%BC%9A%E8%AF%9D-%E9%9C%80%E8%A6%81%E6%8F%92%E4%BB%B6"><span class="toc-number">1.4.3.</span> <span class="toc-text">保存和恢复会话 (需要插件)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-tmux-conf"><span class="toc-number">1.5.</span> <span class="toc-text">配置文件 (~&#x2F;.tmux.conf)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tmux-vs-Screen-%E5%AF%B9%E6%AF%94"><span class="toc-number">1.6.</span> <span class="toc-text">Tmux vs Screen 对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%8F%82%E8%80%83%E5%8D%A1"><span class="toc-number">1.7.</span> <span class="toc-text">快速参考卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7"><span class="toc-number">1.8.</span> <span class="toc-text">实用技巧</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/21/tmux%E7%94%A8%E6%B3%95/" title="tmux用法">tmux用法</a><time datetime="2025-12-21T03:07:48.000Z" title="Created 2025-12-21 11:07:48">2025-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/11/ros2-setpy-py%E8%AF%A6%E8%A7%A3/" title="ros2 setpy.py详解">ros2 setpy.py详解</a><time datetime="2025-12-11T11:50:01.000Z" title="Created 2025-12-11 19:50:01">2025-12-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/11/ros2%E5%8F%AF%E6%89%A7%E8%A1%8C%E8%8A%82%E7%82%B9/" title="ros2可执行节点">ros2可执行节点</a><time datetime="2025-12-11T09:31:25.000Z" title="Created 2025-12-11 17:31:25">2025-12-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/10/SLAM%EF%BC%9A%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/" title="SLAM：激光雷达">SLAM：激光雷达</a><time datetime="2025-12-10T02:32:43.000Z" title="Created 2025-12-10 10:32:43">2025-12-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/04/gy-26/" title="gy-26">gy-26</a><time datetime="2025-12-04T11:58:16.000Z" title="Created 2025-12-04 19:58:16">2025-12-04</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
