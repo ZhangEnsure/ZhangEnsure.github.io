@@ -7,7 +7,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-12-24T06:02:53.000Z">
-<meta property="article:modified_time" content="2025-12-24T06:06:21.369Z">
+<meta property="article:modified_time" content="2026-01-04T06:15:56.157Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
@@ -17,7 +17,7 @@
   "url": "http://example.com/2025/12/24/Isaac-Lab%E5%8F%82%E6%95%B0%E5%88%86%E6%9E%90/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2025-12-24T06:02:53.000Z",
-  "dateModified": "2025-12-24T06:06:21.369Z",
+  "dateModified": "2026-01-04T06:15:56.157Z",
   "author": [
     {
       "@type": "Person",
@@ -158,18 +158,20 @@
   isHighlightShrink: false,
   isToc: false,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Isaac Lab参数分析</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Isaac Lab参数分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-12-24T06:02:53.000Z" title="Created 2025-12-24 14:02:53">2025-12-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-12-24T06:06:21.369Z" title="Updated 2025-12-24 14:06:21">2025-12-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>它主要定义了关节驱动器在底层物理引擎中是如何施加作用力的。<br>我们可以从Python 语法和物理仿真含义两个层面来解读。</p>
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Isaac Lab参数分析</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Isaac Lab参数分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-12-24T06:02:53.000Z" title="Created 2025-12-24 14:02:53">2025-12-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-04T06:15:56.157Z" title="Updated 2026-01-04 14:15:56">2026-01-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>它主要定义了关节驱动器在底层物理引擎中是如何施加作用力的。<br>我们可以从Python 语法和物理仿真含义两个层面来解读。</p>
 <ol>
 <li>Python 语法层面<br>drive_type: dict[str, Literal[“acceleration”, “force”]] | Literal[“acceleration”, “force”] &#x3D; “force”</li>
 </ol>
 <p>变量名: drive_type。<br>类型注解 (Type Hinting):<br>| (竖线): 代表 或者 (Union)。这意味着这个变量可以接受两种类型的数据。<br>类型一: Literal[“acceleration”, “force”]。这表示变量可以是一个字符串，但必须严格是 “acceleration” 或 “force” 其中之一。如果设为这个值，它将应用于所有关节。<br>类型二: dict[str, Literal[“acceleration”, “force”]]。这表示变量可以是一个字典。<br>键 (key) 是字符串（通常是关节名称的正则表达式）。<br>值 (value) 是 “acceleration” 或 “force”。<br>这种方式允许你为机器人的不同关节设置不同的驱动模式（例如：腿部用 force，头部用 acceleration）。</p>
 <p>默认值: &#x3D; “force”。如果不特别指定，默认使用力（力矩）模式。</p>
 <ol start="2">
-<li>物理仿真含义 (核心概念)<br>这个参数决定了 PhysX 物理引擎如何处理控制器的输出信号。<br>A. “force” (力&#x2F;力矩模式) - 默认推荐</li>
+<li>物理仿真含义 (核心概念)<br>这个参数决定了 PhysX 物理引擎如何处理控制器的输出信号。</li>
 </ol>
-<p>含义: 驱动器直接向关节施加物理力（Force）或力矩（Torque）。<br>物理公式: 遵循牛顿第二定律 F&#x3D;m⋅aF &#x3D; m \cdot aF&#x3D;m⋅a 或转动定律 τ&#x3D;I⋅α\tau &#x3D; I \cdot \alphaτ&#x3D;I⋅α。<br>特点:<br>真实性高: 这是现实世界中电机的行为方式（电流产生磁场，磁场产生力矩）。<br>受惯性影响: 如果机器人的手臂抓起一个重物（惯性 III 变大），同样的控制力矩 τ\tauτ 产生的加速度 α\alphaα 会变小（因为 α&#x3D;τ&#x2F;I\alpha &#x3D; \tau &#x2F; Iα&#x3D;τ&#x2F;I）。这意味着控制效果会随负载变化。<br>用途: 适用于 Sim-to-Real (仿真到真机迁移)，因为真机通常就是力矩控制。</p>
+<p>A. “force” (力&#x2F;力矩模式) - 默认推荐</p>
+<p>含义: 驱动器直接向关节施加物理力（Force）或力矩（Torque）。<br>物理公式: 遵循牛顿第二定律 $ F &#x3D; m \cdot a $ 或转动定律 $ τ&#x3D;I \cdot \alpha$。<br>特点:<br>真实性高: 这是现实世界中电机的行为方式（电流产生磁场，磁场产生力矩）。<br>受惯性影响: 如果机器人的手臂抓起一个重物（惯性 III 变大），同样的控制力矩 $\tau$ 产生的加速度 $\alpha$ 会变小，这意味着控制效果会随负载变化。<br>用途: 适用于 Sim-to-Real (仿真到真机迁移)，因为真机通常就是力矩控制。</p>
 <p>B. “acceleration” (加速度模式)</p>
-<p>含义: 驱动器在施加力之前，会自动“归一化”惯性。也就是说，它直接控制关节的加速度，而忽略关节后连接物体的质量或惯性。<br>物理原理: 物理引擎在内部计算时，会根据当前的惯性 III 自动调整施加的力。<br>假设控制器输出期望加速度 acmda_{cmd}acmd​。<br>引擎实际施加的力矩为 τactual&#x3D;acmd⋅Icurrent\tau_{actual} &#x3D; a_{cmd} \cdot I_{current}τactual​&#x3D;acmd​⋅Icurrent​。<br>结果是：关节的实际加速度 α≈acmd\alpha \approx a_{cmd}α≈acmd​。</p>
+<p>含义: 驱动器在施加力之前，会自动“归一化”惯性。也就是说，它直接控制关节的加速度，而忽略关节后连接物体的质量或惯性。<br>物理原理: 物理引擎在内部计算时，会根据当前的惯性 III 自动调整施加的力。</p>
+<p>假设控制器输出的期望加速度为 $ a_{\text{cmd}} $。<br>引擎实际施加的力矩为 $ \tau_{\text{actual}} &#x3D; a_{\text{cmd}} \cdot I_{\text{current}} $，<br>其中 $ I_{\text{current}} $ 为当前关节的转动惯量。<br>因此，关节的实际角加速度近似等于期望加速度，即 $ \alpha \approx a_{\text{cmd}} $。</p>
 <p>特点:<br>非物理&#x2F;理想化: 现实中的电机无法直接输出“加速度”，这是一种仿真中的简化模型。<br>不受惯性影响: 无论机器人手臂是空载还是拿着重物，同样的控制指令都会产生相同的运动轨迹。<br>易于调参: 相当于一个“理想的阻尼振荡器”。PID 参数（刚度 KpK_pKp​ 和阻尼 KdK_dKd​）的效果不会因为机器人构型的改变（惯性矩阵的变化）而改变。<br>用途: 适用于调试算法逻辑、或者不需要高保真动力学的场景，因为它能提供非常稳定的控制表现。</p>
 <p>总结</p>
 <p>如果你在做 Sim-to-Real 或者需要高保真的动力学仿真，请保持默认值 “force”。<br>如果你发现 PID 参数很难调，或者机器人因为惯性变化（如手臂伸展&#x2F;收缩）导致控制极其不稳定，且你不在乎物理真实性，可以尝试改为 “acceleration”。</p>
