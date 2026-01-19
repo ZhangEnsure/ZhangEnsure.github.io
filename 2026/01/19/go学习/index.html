@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>go学习 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="全局变量var c, m []interface{}必须要使用var声明。  使用方式：var name Type 或 var name &#x3D; value；不能用 var name Type{}（这是局部变量的短声明风格） []interface{}：Go 的”万能容器”，可存放任意类型，等价于[]any 使用示例：  12345678&#x2F;&#x2F; 方案1：用 &#x3D; 赋值（推荐！）var define_1 &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go学习">
+<meta property="og:url" content="http://example.com/2026/01/19/go%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="全局变量var c, m []interface{}必须要使用var声明。  使用方式：var name Type 或 var name &#x3D; value；不能用 var name Type{}（这是局部变量的短声明风格） []interface{}：Go 的”万能容器”，可存放任意类型，等价于[]any 使用示例：  12345678&#x2F;&#x2F; 方案1：用 &#x3D; 赋值（推荐！）var define_1 &#x3D;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-19T06:27:08.000Z">
+<meta property="article:modified_time" content="2026-01-19T07:16:47.348Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "go学习",
+  "url": "http://example.com/2026/01/19/go%E5%AD%A6%E4%B9%A0/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-01-19T06:27:08.000Z",
+  "dateModified": "2026-01-19T07:16:47.348Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/01/19/go%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'go学习',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">go学习</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">go学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-19T06:27:08.000Z" title="Created 2026-01-19 14:27:08">2026-01-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-19T07:16:47.348Z" title="Updated 2026-01-19 15:16:47">2026-01-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h2><p><code>var c, m []interface{}</code>必须要使用<code>var</code>声明。</p>
+<ul>
+<li>使用方式：<code>var name Type</code> 或 <code>var name = value</code>；不能用 var name Type{}（这是局部变量的短声明风格）</li>
+<li><code>[]interface{}</code>：Go 的”万能容器”，可存放任意类型，等价于<code>[]any</code></li>
+<li>使用示例：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方案1：用 = 赋值（推荐！）</span></span><br><span class="line"><span class="keyword">var</span> define_1 = []any&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方案2：先声明，后在 init/main 中初始化</span></span><br><span class="line"><span class="keyword">var</span> define_1 []any <span class="comment">// 零值初始化为 nil</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    define_1 = []any&#123;&#125; <span class="comment">// 运行时初始化</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>推荐使用方法 1，该方法不存在空指针！</li>
+</ul>
+<h2 id="any"><a href="#any" class="headerlink" title="[]any"></a>[]any</h2><ul>
+<li><code>[]any</code>是一个数据类型（不能单独作为值）</li>
+</ul>
+<p>any 是 Go 1.18+ 中 interface{} 的别名（完全等价）</p>
+<ul>
+<li>花括号 {} 创建结构体实例</li>
+</ul>
+<h2 id="切片字面量"><a href="#切片字面量" class="headerlink" title="切片字面量"></a>切片字面量</h2><ul>
+<li>切片字面量必须写成 []any{元素} 或 []any{}（空切片），即切片字面量必须包含 <code>{}</code></li>
+</ul>
+<p>使用示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b := []any&#123;&#125;        <span class="comment">// ✅ 空切片</span></span><br><span class="line">b := []any&#123;<span class="number">1</span>, <span class="string">&quot;two&quot;</span>&#125; <span class="comment">// ✅ 带元素的切片</span></span><br></pre></td></tr></table></figure>
+
+<p>语法规则：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>允许的语法</th>
+<th>禁止的语法</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局变量</td>
+<td><code>var x = []T{}</code></td>
+<td><code>var x []T{}</code></td>
+<td>语法规则限制</td>
+</tr>
+<tr>
+<td></td>
+<td><code>var x []T</code> (零值)</td>
+<td><code>x := []T{}</code></td>
+<td><code>:=</code> 不能在全局使用</td>
+</tr>
+<tr>
+<td>局部变量</td>
+<td><code>x := []T{}</code></td>
+<td><code>var x []T{}</code></td>
+<td>局部声明不支持此语法</td>
+</tr>
+<tr>
+<td></td>
+<td><code>var x = []T{}</code></td>
+<td><code>x := []T</code></td>
+<td>缺少 <code>{}</code></td>
+</tr>
+<tr>
+<td>函数参数&#x2F;返回值</td>
+<td><code>func f(a []T)</code></td>
+<td><code>func f(a []T{})</code></td>
+<td><code>{}</code> 只用于字面量</td>
+</tr>
+</tbody></table>
+<p>诀窍：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">写切片，带花括号；</span><br><span class="line">无 &#123;&#125;，必报错；</span><br><span class="line">全局用=，局部用:=；</span><br><span class="line">混合类型用 any！”</span><br></pre></td></tr></table></figure>
+
+<h2 id="append-c-m…"><a href="#append-c-m…" class="headerlink" title="append(c, m…)"></a>append(c, m…)</h2><ul>
+<li>m…：展开操作符，把 m 切片拆成独立元素，加入到c中。</li>
+<li>append 之后不改变 c，返回一个新的对象</li>
+</ul>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确：全局变量零值初始化（nil 切片）</span></span><br><span class="line"><span class="keyword">var</span> zes []any</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确：全局变量显式初始化（推荐！）</span></span><br><span class="line"><span class="keyword">var</span> initializedGlobal = []any&#123;<span class="string">&quot;global_item&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 1. 处理 nil 切片（zes 是 nil）</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;zes (nil 切片):&quot;</span>, zes == <span class="literal">nil</span>) <span class="comment">// true</span></span><br><span class="line">	zes = []any&#123;&#125;</span><br><span class="line">	<span class="comment">// ✅ 安全：Go 允许对 nil 切片 append（但有风险！）</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;append 到 nil 切片:&quot;</span>, <span class="built_in">append</span>(zes, <span class="number">1</span>)) <span class="comment">// [1]</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2. 局部变量初始化</span></span><br><span class="line">	a := []any&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;        <span class="comment">// ✅ 带元素</span></span><br><span class="line">	b := []any&#123;&#125;               <span class="comment">// ✅ 空切片</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;b (空切片):&quot;</span>, b) <span class="comment">// []</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 3. interface&#123;&#125; 等价于 any</span></span><br><span class="line">	c := []<span class="keyword">interface</span>&#123;&#125;&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">	m := []<span class="keyword">interface</span>&#123;&#125;&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 4. 修复格式化字符串错误：</span></span><br><span class="line">	<span class="comment">//    %v 后不能跟逗号，必须用 Printf 系列</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;a 的值: %v, 类型: %T\n&quot;</span>, a, a) <span class="comment">// a 的值: [1 2 3], 类型: []interface &#123;&#125;</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;c 的值: %v\n&quot;</span>, c)            <span class="comment">// c 的值: [1 2 3]</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;m 长度: %d\n&quot;</span>, <span class="built_in">len</span>(m))       <span class="comment">// m 长度: 0</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;m 类型: %T\n&quot;</span>, m)            <span class="comment">// m 类型: []interface &#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/01/19/go%E5%AD%A6%E4%B9%A0/">http://example.com/2026/01/19/go%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/01/04/qmini%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" title="qmini部署代码分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">qmini部署代码分析</div></div><div class="info-2"><div class="info-item-1">一、qmini 网络输出内容分析1.1 固定配置1.1.1 网络输出维度（12维） 前2维：步态相位频率 (0.5~3.5 Hz) 后10维：关节位置增量速度 (-13.5~13.5 rad&#x2F;s)  1.1.2 控制流程 网络推理：输出12维数据，范围 [-1, 1]  输出转换 (rl_controller.cpp 第211-224行)：  将 [-1,1] 映射到实际物理量 后10维映射为位置增量速度 [-13.5, 13.5] rad&#x2F;s   增量累加 (rl_controller.cpp 第75-82行)： 1joint_act.segment(0, NUM_ACTUAT_JOINTS) += increment.segment(NUM_LEGS, NUM_ACTUAT_JOINTS) * _rl_time_step; 增量乘以时间步长后累加到 joint_act（关节目标位置）  发送电机命令 (rl_controller.cpp 第162-181行)： 12motor_command_tmp.q_target[i] = joint_act[...]...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">全局变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#any"><span class="toc-number">2.</span> <span class="toc-text">[]any</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E7%89%87%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="toc-number">3.</span> <span class="toc-text">切片字面量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#append-c-m%E2%80%A6"><span class="toc-number">4.</span> <span class="toc-text">append(c, m…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">完整代码</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/19/go%E5%AD%A6%E4%B9%A0/" title="go学习">go学习</a><time datetime="2026-01-19T06:27:08.000Z" title="Created 2026-01-19 14:27:08">2026-01-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/04/qmini%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" title="qmini部署代码分析">qmini部署代码分析</a><time datetime="2026-01-04T11:30:44.000Z" title="Created 2026-01-04 19:30:44">2026-01-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/24/Isaac-Lab%E5%8F%82%E6%95%B0%E5%88%86%E6%9E%90/" title="Isaac Lab参数分析">Isaac Lab参数分析</a><time datetime="2025-12-24T06:02:53.000Z" title="Created 2025-12-24 14:02:53">2025-12-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/21/%E5%9B%9B%E5%85%83%E6%95%B0%E5%88%86%E6%9E%90/" title="四元数分析">四元数分析</a><time datetime="2025-12-21T06:55:19.000Z" title="Created 2025-12-21 14:55:19">2025-12-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/21/tmux%E7%94%A8%E6%B3%95/" title="tmux用法">tmux用法</a><time datetime="2025-12-21T03:07:48.000Z" title="Created 2025-12-21 11:07:48">2025-12-21</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
