@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>docker命令 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="常用展示所有镜像 123456ubuntu@VM-0-6-ubuntu:~$ docker images                                                                                i Info →   U  In UseIMAGE                                       ID">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker命令">
+<meta property="og:url" content="http://example.com/2026/03/05/docker%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="常用展示所有镜像 123456ubuntu@VM-0-6-ubuntu:~$ docker images                                                                                i Info →   U  In UseIMAGE                                       ID">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-05T01:24:10.000Z">
+<meta property="article:modified_time" content="2026-03-05T06:29:16.903Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "docker命令",
+  "url": "http://example.com/2026/03/05/docker%E5%91%BD%E4%BB%A4/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-03-05T01:24:10.000Z",
+  "dateModified": "2026-03-05T06:29:16.903Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/03/05/docker%E5%91%BD%E4%BB%A4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'docker命令',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">docker命令</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">docker命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-05T01:24:10.000Z" title="Created 2026-03-05 09:24:10">2026-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-05T06:29:16.903Z" title="Updated 2026-03-05 14:29:16">2026-03-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="常用"><a href="#常用" class="headerlink" title="常用"></a>常用</h2><p>展示所有镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-6-ubuntu:~$ docker images</span><br><span class="line">                                                                                i Info →   U  In Use</span><br><span class="line">IMAGE                                       ID             DISK USAGE   CONTENT SIZE   EXTRA</span><br><span class="line">justlikemaki/openclaw-docker-cn-im:latest   0e4e76e48020       9.92GB         2.71GB        </span><br><span class="line">openclaw-custom:2026.03.04                  11929d3e0258         11GB         2.89GB    U   </span><br><span class="line">openclaw-custom:latest                      11929d3e0258         11GB         2.89GB    U </span><br></pre></td></tr></table></figure>
+
+<p>展示所有的容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-6-ubuntu:~$ docker ps -a</span><br><span class="line">CONTAINER ID   IMAGE                    COMMAND                  CREATED        STATUS                    PORTS     NAMES</span><br><span class="line">a8049b706a76   openclaw-custom:latest   <span class="string">&quot;/usr/local/bin/init…&quot;</span>   16 hours ago   Exited (0) 16 hours ago             boring_margulis</span><br></pre></td></tr></table></figure>
+
+<p>展示正在运行的容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-6-ubuntu:~$ docker ps</span><br><span class="line">CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</span><br></pre></td></tr></table></figure>
+
+<h2 id="📦-镜像管理"><a href="#📦-镜像管理" class="headerlink" title="📦 镜像管理"></a>📦 镜像管理</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker images</code></td>
+<td>查看本地所有镜像</td>
+</tr>
+<tr>
+<td><code>docker pull &lt;镜像名&gt;</code></td>
+<td>从仓库拉取镜像</td>
+</tr>
+<tr>
+<td><code>docker push &lt;镜像名&gt;</code></td>
+<td>推送镜像到仓库</td>
+</tr>
+<tr>
+<td><code>docker build -t &lt;名称&gt; .</code></td>
+<td>根据 Dockerfile 构建镜像</td>
+</tr>
+<tr>
+<td><code>docker tag &lt;源镜像&gt; &lt;目标镜像&gt;</code></td>
+<td>给镜像打标签（重命名）</td>
+</tr>
+<tr>
+<td><code>docker rmi &lt;镜像&gt;</code></td>
+<td>删除镜像</td>
+</tr>
+<tr>
+<td><code>docker image prune</code></td>
+<td>删除未使用的镜像（悬空镜像）</td>
+</tr>
+<tr>
+<td><code>docker image prune -a</code></td>
+<td>删除所有未被容器使用的镜像</td>
+</tr>
+</tbody></table>
+<h2 id="🐳-容器管理"><a href="#🐳-容器管理" class="headerlink" title="🐳 容器管理"></a>🐳 容器管理</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker rm &lt;容器&gt;</code></td>
+<td>删除已停止的容器</td>
+</tr>
+<tr>
+<td><code>docker rm -f &lt;容器&gt;</code></td>
+<td>强制删除容器（包括运行中的）</td>
+</tr>
+<tr>
+<td><code>docker restart &lt;容器&gt;</code></td>
+<td>重启容器</td>
+</tr>
+<tr>
+<td><code>docker rename &lt;旧名&gt; &lt;新名&gt;</code></td>
+<td>重命名容器</td>
+</tr>
+<tr>
+<td><code>docker container prune</code></td>
+<td>删除所有已停止的容器</td>
+</tr>
+</tbody></table>
+<h2 id="📊-查看信息"><a href="#📊-查看信息" class="headerlink" title="📊 查看信息"></a>📊 查看信息</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker inspect &lt;容器/镜像&gt;</code></td>
+<td>查看详细配置信息（JSON 格式）</td>
+</tr>
+<tr>
+<td><code>docker logs -f &lt;容器&gt;</code></td>
+<td>实时跟踪容器日志（类似 <code>tail -f</code>）</td>
+</tr>
+<tr>
+<td><code>docker logs --tail 100 &lt;容器&gt;</code></td>
+<td>查看最后 100 行日志</td>
+</tr>
+<tr>
+<td><code>docker stats</code></td>
+<td>实时查看所有容器的资源使用情况（CPU&#x2F;内存）</td>
+</tr>
+<tr>
+<td><code>docker top &lt;容器&gt;</code></td>
+<td>查看容器内运行的进程</td>
+</tr>
+<tr>
+<td><code>docker port &lt;容器&gt;</code></td>
+<td>查看容器端口映射</td>
+</tr>
+<tr>
+<td><code>docker diff &lt;容器&gt;</code></td>
+<td>查看容器文件系统的变化</td>
+</tr>
+</tbody></table>
+<h2 id="📁-文件操作"><a href="#📁-文件操作" class="headerlink" title="📁 文件操作"></a>📁 文件操作</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker cp &lt;容器&gt;:&lt;路径&gt; &lt;本地路径&gt;</code></td>
+<td>从容器复制文件到本地</td>
+</tr>
+<tr>
+<td><code>docker cp &lt;本地路径&gt; &lt;容器&gt;:&lt;路径&gt;</code></td>
+<td>从本地复制文件到容器</td>
+</tr>
+</tbody></table>
+<h2 id="💾-数据卷管理"><a href="#💾-数据卷管理" class="headerlink" title="💾 数据卷管理"></a>💾 数据卷管理</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker volume ls</code></td>
+<td>查看所有数据卷</td>
+</tr>
+<tr>
+<td><code>docker volume create &lt;名称&gt;</code></td>
+<td>创建数据卷</td>
+</tr>
+<tr>
+<td><code>docker volume rm &lt;名称&gt;</code></td>
+<td>删除数据卷</td>
+</tr>
+<tr>
+<td><code>docker volume prune</code></td>
+<td>删除未使用的数据卷</td>
+</tr>
+<tr>
+<td><code>docker volume inspect &lt;名称&gt;</code></td>
+<td>查看数据卷详情</td>
+</tr>
+</tbody></table>
+<h2 id="🌐-网络管理"><a href="#🌐-网络管理" class="headerlink" title="🌐 网络管理"></a>🌐 网络管理</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker network ls</code></td>
+<td>查看所有网络</td>
+</tr>
+<tr>
+<td><code>docker network create &lt;名称&gt;</code></td>
+<td>创建网络</td>
+</tr>
+<tr>
+<td><code>docker network rm &lt;名称&gt;</code></td>
+<td>删除网络</td>
+</tr>
+<tr>
+<td><code>docker network connect &lt;网络&gt; &lt;容器&gt;</code></td>
+<td>将容器连接到网络</td>
+</tr>
+<tr>
+<td><code>docker network disconnect &lt;网络&gt; &lt;容器&gt;</code></td>
+<td>将容器从网络断开</td>
+</tr>
+</tbody></table>
+<h2 id="🧹-清理命令"><a href="#🧹-清理命令" class="headerlink" title="🧹 清理命令"></a>🧹 清理命令</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker system df</code></td>
+<td>查看 Docker 磁盘使用情况</td>
+</tr>
+<tr>
+<td><code>docker system prune</code></td>
+<td>清理所有未使用的资源（容器、网络、镜像）</td>
+</tr>
+<tr>
+<td><code>docker system prune -a --volumes</code></td>
+<td><strong>深度清理</strong>：包括所有未使用镜像和数据卷</td>
+</tr>
+</tbody></table>
+<h2 id="🔐-登录相关"><a href="#🔐-登录相关" class="headerlink" title="🔐 登录相关"></a>🔐 登录相关</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker login</code></td>
+<td>登录 Docker Hub</td>
+</tr>
+<tr>
+<td><code>docker login &lt;仓库地址&gt;</code></td>
+<td>登录私有仓库（如腾讯云 TCR）</td>
+</tr>
+<tr>
+<td><code>docker logout</code></td>
+<td>退出登录</td>
+</tr>
+</tbody></table>
+<h2 id="📝-常用组合示例"><a href="#📝-常用组合示例" class="headerlink" title="📝 常用组合示例"></a>📝 常用组合示例</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 停止并删除所有容器</span></span><br><span class="line">docker stop $(docker ps -aq) &amp;&amp; docker <span class="built_in">rm</span> $(docker ps -aq)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除所有 &lt;none&gt; 标签的镜像</span></span><br><span class="line">docker rmi $(docker images -f <span class="string">&quot;dangling=true&quot;</span> -q)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看某个镜像的构建历史</span></span><br><span class="line">docker <span class="built_in">history</span> &lt;镜像名&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导出镜像为文件（离线传输用）</span></span><br><span class="line">docker save -o openclaw.tar openclaw-custom:2026.03.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从文件导入镜像</span></span><br><span class="line">docker load -i openclaw.tar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导出容器为镜像</span></span><br><span class="line">docker commit &lt;容器&gt; &lt;新镜像名&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="💡-实用小技巧"><a href="#💡-实用小技巧" class="headerlink" title="💡 实用小技巧"></a>💡 实用小技巧</h2><table>
+<thead>
+<tr>
+<th>技巧</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker ps -q</code></td>
+<td>只输出容器 ID（便于脚本处理）</td>
+</tr>
+<tr>
+<td><code>docker images -q</code></td>
+<td>只输出镜像 ID</td>
+</tr>
+<tr>
+<td><code>--name &lt;名称&gt;</code></td>
+<td>给容器指定名称，便于管理</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td>后台运行容器（detach 模式）</td>
+</tr>
+<tr>
+<td><code>--restart=always</code></td>
+<td>容器自动重启（开机自启）</td>
+</tr>
+<tr>
+<td><code>--restart=unless-stopped</code></td>
+<td>除非手动停止，否则自动重启</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>针对您的 OpenClaw 项目</strong>，最常用的可能是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 OpenClaw 容器日志</span></span><br><span class="line">docker logs -f openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器调试</span></span><br><span class="line">docker <span class="built_in">exec</span> -it openclaw bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器资源占用</span></span><br><span class="line">docker stats openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从容器中复制配置文件出来</span></span><br><span class="line">docker <span class="built_in">cp</span> openclaw:/home/node/.openclaw ./backup-openclaw</span><br></pre></td></tr></table></figure>
+
+<p>openClaw 项目容器创建并启动命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行容器</span></span><br><span class="line">docker run --<span class="built_in">rm</span> -it  \</span><br><span class="line"> -p 18889:18789  \</span><br><span class="line"> -v /tmp/openclaw-test:/home/node/.openclaw   \</span><br><span class="line"> -e OPENCLAW_GATEWAY_BIND=lan   \</span><br><span class="line">  openclaw-custom:latest</span><br></pre></td></tr></table></figure>
+
+<p>docker run -it  <br> -p 18889:18789 8888:8888 <br> -v &#x2F;home&#x2F;ubuntu&#x2F;docker_config&#x2F;test1:&#x2F;root&#x2F;.openclaw   <br>  openclaw-custom:latest-fix bash</p>
+<p>命令解析：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker run</code></td>
+<td>Docker 的基础命令，用于创建并启动一个新容器</td>
+</tr>
+<tr>
+<td><code>--rm</code></td>
+<td>容器退出后自动删除。不加这个参数，容器停止后仍会保留在系统中</td>
+</tr>
+<tr>
+<td><code>-it</code></td>
+<td>两个参数的组合：<code>-i</code>（interactive）保持标准输入开启，<code>-t</code>（tty）分配一个终端，组合起来让你能看到容器的输出并可以用 Ctrl+C 停止</td>
+</tr>
+<tr>
+<td><code>-p 18789:18789</code></td>
+<td>端口映射：<code>宿主机端口:容器端口</code>，把容器内的 18789 端口映射到宿主机的 18789 端口，这样你就能通过 <code>http://localhost:18789</code> 访问容器内的服务</td>
+</tr>
+<tr>
+<td><code>-v /tmp/openclaw-test:/home/node/.openclaw</code></td>
+<td>卷挂载：<code>宿主机目录:容器目录</code>，把宿主机的 <code>/tmp/openclaw-test</code> 目录挂载到容器内的 <code>/home/node/.openclaw</code>，容器内对这个目录的读写会直接反映到宿主机目录</td>
+</tr>
+<tr>
+<td><code>-e OPENCLAW_GATEWAY_BIND=lan</code></td>
+<td>环境变量：在容器内设置环境变量 <code>OPENCLAW_GATEWAY_BIND=lan</code>，让服务监听所有网络接口（<code>0.0.0.0</code>）而不只是 localhost</td>
+</tr>
+<tr>
+<td><code>openclaw-custom:latest</code></td>
+<td>要运行的镜像名称:标签</td>
+</tr>
+</tbody></table>
+<p><strong>参数不添加会怎么样？</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>为什么需要？</th>
+<th>不加会怎样？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--rm</code></td>
+<td>自动清理临时容器，避免磁盘空间被无用容器占用</td>
+<td>容器停止后仍保留在系统中，需手动执行 <code>docker rm</code> 清理，长期积累会占用大量磁盘空间</td>
+</tr>
+<tr>
+<td><code>-it</code></td>
+<td>提供交互式终端，便于实时查看日志输出、调试问题、用 <code>Ctrl+C</code> 优雅停止</td>
+<td>容器在后台静默运行，看不到输出日志，无法通过 <code>Ctrl+C</code> 中断，排查问题困难</td>
+</tr>
+<tr>
+<td><code>-p 18789:18789</code></td>
+<td>将容器内服务端口映射到宿主机，使外部能够访问容器提供的服务</td>
+<td>服务仅在容器内部网络可达，宿主机及外部无法通过 <code>http://localhost:18789</code> 访问</td>
+</tr>
+<tr>
+<td><code>-v /tmp/openclaw-test:/home/node/.openclaw</code></td>
+<td>实现数据持久化，配置&#x2F;日志&#x2F;结果等数据保存在宿主机，容器重建后数据不丢失</td>
+<td>数据写入容器层，容器被删除后数据永久丢失，且难以从宿主机直接编辑配置文件</td>
+</tr>
+<tr>
+<td><code>-e OPENCLAW_GATEWAY_BIND=lan</code></td>
+<td>让服务监听 <code>0.0.0.0</code>（所有网络接口），支持通过宿主机 IP 或端口映射访问</td>
+<td>服务默认只监听 <code>127.0.0.1</code>，即使有 <code>-p</code> 映射，宿主机也可能无法访问容器内服务</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>🔍 <strong>小结</strong>：这些参数共同确保了容器的 <strong>可访问性</strong>、<strong>可调试性</strong>、<strong>数据持久性</strong> 和 <strong>环境整洁性</strong>。根据实际场景可灵活调整，但开发和测试阶段建议保留以上配置。****</p>
+</blockquote>
+<h2 id="V-挂载"><a href="#V-挂载" class="headerlink" title="-V 挂载"></a>-V 挂载</h2><ol>
+<li>启动时：宿主机的内容“遮蔽”容器内容<br>当容器启动并挂载 -v &#x2F;tmp&#x2F;openclaw-test:&#x2F;home&#x2F;node&#x2F;.openclaw 时：</li>
+</ol>
+<ul>
+<li>现象：容器内的 &#x2F;home&#x2F;node&#x2F;.openclaw 目录会立即显示宿主机 &#x2F;tmp&#x2F;openclaw-test 里的文件。</li>
+<li>本质：容器镜像里原本在这个路径下的文件会被临时隐藏（不是删除），容器此时只能看到宿主机目录里的内容。</li>
+</ul>
+<ol start="2">
+<li>运行时：双向实时同步<br>容器运行期间：</li>
+</ol>
+<ul>
+<li>宿主机修改 → 容器内立即可见。</li>
+<li>容器内修改 → 宿主机目录立即保存。</li>
+<li>你的理解：“宿主机修改，容器内随之变化” → 正确（其实是双向的，容器改宿主机也会变）。</li>
+</ul>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>docker run</code></td>
+<td>创建并启动新容器</td>
+</tr>
+<tr>
+<td><code>docker start &lt;容器&gt;</code></td>
+<td>启动已存在的容器</td>
+</tr>
+<tr>
+<td><code>docker stop &lt;容器&gt;</code></td>
+<td>停止运行中的容器</td>
+</tr>
+<tr>
+<td><code>docker ps</code></td>
+<td>查看运行中的容器</td>
+</tr>
+<tr>
+<td><code>docker ps -a</code></td>
+<td>查看所有容器（包括已停止的）</td>
+</tr>
+<tr>
+<td><code>docker logs &lt;容器&gt;</code></td>
+<td>查看容器日志</td>
+</tr>
+<tr>
+<td><code>docker exec -it &lt;容器&gt; bash</code></td>
+<td>进入运行中的容器</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/03/05/docker%E5%91%BD%E4%BB%A4/">http://example.com/2026/03/05/docker%E5%91%BD%E4%BB%A4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/03/05/docker%E9%83%A8%E7%BD%B2openClaw/" title="docker部署openClaw"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">docker部署openClaw</div></div><div class="info-2"><div class="info-item-1">在 docker 容器内的配置文件目录在是：Config overwrite: /root/.openclaw/openclaw.json docker的 dockerfile 配置挂载目录有问题，现在的问题是.openclaw配置在：/home/node/.openclaw，实际上的容器内.openclaw配置路径是：/root/.openclaw 详细步骤 步骤 1：创建构建目录结构  12345678910111213141516171819202122# 创建构建目录mkdir -p /home/ubuntu/docker-buildcd /home/ubuntu/docker-build# 复制 OpenClaw 源码cp -r /home/ubuntu/openclaw/* .# 创建 openclaw-defaults 目录（存放默认配置）mkdir -p openclaw-defaults# 复制自定义插件cp -r /home/ubuntu/.openclaw/extensions openclaw-defaults/# 复制工作空间配置cp -r /home/...</div></div></div></a><a class="pagination-related" href="/2026/03/02/OpenAI-HTTP-API%E5%AF%B9%E6%AF%94%E9%A3%9E%E4%B9%A6%E6%8F%92%E4%BB%B6/" title="OpenAI HTTP API对比飞书插件"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">OpenAI HTTP API对比飞书插件</div></div><div class="info-2"><div class="info-item-1">我来详细分析这两种交互方式的差异。让我先查看相关源码：让我继续查看飞书插件中更多的核心处理逻辑：现在让我查看飞书如何处理消息并调用 Agent：让我继续查看飞书消息处理的核心部分，特别是如何调用 Agent：现在让我继续查看飞书如何触发 Agent 调用：现在我有了完整的信息，可以为你做一个详细的对比了：  OpenAI HTTP API vs 飞书渠道 功能详细对比一、整体架构对比123456789101112131415161718┌─────────────────────────────────────────────────────────────────────────────┐│                          OpenAI HTTP API (openai-http.ts)                    │├─────────────────────────────────────────────────────────────────────────────┤│  PC App / IDE ────HTTP POST───▶ Gatew...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">常用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%A6-%E9%95%9C%E5%83%8F%E7%AE%A1%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">📦 镜像管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%90%B3-%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">🐳 容器管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8A-%E6%9F%A5%E7%9C%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">4.</span> <span class="toc-text">📊 查看信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%81-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">📁 文件操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%BE-%E6%95%B0%E6%8D%AE%E5%8D%B7%E7%AE%A1%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">💾 数据卷管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8C%90-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">🌐 网络管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%B9-%E6%B8%85%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-number">8.</span> <span class="toc-text">🧹 清理命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%90-%E7%99%BB%E5%BD%95%E7%9B%B8%E5%85%B3"><span class="toc-number">9.</span> <span class="toc-text">🔐 登录相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%9D-%E5%B8%B8%E7%94%A8%E7%BB%84%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">10.</span> <span class="toc-text">📝 常用组合示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">11.</span> <span class="toc-text">💡 实用小技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V-%E6%8C%82%E8%BD%BD"><span class="toc-number">12.</span> <span class="toc-text">-V 挂载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">13.</span> <span class="toc-text">补充</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/05/openClaw/" title="openClaw">openClaw</a><time datetime="2026-03-05T01:35:38.000Z" title="Created 2026-03-05 09:35:38">2026-03-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/05/docker%E9%83%A8%E7%BD%B2openClaw/" title="docker部署openClaw">docker部署openClaw</a><time datetime="2026-03-05T01:34:13.000Z" title="Created 2026-03-05 09:34:13">2026-03-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/05/docker%E5%91%BD%E4%BB%A4/" title="docker命令">docker命令</a><time datetime="2026-03-05T01:24:10.000Z" title="Created 2026-03-05 09:24:10">2026-03-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/02/OpenAI-HTTP-API%E5%AF%B9%E6%AF%94%E9%A3%9E%E4%B9%A6%E6%8F%92%E4%BB%B6/" title="OpenAI HTTP API对比飞书插件">OpenAI HTTP API对比飞书插件</a><time datetime="2026-03-02T13:18:57.000Z" title="Created 2026-03-02 21:18:57">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/02/IM-%E5%88%A9%E7%94%A8-V1-chat-completions-%E7%BB%99-openClaw-%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF/" title="IM 利用 /V1/chat/completions 给 openClaw 发送消息">IM 利用 /V1/chat/completions 给 openClaw 发送消息</a><time datetime="2026-03-02T13:08:56.000Z" title="Created 2026-03-02 21:08:56">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
