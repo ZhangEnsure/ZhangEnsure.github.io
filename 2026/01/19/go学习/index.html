@@ -7,7 +7,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2026-01-19T06:27:08.000Z">
-<meta property="article:modified_time" content="2026-01-21T08:32:17.030Z">
+<meta property="article:modified_time" content="2026-03-29T09:30:03.027Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
@@ -17,7 +17,7 @@
   "url": "http://example.com/2026/01/19/go%E5%AD%A6%E4%B9%A0/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2026-01-19T06:27:08.000Z",
-  "dateModified": "2026-01-21T08:32:17.030Z",
+  "dateModified": "2026-03-29T09:30:03.027Z",
   "author": [
     {
       "@type": "Person",
@@ -158,7 +158,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">go学习</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">go学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-19T06:27:08.000Z" title="Created 2026-01-19 14:27:08">2026-01-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-21T08:32:17.030Z" title="Updated 2026-01-21 16:32:17">2026-01-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h2><p><code>var c, m []interface{}</code>必须要使用<code>var</code>声明。</p>
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">go学习</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">go学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-19T06:27:08.000Z" title="Created 2026-01-19 14:27:08">2026-01-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-29T09:30:03.027Z" title="Updated 2026-03-29 17:30:03">2026-03-29</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h2><p><code>var c, m []interface{}</code>必须要使用<code>var</code>声明。</p>
 <ul>
 <li>使用方式：<code>var name Type</code> 或 <code>var name = value</code>；不能用 var name Type{}（这是局部变量的短声明风格）</li>
 <li><code>[]interface{}</code>：Go 的”万能容器”，可存放任意类型，等价于<code>[]any</code></li>
@@ -177,7 +177,16 @@
 </ul>
 <h2 id="切片字面量"><a href="#切片字面量" class="headerlink" title="切片字面量"></a>切片字面量</h2><ul>
 <li>切片字面量必须写成 []any{元素} 或 []any{}（空切片），即切片字面量必须包含 <code>{}</code></li>
+<li>可以使用切片自变量<code>{}</code>的数据类型包括：<ul>
+<li>切片</li>
+<li>数组</li>
+<li>Map</li>
+<li>结构体</li>
 </ul>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 切片</span></span><br><span class="line">s := []<span class="type">int</span>&#123;&#125;</span><br><span class="line">s := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数组</span></span><br><span class="line">arr := [<span class="number">3</span>]<span class="type">int</span>&#123;&#125;</span><br><span class="line">arr := [<span class="number">3</span>]<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Map</span></span><br><span class="line">m := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>&#123;&#125;</span><br><span class="line">m := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>&#123;<span class="string">&quot;a&quot;</span>: <span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结构体</span></span><br><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="type">string</span></span><br><span class="line">    Age  <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line">p := Person&#123;&#125;</span><br><span class="line">p := Person&#123;Name: <span class="string">&quot;张三&quot;</span>, Age: <span class="number">20</span>&#125;</span><br></pre></td></tr></table></figure>
+
 <p>使用示例：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b := []any&#123;&#125;        <span class="comment">// ✅ 空切片</span></span><br><span class="line">b := []any&#123;<span class="number">1</span>, <span class="string">&quot;two&quot;</span>&#125; <span class="comment">// ✅ 带元素的切片</span></span><br></pre></td></tr></table></figure>
 
@@ -300,6 +309,9 @@
 <td><code>var param dto.CreateProjectRequest</code> → 所有字段为零值</td>
 </tr>
 </tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var res int</span><br><span class="line">var arr []int</span><br></pre></td></tr></table></figure>
+
+
 <h2 id="append-c-m…"><a href="#append-c-m…" class="headerlink" title="append(c, m…)"></a>append(c, m…)</h2><ul>
 <li>m…：展开操作符，把 m 切片拆成独立元素，加入到c中。</li>
 <li>append 之后不改变 c，返回一个新的对象</li>
