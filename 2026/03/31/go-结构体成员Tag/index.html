@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>go-结构体成员Tag | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="《Go 程序设计语言》4.5 JSON — 结构体成员 Tag1. Tag 是什么？Tag（标签） 是附加在结构体字段上的元信息字符串，用反引号 &#96; 包裹： 123456type Movie struct &#123;    Title  string    Year   int  &#96;json:&quot;released&quot;&#96;    Color  bool &#96;json:&quot;col">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go-结构体成员Tag">
+<meta property="og:url" content="http://example.com/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="《Go 程序设计语言》4.5 JSON — 结构体成员 Tag1. Tag 是什么？Tag（标签） 是附加在结构体字段上的元信息字符串，用反引号 &#96; 包裹： 123456type Movie struct &#123;    Title  string    Year   int  &#96;json:&quot;released&quot;&#96;    Color  bool &#96;json:&quot;col">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-31T07:25:00.000Z">
+<meta property="article:modified_time" content="2026-03-31T07:25:57.487Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "go-结构体成员Tag",
+  "url": "http://example.com/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-03-31T07:25:00.000Z",
+  "dateModified": "2026-03-31T07:25:57.487Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'go-结构体成员Tag',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">go-结构体成员Tag</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">go-结构体成员Tag</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-31T07:25:00.000Z" title="Created 2026-03-31 15:25:00">2026-03-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-31T07:25:57.487Z" title="Updated 2026-03-31 15:25:57">2026-03-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="《Go-程序设计语言》4-5-JSON-—-结构体成员-Tag"><a href="#《Go-程序设计语言》4-5-JSON-—-结构体成员-Tag" class="headerlink" title="《Go 程序设计语言》4.5 JSON — 结构体成员 Tag"></a>《Go 程序设计语言》4.5 JSON — 结构体成员 Tag</h1><h2 id="1-Tag-是什么？"><a href="#1-Tag-是什么？" class="headerlink" title="1. Tag 是什么？"></a>1. Tag 是什么？</h2><p><strong>Tag（标签）</strong> 是附加在结构体字段上的<strong>元信息字符串</strong>，用反引号 <code>`</code> 包裹：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Movie <span class="keyword">struct</span> &#123;</span><br><span class="line">    Title  <span class="type">string</span></span><br><span class="line">    Year   <span class="type">int</span>  <span class="string">`json:&quot;released&quot;`</span></span><br><span class="line">    Color  <span class="type">bool</span> <span class="string">`json:&quot;color,omitempty&quot;`</span></span><br><span class="line">    Actors []<span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 Tag <strong>不影响 Go 代码的逻辑</strong>，它是给 <code>encoding/json</code> 等包读取的”标注”，用来控制<strong>序列化&#x2F;反序列化</strong>的行为。</p>
+</blockquote>
+<hr>
+<h2 id="2-Tag-的语法"><a href="#2-Tag-的语法" class="headerlink" title="2. Tag 的语法"></a>2. Tag 的语法</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`key:&quot;value&quot; key2:&quot;value2&quot;`</span><br></pre></td></tr></table></figure>
+
+<p>以 JSON 为例，通用格式为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`json:&quot;字段名,选项&quot;`</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">写法</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>json:&quot;released&quot;</code></td>
+<td align="left">JSON 字段名为 <code>released</code></td>
+</tr>
+<tr>
+<td align="left"><code>json:&quot;color,omitempty&quot;</code></td>
+<td align="left">字段名 <code>color</code>，<strong>零值时省略</strong></td>
+</tr>
+<tr>
+<td align="left"><code>json:&quot;-&quot;</code></td>
+<td align="left"><strong>完全忽略</strong>该字段，不参与 JSON 编解码</td>
+</tr>
+<tr>
+<td align="left"><code>json:&quot;,omitempty&quot;</code></td>
+<td align="left">字段名用默认（Go 字段名），<strong>零值时省略</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-实际效果演示"><a href="#3-实际效果演示" class="headerlink" title="3. 实际效果演示"></a>3. 实际效果演示</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Movie <span class="keyword">struct</span> &#123;</span><br><span class="line">    Title  <span class="type">string</span></span><br><span class="line">    Year   <span class="type">int</span>  <span class="string">`json:&quot;released&quot;`</span></span><br><span class="line">    Color  <span class="type">bool</span> <span class="string">`json:&quot;color,omitempty&quot;`</span></span><br><span class="line">    Actors []<span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">m := Movie&#123;</span><br><span class="line">    Title:  <span class="string">&quot;Casablanca&quot;</span>,</span><br><span class="line">    Year:   <span class="number">1942</span>,</span><br><span class="line">    Color:  <span class="literal">false</span>,  <span class="comment">// ⚠️ 零值</span></span><br><span class="line">    Actors: []<span class="type">string</span>&#123;<span class="string">&quot;Humphrey Bogart&quot;</span>, <span class="string">&quot;Ingrid Bergman&quot;</span>&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data, _ := json.MarshalIndent(m, <span class="string">&quot;&quot;</span>, <span class="string">&quot;    &quot;</span>)</span><br><span class="line">fmt.Println(<span class="type">string</span>(data))</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出结果：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;Title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Casablanca&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;released&quot;</span><span class="punctuation">:</span> <span class="number">1942</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Actors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;Humphrey Bogart&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Ingrid Bergman&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="🔍-关键字段分析"><a href="#🔍-关键字段分析" class="headerlink" title="🔍 关键字段分析"></a>🔍 关键字段分析</h3><table>
+<thead>
+<tr>
+<th align="left">Go 字段</th>
+<th align="left">Tag</th>
+<th align="left">JSON 输出</th>
+<th align="left">原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Title</code></td>
+<td align="left">无</td>
+<td align="left"><code>&quot;Title&quot;</code></td>
+<td align="left">无 Tag，直接用 Go 字段名</td>
+</tr>
+<tr>
+<td align="left"><code>Year</code></td>
+<td align="left"><code>json:&quot;released&quot;</code></td>
+<td align="left"><code>&quot;released&quot;</code></td>
+<td align="left">Tag 指定了映射名称</td>
+</tr>
+<tr>
+<td align="left"><code>Color</code></td>
+<td align="left"><code>json:&quot;color,omitempty&quot;</code></td>
+<td align="left">❌ 未出现</td>
+<td align="left">值为 <code>false</code>（零值）+ <code>omitempty</code> → 被省略</td>
+</tr>
+<tr>
+<td align="left"><code>Actors</code></td>
+<td align="left">无</td>
+<td align="left"><code>&quot;Actors&quot;</code></td>
+<td align="left">非零值，正常输出</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="4-omitempty-的零值规则"><a href="#4-omitempty-的零值规则" class="headerlink" title="4. omitempty 的零值规则"></a>4. <code>omitempty</code> 的零值规则</h2><p><code>omitempty</code> 选项会在字段为<strong>零值</strong>时省略该字段：</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">零值</th>
+<th align="left">是否被省略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>bool</code></td>
+<td align="left"><code>false</code></td>
+<td align="left">✅ 是</td>
+</tr>
+<tr>
+<td align="left"><code>int</code> &#x2F; <code>float</code></td>
+<td align="left"><code>0</code> &#x2F; <code>0.0</code></td>
+<td align="left">✅ 是</td>
+</tr>
+<tr>
+<td align="left"><code>string</code></td>
+<td align="left"><code>&quot;&quot;</code></td>
+<td align="left">✅ 是</td>
+</tr>
+<tr>
+<td align="left"><code>slice</code> &#x2F; <code>map</code> &#x2F; <code>pointer</code></td>
+<td align="left"><code>nil</code></td>
+<td align="left">✅ 是</td>
+</tr>
+<tr>
+<td align="left"><code>struct</code></td>
+<td align="left">所有字段为零值</td>
+<td align="left">✅ 是</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ 注意：空切片 <code>[]int{}</code> 不是 <code>nil</code>，<strong>不会</strong>被 <code>omitempty</code> 省略！</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Data <span class="keyword">struct</span> &#123;</span><br><span class="line">    Items []<span class="type">int</span> <span class="string">`json:&quot;items,omitempty&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 不会省略：空但非 nil</span></span><br><span class="line">d1 := Data&#123;Items: []<span class="type">int</span>&#123;&#125;&#125;      <span class="comment">// 输出: &#123;&quot;items&quot;:[]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 会省略：nil 切片</span></span><br><span class="line">d2 := Data&#123;Items: <span class="literal">nil</span>&#125;          <span class="comment">// 输出: &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-解码时-Tag-同样生效"><a href="#5-解码时-Tag-同样生效" class="headerlink" title="5. 解码时 Tag 同样生效"></a>5. 解码时 Tag 同样生效</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jsonStr := <span class="string">`&#123;&quot;released&quot;: 1942, &quot;Title&quot;: &quot;Casablanca&quot;&#125;`</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> m Movie</span><br><span class="line">json.Unmarshal([]<span class="type">byte</span>(jsonStr), &amp;m)</span><br><span class="line"></span><br><span class="line">fmt.Println(m.Year)    <span class="comment">// ✅ 1942 ← JSON 的 &quot;released&quot; 映射到 Go 的 Year 字段</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="🔹-解码时的匹配规则"><a href="#🔹-解码时的匹配规则" class="headerlink" title="🔹 解码时的匹配规则"></a>🔹 解码时的匹配规则</h3><ol>
+<li><strong>精确匹配 Tag</strong>（优先级最高）：<code>json:&quot;released&quot;</code> → 匹配 <code>Year</code></li>
+<li><strong>大小写不敏感匹配字段名</strong>：<code>&quot;title&quot;</code> → 匹配 <code>Title</code></li>
+<li><strong>完全匹配字段名</strong>：<code>&quot;Title&quot;</code> → 匹配 <code>Title</code></li>
+</ol>
+<blockquote>
+<p>💡 建议始终使用 Tag 明确指定映射关系，避免大小写歧义。</p>
+</blockquote>
+<hr>
+<h2 id="6-选择性解码"><a href="#6-选择性解码" class="headerlink" title="6. 选择性解码"></a>6. 选择性解码</h2><p>可以定义<strong>只包含部分字段</strong>的结构体，只解析关心的字段：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 只关心 Title 和 Year</span></span><br><span class="line"><span class="keyword">type</span> MovieTitle <span class="keyword">struct</span> &#123;</span><br><span class="line">    Title <span class="type">string</span></span><br><span class="line">    Year  <span class="type">int</span> <span class="string">`json:&quot;released&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> mt MovieTitle</span><br><span class="line">json.Unmarshal(data, &amp;mt)</span><br><span class="line"><span class="comment">// ✅ 其他字段（Color, Actors）被自动忽略，不会报错</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 这是处理大型 JSON 响应时的常用技巧，可提升性能并简化代码。</p>
+</blockquote>
+<hr>
+<h2 id="7-Tag-是通用机制，不只用于-JSON"><a href="#7-Tag-是通用机制，不只用于-JSON" class="headerlink" title="7. Tag 是通用机制，不只用于 JSON"></a>7. Tag 是通用机制，不只用于 JSON</h2><p>Tag 是 Go 的<strong>通用元数据机制</strong>，不同的包读取不同的 key：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name  <span class="type">string</span> <span class="string">`json:&quot;name&quot; xml:&quot;name&quot; db:&quot;user_name&quot;`</span></span><br><span class="line">    Email <span class="type">string</span> <span class="string">`json:&quot;email,omitempty&quot; validate:&quot;required,email&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">Tag Key</th>
+<th align="left">使用者</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>json</code></td>
+<td align="left"><code>encoding/json</code></td>
+<td align="left">JSON 序列化&#x2F;反序列化</td>
+</tr>
+<tr>
+<td align="left"><code>xml</code></td>
+<td align="left"><code>encoding/xml</code></td>
+<td align="left">XML 编解码</td>
+</tr>
+<tr>
+<td align="left"><code>db</code> &#x2F; <code>gorm</code></td>
+<td align="left">数据库 ORM（sqlx、GORM）</td>
+<td align="left">映射数据库列名</td>
+</tr>
+<tr>
+<td align="left"><code>validate</code></td>
+<td align="left">校验库（go-playground&#x2F;validator）</td>
+<td align="left">字段校验规则</td>
+</tr>
+<tr>
+<td align="left"><code>yaml</code></td>
+<td align="left">YAML 解析库</td>
+<td align="left">YAML 编解码</td>
+</tr>
+<tr>
+<td align="left"><code>form</code></td>
+<td align="left">Web 框架（Gin、Echo）</td>
+<td align="left">表单参数绑定</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>💡 一个字段可以同时拥有多个 Tag，服务于不同场景。</p>
+</blockquote>
+<hr>
+<h2 id="8-只有导出字段参与编解码"><a href="#8-只有导出字段参与编解码" class="headerlink" title="8. 只有导出字段参与编解码"></a>8. 只有导出字段参与编解码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name   <span class="type">string</span>   <span class="comment">// ✅ 大写开头，会出现在 JSON 中</span></span><br><span class="line">    age    <span class="type">int</span>      <span class="comment">// ❌ 小写开头，json 包看不到，会被忽略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">字段名</th>
+<th align="left">是否导出</th>
+<th align="left">是否参与 JSON 编解码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Name</code></td>
+<td align="left">✅ 是</td>
+<td align="left">✅ 是</td>
+</tr>
+<tr>
+<td align="left"><code>age</code></td>
+<td align="left">❌ 否</td>
+<td align="left">❌ 否（即使有 Tag 也无效）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ <strong>重要</strong>：<code>encoding/json</code> 等标准库<strong>只能访问导出字段</strong>（大写开头），私有字段会被静默忽略。</p>
+</blockquote>
+<hr>
+<h2 id="🔑-关键要点速记"><a href="#🔑-关键要点速记" class="headerlink" title="🔑 关键要点速记"></a>🔑 关键要点速记</h2><table>
+<thead>
+<tr>
+<th align="left">要点</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>本质</strong></td>
+<td align="left">结构体字段的元信息字符串，用反引号包裹</td>
+</tr>
+<tr>
+<td align="left"><strong>作用</strong></td>
+<td align="left">控制 JSON 字段名映射、零值省略等行为</td>
+</tr>
+<tr>
+<td align="left"><strong><code>json:&quot;name&quot;</code></strong></td>
+<td align="left">指定 JSON 字段名</td>
+</tr>
+<tr>
+<td align="left"><strong><code>omitempty</code></strong></td>
+<td align="left">零值时不输出该字段</td>
+</tr>
+<tr>
+<td align="left"><strong><code>json:&quot;-&quot;</code></strong></td>
+<td align="left">完全忽略该字段</td>
+</tr>
+<tr>
+<td align="left"><strong>解码匹配</strong></td>
+<td align="left">Tag 优先级最高，其次大小写不敏感匹配字段名</td>
+</tr>
+<tr>
+<td align="left"><strong>导出要求</strong></td>
+<td align="left">只有<strong>大写开头</strong>的字段才参与 JSON 编解码</td>
+</tr>
+<tr>
+<td align="left"><strong>通用机制</strong></td>
+<td align="left">不只用于 JSON，<code>xml</code>、<code>db</code>、<code>yaml</code>、<code>validate</code> 等包都用 Tag</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="🎯-实践建议"><a href="#🎯-实践建议" class="headerlink" title="🎯 实践建议"></a>🎯 实践建议</h2><h3 id="✅-始终为公共-API-结构体添加-Tag"><a href="#✅-始终为公共-API-结构体添加-Tag" class="headerlink" title="✅ 始终为公共 API 结构体添加 Tag"></a>✅ 始终为公共 API 结构体添加 Tag</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 不推荐：依赖默认字段名，易受重构影响</span></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    UserName <span class="type">string</span></span><br><span class="line">    EmailAddr <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 推荐：明确指定 JSON 字段名，稳定可靠</span></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    UserName <span class="type">string</span> <span class="string">`json:&quot;username&quot;`</span></span><br><span class="line">    EmailAddr <span class="type">string</span> <span class="string">`json:&quot;email&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✅-合理使用-omitempty-减少冗余"><a href="#✅-合理使用-omitempty-减少冗余" class="headerlink" title="✅ 合理使用 omitempty 减少冗余"></a>✅ 合理使用 <code>omitempty</code> 减少冗余</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> APIResponse <span class="keyword">struct</span> &#123;</span><br><span class="line">    Code    <span class="type">int</span>         <span class="string">`json:&quot;code&quot;`</span></span><br><span class="line">    Message <span class="type">string</span>      <span class="string">`json:&quot;message,omitempty&quot;`</span>  <span class="comment">// 可选</span></span><br><span class="line">    Data    <span class="keyword">interface</span>&#123;&#125; <span class="string">`json:&quot;data,omitempty&quot;`</span>     <span class="comment">// 可选</span></span><br><span class="line">    Error   <span class="type">string</span>      <span class="string">`json:&quot;error,omitempty&quot;`</span>    <span class="comment">// 可选</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✅-忽略敏感字段"><a href="#✅-忽略敏感字段" class="headerlink" title="✅ 忽略敏感字段"></a>✅ 忽略敏感字段</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    ID       <span class="type">uint</span>   <span class="string">`json:&quot;id&quot;`</span></span><br><span class="line">    Name     <span class="type">string</span> <span class="string">`json:&quot;name&quot;`</span></span><br><span class="line">    Password <span class="type">string</span> <span class="string">`json:&quot;-&quot;`</span>  <span class="comment">// ✅ 永不序列化到 JSON</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✅-数据库列名映射"><a href="#✅-数据库列名映射" class="headerlink" title="✅ 数据库列名映射"></a>✅ 数据库列名映射</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    ID    <span class="type">uint</span>   <span class="string">`json:&quot;id&quot; db:&quot;id&quot;`</span></span><br><span class="line">    Name  <span class="type">string</span> <span class="string">`json:&quot;name&quot; db:&quot;user_name&quot;`</span>  <span class="comment">// Go 字段 vs 数据库列</span></span><br><span class="line">    Email <span class="type">string</span> <span class="string">`json:&quot;email&quot; db:&quot;email_addr&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✅-校验规则集成"><a href="#✅-校验规则集成" class="headerlink" title="✅ 校验规则集成"></a>✅ 校验规则集成</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> RegisterReq <span class="keyword">struct</span> &#123;</span><br><span class="line">    Username <span class="type">string</span> <span class="string">`json:&quot;username&quot; validate:&quot;required,min=3,max=20&quot;`</span></span><br><span class="line">    Email    <span class="type">string</span> <span class="string">`json:&quot;email&quot; validate:&quot;required,email&quot;`</span></span><br><span class="line">    Password <span class="type">string</span> <span class="string">`json:&quot;password&quot; validate:&quot;required,min=8&quot; json:&quot;-&quot;`</span>  <span class="comment">// 不输出</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="🔧-调试技巧"><a href="#🔧-调试技巧" class="headerlink" title="🔧 调试技巧"></a>🔧 调试技巧</h2><h3 id="查看结构体的实际-Tag"><a href="#查看结构体的实际-Tag" class="headerlink" title="查看结构体的实际 Tag"></a>查看结构体的实际 Tag</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;reflect&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTags</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    t := reflect.TypeOf(v)</span><br><span class="line">    <span class="keyword">if</span> t.Kind() == reflect.Ptr &#123;</span><br><span class="line">        t = t.Elem()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; t.NumField(); i++ &#123;</span><br><span class="line">        field := t.Field(i)</span><br><span class="line">        fmt.Printf(<span class="string">&quot;%s: %s\n&quot;</span>, field.Name, field.Tag)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="验证-JSON-映射"><a href="#验证-JSON-映射" class="headerlink" title="验证 JSON 映射"></a>验证 JSON 映射</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速验证编解码是否符合预期</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">testJSON</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    data, err := json.Marshal(v)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="type">string</span>(data))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 反向验证</span></span><br><span class="line">    <span class="keyword">var</span> decoded <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">    json.Unmarshal(data, &amp;decoded)</span><br><span class="line">    fmt.Printf(<span class="string">&quot;Decoded: %+v\n&quot;</span>, decoded)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>📌 <strong>一句话总结</strong>：结构体 Tag 是 Go 中连接代码与外部数据格式的”桥梁”，理解其语法、零值规则和导出限制，是编写健壮 API 和数据交互层的关键。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/">http://example.com/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E6%80%BB%E7%BB%93/" title="go-结构体核心概念总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">go-结构体核心概念总结</div></div><div class="info-2"><div class="info-item-1">《Go 程序设计语言》4.4 结构体 核心概念总结1. 基本定义结构体（struct）是聚合数据类型，将零个或多个不同类型的值组合成一个实体： 1234567891011type Employee struct &#123;    ID        int    Name      string    Address   string    DoB       time.Time    Position  string    Salary    int    ManagerID int&#125;var dilbert Employee  🔹 相同类型成员可合并声明123type Point struct &#123;    X, Y int   // 等价于 X int; Y int&#125;   2. 成员访问与修改1234567891011// 点操作符访问dilbert.Name = &quot;Alice&quot;fmt.Println(dilbert.Salary)// 取成员地址（成员可寻址时）position := &amp;dilbert.Positio...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8AGo-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E3%80%8B4-5-JSON-%E2%80%94-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98-Tag"><span class="toc-number">1.</span> <span class="toc-text">《Go 程序设计语言》4.5 JSON — 结构体成员 Tag</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Tag-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. Tag 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Tag-%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">2. Tag 的语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%9E%E9%99%85%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA"><span class="toc-number">1.3.</span> <span class="toc-text">3. 实际效果演示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%8D-%E5%85%B3%E9%94%AE%E5%AD%97%E6%AE%B5%E5%88%86%E6%9E%90"><span class="toc-number">1.3.1.</span> <span class="toc-text">🔍 关键字段分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-omitempty-%E7%9A%84%E9%9B%B6%E5%80%BC%E8%A7%84%E5%88%99"><span class="toc-number">1.4.</span> <span class="toc-text">4. omitempty 的零值规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%A7%A3%E7%A0%81%E6%97%B6-Tag-%E5%90%8C%E6%A0%B7%E7%94%9F%E6%95%88"><span class="toc-number">1.5.</span> <span class="toc-text">5. 解码时 Tag 同样生效</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E8%A7%A3%E7%A0%81%E6%97%B6%E7%9A%84%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="toc-number">1.5.1.</span> <span class="toc-text">🔹 解码时的匹配规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%80%89%E6%8B%A9%E6%80%A7%E8%A7%A3%E7%A0%81"><span class="toc-number">1.6.</span> <span class="toc-text">6. 选择性解码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Tag-%E6%98%AF%E9%80%9A%E7%94%A8%E6%9C%BA%E5%88%B6%EF%BC%8C%E4%B8%8D%E5%8F%AA%E7%94%A8%E4%BA%8E-JSON"><span class="toc-number">1.7.</span> <span class="toc-text">7. Tag 是通用机制，不只用于 JSON</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%8F%AA%E6%9C%89%E5%AF%BC%E5%87%BA%E5%AD%97%E6%AE%B5%E5%8F%82%E4%B8%8E%E7%BC%96%E8%A7%A3%E7%A0%81"><span class="toc-number">1.8.</span> <span class="toc-text">8. 只有导出字段参与编解码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%91-%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9%E9%80%9F%E8%AE%B0"><span class="toc-number">1.9.</span> <span class="toc-text">🔑 关键要点速记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E5%AE%9E%E8%B7%B5%E5%BB%BA%E8%AE%AE"><span class="toc-number">1.10.</span> <span class="toc-text">🎯 实践建议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%A7%8B%E7%BB%88%E4%B8%BA%E5%85%AC%E5%85%B1-API-%E7%BB%93%E6%9E%84%E4%BD%93%E6%B7%BB%E5%8A%A0-Tag"><span class="toc-number">1.10.1.</span> <span class="toc-text">✅ 始终为公共 API 结构体添加 Tag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%90%88%E7%90%86%E4%BD%BF%E7%94%A8-omitempty-%E5%87%8F%E5%B0%91%E5%86%97%E4%BD%99"><span class="toc-number">1.10.2.</span> <span class="toc-text">✅ 合理使用 omitempty 减少冗余</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%BF%BD%E7%95%A5%E6%95%8F%E6%84%9F%E5%AD%97%E6%AE%B5"><span class="toc-number">1.10.3.</span> <span class="toc-text">✅ 忽略敏感字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%97%E5%90%8D%E6%98%A0%E5%B0%84"><span class="toc-number">1.10.4.</span> <span class="toc-text">✅ 数据库列名映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%A0%A1%E9%AA%8C%E8%A7%84%E5%88%99%E9%9B%86%E6%88%90"><span class="toc-number">1.10.5.</span> <span class="toc-text">✅ 校验规则集成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%A7-%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">1.11.</span> <span class="toc-text">🔧 调试技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E5%AE%9E%E9%99%85-Tag"><span class="toc-number">1.11.1.</span> <span class="toc-text">查看结构体的实际 Tag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81-JSON-%E6%98%A0%E5%B0%84"><span class="toc-number">1.11.2.</span> <span class="toc-text">验证 JSON 映射</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/" title="go-结构体成员Tag">go-结构体成员Tag</a><time datetime="2026-03-31T07:25:00.000Z" title="Created 2026-03-31 15:25:00">2026-03-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E6%80%BB%E7%BB%93/" title="go-结构体核心概念总结">go-结构体核心概念总结</a><time datetime="2026-03-31T07:03:32.000Z" title="Created 2026-03-31 15:03:32">2026-03-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E5%88%87%E7%89%87%E7%94%A8%E6%B3%95-%E5%88%87%E7%89%87%E5%A4%B4%E8%AF%A6%E8%A7%A3%EF%BC%882-2%EF%BC%89/" title="go-切片用法-切片头详解（2/2）">go-切片用法-切片头详解（2/2）</a><time datetime="2026-03-31T06:44:47.000Z" title="Created 2026-03-31 14:44:47">2026-03-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%8C%87%E9%92%88%E4%B8%8E%E8%BF%94%E5%9B%9E%E5%80%BC%E7%B1%BB%E5%9E%8B%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/" title="go-结构体指针与返回值类型知识点汇总">go-结构体指针与返回值类型知识点汇总</a><time datetime="2026-03-31T03:44:39.000Z" title="Created 2026-03-31 11:44:39">2026-03-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E5%88%A9%E7%94%A8map%E6%9E%84%E5%BB%BAset/" title="go-利用map构建set">go-利用map构建set</a><time datetime="2026-03-31T03:14:46.000Z" title="Created 2026-03-31 11:14:46">2026-03-31</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
