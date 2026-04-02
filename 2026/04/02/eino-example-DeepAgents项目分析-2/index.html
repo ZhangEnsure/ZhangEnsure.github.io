@@ -1,0 +1,480 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>eino-example-DeepAgents项目分析(2/) | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="DeepAgent 示例：Tool 定义体系详解 📁 项目路径：adk&#x2F;multiagent&#x2F;deep&#x2F;🎯 核心设计：两层工具分配 + 装饰器包装 + 子智能体委派   一、整体 Tool 架构本项目采用 两层 Tool 分配机制——主 Agent 和子 Agent 各自拥有不同的工具集： 123456789101112┌─ DeepAgent (主 Agent) ──────────────">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eino-example-DeepAgents项目分析(2&#x2F;)">
+<meta property="og:url" content="http://example.com/2026/04/02/eino-example-DeepAgents%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90-2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="DeepAgent 示例：Tool 定义体系详解 📁 项目路径：adk&#x2F;multiagent&#x2F;deep&#x2F;🎯 核心设计：两层工具分配 + 装饰器包装 + 子智能体委派   一、整体 Tool 架构本项目采用 两层 Tool 分配机制——主 Agent 和子 Agent 各自拥有不同的工具集： 123456789101112┌─ DeepAgent (主 Agent) ──────────────">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-02T02:43:22.000Z">
+<meta property="article:modified_time" content="2026-04-02T02:43:33.989Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "eino-example-DeepAgents项目分析(2/)",
+  "url": "http://example.com/2026/04/02/eino-example-DeepAgents%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90-2/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-04-02T02:43:22.000Z",
+  "dateModified": "2026-04-02T02:43:33.989Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/04/02/eino-example-DeepAgents%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90-2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'eino-example-DeepAgents项目分析(2/)',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">eino-example-DeepAgents项目分析(2/)</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">eino-example-DeepAgents项目分析(2/)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-02T02:43:22.000Z" title="Created 2026-04-02 10:43:22">2026-04-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-02T02:43:33.989Z" title="Updated 2026-04-02 10:43:33">2026-04-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="DeepAgent-示例：Tool-定义体系详解"><a href="#DeepAgent-示例：Tool-定义体系详解" class="headerlink" title="DeepAgent 示例：Tool 定义体系详解"></a>DeepAgent 示例：Tool 定义体系详解</h1><blockquote>
+<p>📁 项目路径：<code>adk/multiagent/deep/</code><br>🎯 核心设计：<strong>两层工具分配 + 装饰器包装 + 子智能体委派</strong></p>
+</blockquote>
+<hr>
+<h2 id="一、整体-Tool-架构"><a href="#一、整体-Tool-架构" class="headerlink" title="一、整体 Tool 架构"></a>一、整体 Tool 架构</h2><p>本项目采用 <strong>两层 Tool 分配机制</strong>——主 Agent 和子 Agent 各自拥有不同的工具集：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌─ DeepAgent (主 Agent) ───────────────────────────────┐</span><br><span class="line">│  工具：read_file, tree                   ← 只读能力  │</span><br><span class="line">│                                                       │</span><br><span class="line">│  子Agent：                                            │</span><br><span class="line">│  ┌─ CodeAgent ─────────────────────────────────────┐  │</span><br><span class="line">│  │  工具：bash, tree, edit_file, read_file,        │  │</span><br><span class="line">│  │        python_runner                   ← 读+写  │  │</span><br><span class="line">│  └─────────────────────────────────────────────────┘  │</span><br><span class="line">│  ┌─ WebSearchAgent ────────────────────────────────┐  │</span><br><span class="line">│  │  工具：duckduckgo_search               ← 搜索   │  │</span><br><span class="line">│  └─────────────────────────────────────────────────┘  │</span><br><span class="line">└───────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="🎨-设计意图"><a href="#🎨-设计意图" class="headerlink" title="🎨 设计意图"></a>🎨 设计意图</h3><table>
+<thead>
+<tr>
+<th align="left">角色</th>
+<th align="left">职责</th>
+<th align="left">工具权限</th>
+<th align="left">设计目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>主 Agent</strong></td>
+<td align="left">规划、协调、只读查看</td>
+<td align="left"><code>read_file</code>, <code>tree</code></td>
+<td align="left">专注”看”，避免意外修改</td>
+</tr>
+<tr>
+<td align="left"><strong>CodeAgent</strong></td>
+<td align="left">文件操作、代码执行</td>
+<td align="left"><code>bash</code>, <code>edit_file</code>, <code>python_runner</code> 等</td>
+<td align="left">专注”做”，承担写操作风险</td>
+</tr>
+<tr>
+<td align="left"><strong>WebSearchAgent</strong></td>
+<td align="left">信息检索</td>
+<td align="left"><code>duckduckgo_search</code></td>
+<td align="left">专注”查”，隔离外部依赖</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>💡 <strong>核心原则</strong>：主 Agent 只负责”看”（规划），子 Agent 才负责”做”（执行）——职责隔离，降低耦合。</p>
+</blockquote>
+<hr>
+<h2 id="二、Tool-的定义模式（三步法）"><a href="#二、Tool-的定义模式（三步法）" class="headerlink" title="二、Tool 的定义模式（三步法）"></a>二、Tool 的定义模式（三步法）</h2><p>每个 Tool 都遵循相同的 <strong>三步定义模式</strong>。以 <code>bash</code> 工具为例：</p>
+<h3 id="🔹-步骤-1：定义-ToolInfo（元信息）"><a href="#🔹-步骤-1：定义-ToolInfo（元信息）" class="headerlink" title="🔹 步骤 1：定义 ToolInfo（元信息）"></a>🔹 步骤 1：定义 ToolInfo（元信息）</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tools/bash.go</span></span><br><span class="line"><span class="keyword">var</span> bashToolInfo = &amp;schema.ToolInfo&#123;</span><br><span class="line">    Name: <span class="string">&quot;bash&quot;</span>,</span><br><span class="line">    Desc: <span class="string">`Run commands in a bash shell...`</span>,           <span class="comment">// 📝 描述给 LLM 看</span></span><br><span class="line">    ParamsOneOf: schema.NewParamsOneOfByParams(<span class="keyword">map</span>[<span class="type">string</span>]*schema.ParameterInfo&#123;</span><br><span class="line">        <span class="string">&quot;command&quot;</span>: &#123;</span><br><span class="line">            Type:     <span class="string">&quot;string&quot;</span>,</span><br><span class="line">            Desc:     <span class="string">&quot;The command to execute&quot;</span>,</span><br><span class="line">            Required: <span class="literal">true</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 <code>ToolInfo</code> 是 <strong>LLM 的”使用说明书”</strong>——LLM 根据 <code>Name</code>、<code>Desc</code>、参数 Schema 来决定<strong>是否调用</strong>以及<strong>如何调用</strong>。</p>
+</blockquote>
+<hr>
+<h3 id="🔹-步骤-2：实现-InvokableTool-接口"><a href="#🔹-步骤-2：实现-InvokableTool-接口" class="headerlink" title="🔹 步骤 2：实现 InvokableTool 接口"></a>🔹 步骤 2：实现 <code>InvokableTool</code> 接口</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> bashTool <span class="keyword">struct</span> &#123;</span><br><span class="line">    op commandline.Operator       <span class="comment">// 🔌 注入的底层执行引擎</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回元信息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *bashTool)</span></span> Info(_ context.Context) (*schema.ToolInfo, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bashToolInfo, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行逻辑</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *bashTool)</span></span> InvokableRun(ctx context.Context, argumentsInJSON <span class="type">string</span>, opts ...tool.Option) (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="comment">// 1️⃣ 解析 JSON 参数</span></span><br><span class="line">    input := &amp;shellInput&#123;&#125;</span><br><span class="line">    json.Unmarshal([]<span class="type">byte</span>(argumentsInJSON), input)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2️⃣ 通过 Operator 执行命令</span></span><br><span class="line">    cmd, err := o.op.RunCommand(ctx, []<span class="type">string</span>&#123;input.Command&#125;)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>, err</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3️⃣ 格式化返回结果</span></span><br><span class="line">    <span class="keyword">return</span> utils.FormatCommandOutput(cmd), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>接口契约：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">方法</th>
+<th align="left">签名</th>
+<th align="left">职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Info()</code></td>
+<td align="left"><code>(*schema.ToolInfo, error)</code></td>
+<td align="left">返回工具元信息，供 LLM 决策</td>
+</tr>
+<tr>
+<td align="left"><code>InvokableRun()</code></td>
+<td align="left"><code>(string, error)</code></td>
+<td align="left">执行实际逻辑，返回文本结果</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="🔹-步骤-3：用-WrapTool-包装"><a href="#🔹-步骤-3：用-WrapTool-包装" class="headerlink" title="🔹 步骤 3：用 WrapTool 包装"></a>🔹 步骤 3：用 <code>WrapTool</code> 包装</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注册工具时添加预处理/后处理</span></span><br><span class="line">tools.NewWrapTool(</span><br><span class="line">    tools.NewBashTool(operator),  <span class="comment">// 基础工具</span></span><br><span class="line">    preprocess,                    <span class="comment">// 预处理链</span></span><br><span class="line">    postprocess,                   <span class="comment">// 后处理链</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 包装器模式让工具具备<strong>可组合的增强能力</strong>，无需修改核心逻辑。</p>
+</blockquote>
+<hr>
+<h2 id="三、所有-Tool-一览"><a href="#三、所有-Tool-一览" class="headerlink" title="三、所有 Tool 一览"></a>三、所有 Tool 一览</h2><table>
+<thead>
+<tr>
+<th align="left">Tool</th>
+<th align="left">文件</th>
+<th align="left">输入参数</th>
+<th align="left">用途</th>
+<th align="left">所属 Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>bash</code></td>
+<td align="left"><code>bash.go</code></td>
+<td align="left"><code>command</code></td>
+<td align="left">执行 shell 命令</td>
+<td align="left">CodeAgent</td>
+</tr>
+<tr>
+<td align="left"><code>read_file</code></td>
+<td align="left"><code>read.go</code></td>
+<td align="left"><code>path</code>, <code>start_row</code>, <code>n_rows</code></td>
+<td align="left">按行读取文件</td>
+<td align="left">主Agent + CodeAgent</td>
+</tr>
+<tr>
+<td align="left"><code>edit_file</code></td>
+<td align="left"><code>edit.go</code></td>
+<td align="left"><code>path</code>, <code>content</code></td>
+<td align="left">创建&#x2F;覆盖文件</td>
+<td align="left">CodeAgent</td>
+</tr>
+<tr>
+<td align="left"><code>tree</code></td>
+<td align="left"><code>tree.go</code></td>
+<td align="left"><code>path</code></td>
+<td align="left">查看目录结构</td>
+<td align="left">主Agent + CodeAgent</td>
+</tr>
+<tr>
+<td align="left"><code>python_runner</code></td>
+<td align="left"><code>python_runner.go</code></td>
+<td align="left"><code>code</code></td>
+<td align="left">写 Python 并执行</td>
+<td align="left">CodeAgent</td>
+</tr>
+<tr>
+<td align="left"><code>image_reader</code></td>
+<td align="left"><code>read_image.go</code></td>
+<td align="left"><code>query</code>, <code>image_path</code></td>
+<td align="left">用视觉模型分析图片</td>
+<td align="left">（预留未使用）</td>
+</tr>
+<tr>
+<td align="left"><code>submit_result</code></td>
+<td align="left"><code>submit_result.go</code></td>
+<td align="left"><code>is_success</code>, <code>result</code>, <code>files</code></td>
+<td align="left">提交最终结果</td>
+<td align="left">主Agent（框架内置）</td>
+</tr>
+<tr>
+<td align="left"><code>create_plan</code></td>
+<td align="left"><code>generic/plan.go</code></td>
+<td align="left"><code>steps[]</code></td>
+<td align="left">生成执行计划</td>
+<td align="left">主Agent（框架内置）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="四、WrapTool-包装机制（核心设计）"><a href="#四、WrapTool-包装机制（核心设计）" class="headerlink" title="四、WrapTool 包装机制（核心设计）"></a>四、WrapTool 包装机制（核心设计）</h2><h3 id="🔹-处理流程"><a href="#🔹-处理流程" class="headerlink" title="🔹 处理流程"></a>🔹 处理流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">LLM 生成的 JSON 参数</span><br><span class="line">    │</span><br><span class="line">    ▼ ── 预处理 (Preprocess) ──</span><br><span class="line">    │   ToolRequestRepairJSON:</span><br><span class="line">    │   • 去掉 &lt;|FunctionCallBegin|&gt; 等模型格式残留</span><br><span class="line">    │   • jsonrepair 自动修复损坏的 JSON</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">    实际 Tool 执行 (InvokableRun)</span><br><span class="line">    │</span><br><span class="line">    ▼ ── 后处理 (Postprocess) ──</span><br><span class="line">    │   FilePostProcess:</span><br><span class="line">    │   • 解析 runResult 结构</span><br><span class="line">    │   • 提取 stdout / stderr / fileChange</span><br><span class="line">    │   • 格式化为简洁文本返回给 LLM</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">LLM 收到的工具结果</span><br></pre></td></tr></table></figure>
+
+<h3 id="🔹-包装器实现"><a href="#🔹-包装器实现" class="headerlink" title="🔹 包装器实现"></a>🔹 包装器实现</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tools/wrap.go</span></span><br><span class="line"><span class="keyword">type</span> wrapTool <span class="keyword">struct</span> &#123;</span><br><span class="line">    baseTool    tool.InvokableTool</span><br><span class="line">    preprocess  []ToolRequestPreprocess      <span class="comment">// 请求预处理链</span></span><br><span class="line">    postprocess []ToolResponsePostprocess    <span class="comment">// 响应后处理链</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *wrapTool)</span></span> InvokableRun(ctx context.Context, args <span class="type">string</span>, opts ...tool.Option) (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">    <span class="comment">// 🔁 依次执行预处理</span></span><br><span class="line">    <span class="keyword">for</span> _, pre := <span class="keyword">range</span> w.preprocess &#123;</span><br><span class="line">        args, _ = pre(ctx, w.baseTool, args)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ⚙️ 执行实际工具</span></span><br><span class="line">    resp, err := w.baseTool.InvokableRun(ctx, args, opts...)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>, err</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 🔁 依次执行后处理</span></span><br><span class="line">    <span class="keyword">for</span> _, post := <span class="keyword">range</span> w.postprocess &#123;</span><br><span class="line">        resp, _ = post(ctx, w.baseTool, resp, args)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> resp, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="🔹-各-Tool-的包装配置"><a href="#🔹-各-Tool-的包装配置" class="headerlink" title="🔹 各 Tool 的包装配置"></a>🔹 各 Tool 的包装配置</h3><table>
+<thead>
+<tr>
+<th align="left">Tool</th>
+<th align="left">预处理</th>
+<th align="left">后处理</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>bash</code></td>
+<td align="left"><code>RepairJSON</code></td>
+<td align="left"><code>FilePostProcess</code></td>
+<td align="left">命令输出格式化</td>
+</tr>
+<tr>
+<td align="left"><code>tree</code></td>
+<td align="left"><code>RepairJSON</code></td>
+<td align="left">无</td>
+<td align="left">目录结构直接返回</td>
+</tr>
+<tr>
+<td align="left"><code>edit_file</code></td>
+<td align="left"><code>RepairJSON</code></td>
+<td align="left"><code>EditFilePostProcess</code></td>
+<td align="left">简化为 “success” 消息</td>
+</tr>
+<tr>
+<td align="left"><code>read_file</code></td>
+<td align="left"><code>RepairJSON</code></td>
+<td align="left">无</td>
+<td align="left">文件内容直接返回</td>
+</tr>
+<tr>
+<td align="left"><code>python_runner</code></td>
+<td align="left"><code>RepairJSON</code></td>
+<td align="left"><code>FilePostProcess</code></td>
+<td align="left">执行结果格式化</td>
+</tr>
+<tr>
+<td align="left"><strong>主Agent工具</strong></td>
+<td align="left"><strong>无</strong></td>
+<td align="left"><strong>无</strong></td>
+<td align="left">主Agent模型 temperature&#x3D;0，输出稳定</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠️ <strong>关键设计</strong>：主 Agent 的工具<strong>没有加 JSON 修复</strong>——因为主 Agent 用的模型 <code>temperature=0</code>，输出更稳定；而 CodeAgent 用 <code>temperature=1</code>，创造性高但易出错，需要修复保护。</p>
+</blockquote>
+<hr>
+<h2 id="五、agents-目录的作用"><a href="#五、agents-目录的作用" class="headerlink" title="五、agents&#x2F; 目录的作用"></a>五、agents&#x2F; 目录的作用</h2><p><code>agents/</code> 目录定义了两个<strong>子 Agent</strong>，它们<strong>不是 Tool</strong>，而是可以被 DeepAgent 委派任务的<strong>独立智能体</strong>。</p>
+<h3 id="🔹-CodeAgent（agents-code-agent-go）"><a href="#🔹-CodeAgent（agents-code-agent-go）" class="headerlink" title="🔹 CodeAgent（agents&#x2F;code_agent.go）"></a>🔹 CodeAgent（agents&#x2F;code_agent.go）</h3><p><strong>定位</strong>：专门处理文件操作和代码执行的”工程师”</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewCodeAgent</span><span class="params">(ctx context.Context, operator commandline.Operator)</span></span> (adk.Agent, <span class="type">error</span>) &#123;</span><br><span class="line">    cm, _ := utils.NewChatModel(ctx,</span><br><span class="line">        utils.WithMaxTokens(<span class="number">14125</span>),</span><br><span class="line">        utils.WithTemperature(<span class="type">float32</span>(<span class="number">1</span>)),    <span class="comment">// 🎲 高创造性</span></span><br><span class="line">        utils.WithTopP(<span class="type">float32</span>(<span class="number">1</span>)),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig&#123;</span><br><span class="line">        Name:        <span class="string">&quot;CodeAgent&quot;</span>,</span><br><span class="line">        Description: <span class="string">&quot;specialized in handling Excel files via Python code...&quot;</span>,</span><br><span class="line">        Instruction: <span class="string">`You are a code agent. Your workflow is:</span></span><br><span class="line"><span class="string">            1. 分析任务</span></span><br><span class="line"><span class="string">            2. 使用工具辅助编码</span></span><br><span class="line"><span class="string">            3. 编写 Python 代码完成任务</span></span><br><span class="line"><span class="string">            4. 将结果写入文件`</span>,</span><br><span class="line">        Model:         cm,</span><br><span class="line">        Tools:         []tool.BaseTool&#123;bash, tree, edit_file, read_file, python_runner&#125;,  <span class="comment">// 5 个工具</span></span><br><span class="line">        MaxIterations: <span class="number">1000</span>,     <span class="comment">// 🔄 允许大量迭代</span></span><br><span class="line">        GenModelInput: <span class="function"><span class="keyword">func</span><span class="params">(...)</span></span> &#123;</span><br><span class="line">            <span class="comment">// 📥 注入工作目录和当前时间到 Prompt</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>🔑 关键设计点：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">设计</th>
+<th align="left">说明</th>
+<th align="left">收益</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>MaxIterations: 1000</code></td>
+<td align="left">文件处理可能需要多轮工具调用（读→写→执行→检查→修改→再执行）</td>
+<td align="left">支持复杂任务的自主迭代</td>
+</tr>
+<tr>
+<td align="left"><code>GenModelInput</code></td>
+<td align="left">通过 Jinja2 模板向 LLM 注入运行时上下文（工作目录、查询内容、时间）</td>
+<td align="left">让 Agent 感知环境，决策更准确</td>
+</tr>
+<tr>
+<td align="left"><code>Description</code></td>
+<td align="left">这段描述是<strong>给主 Agent 看的</strong></td>
+<td align="left">主 Agent 根据它决定何时委派任务给 CodeAgent</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="🔹-WebSearchAgent（agents-web-search-go）"><a href="#🔹-WebSearchAgent（agents-web-search-go）" class="headerlink" title="🔹 WebSearchAgent（agents&#x2F;web_search.go）"></a>🔹 WebSearchAgent（agents&#x2F;web_search.go）</h3><p><strong>定位</strong>：信息检索的”调研员”</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewWebSearchAgent</span><span class="params">(ctx context.Context)</span></span> (adk.Agent, <span class="type">error</span>) &#123;</span><br><span class="line">    cm, _ := utils.NewChatModel(ctx)    <span class="comment">// 默认参数</span></span><br><span class="line">    searchTool, _ := duckduckgo.NewTextSearchTool(ctx, &amp;duckduckgo.Config&#123;&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig&#123;</span><br><span class="line">        Name:          <span class="string">&quot;WebSearchAgent&quot;</span>,</span><br><span class="line">        Description:   <span class="string">&quot;utilizes ReAct model... using web search tools&quot;</span>,</span><br><span class="line">        Tools:         []tool.BaseTool&#123;searchTool&#125;,          <span class="comment">// 仅 1 个工具</span></span><br><span class="line">        MaxIterations: <span class="number">10</span>,                    <span class="comment">// 搜索不需要太多轮</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="🔹-子-Agent-如何被使用"><a href="#🔹-子-Agent-如何被使用" class="headerlink" title="🔹 子 Agent 如何被使用"></a>🔹 子 Agent 如何被使用</h3><p>在 <code>main.go</code> 中，子 Agent 通过 <code>SubAgents</code> 配置注册给 DeepAgent：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deepAgent, _ := deep.New(ctx, &amp;deep.Config&#123;</span><br><span class="line">    SubAgents: []adk.Agent&#123;codeAgent, webSearchAgent&#125;,  <span class="comment">// ← 注册子 Agent</span></span><br><span class="line">    ToolsConfig: adk.ToolsConfig&#123;</span><br><span class="line">        Tools: []tool.BaseTool&#123;read_file, tree&#125;,         <span class="comment">// ← 主 Agent 自己的工具</span></span><br><span class="line">    &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行时</strong>：DeepAgent 在执行计划的每一步时，会根据子 Agent 的 <code>Description</code> <strong>自动选择</strong>合适的子 Agent 来执行该步骤。</p>
+<hr>
+<h3 id="🔹-SubAgent-≠-Tool-的核心区别"><a href="#🔹-SubAgent-≠-Tool-的核心区别" class="headerlink" title="🔹 SubAgent ≠ Tool 的核心区别"></a>🔹 SubAgent ≠ Tool 的核心区别</h3><table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left">Tool</th>
+<th align="left">SubAgent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>本质</strong></td>
+<td align="left">单次函数调用</td>
+<td align="left">一个完整的 Agent（有自己的模型、工具、多轮循环）</td>
+</tr>
+<tr>
+<td align="left"><strong>能力</strong></td>
+<td align="left">执行一个原子操作</td>
+<td align="left">能自主规划多步执行</td>
+</tr>
+<tr>
+<td align="left"><strong>复杂度</strong></td>
+<td align="left"><code>bash(&quot;ls&quot;)</code> → 返回结果</td>
+<td align="left">接收”提取CSV第一列” → 自己决定读文件→写代码→执行→验证</td>
+</tr>
+<tr>
+<td align="left"><strong>迭代</strong></td>
+<td align="left">无</td>
+<td align="left">CodeAgent 最多 1000 轮内部迭代</td>
+</tr>
+<tr>
+<td align="left"><strong>调用方</strong></td>
+<td align="left">LLM 直接调用</td>
+<td align="left">主 Agent 委派任务</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>💡 <strong>一句话区分</strong>：Tool 是”手”，执行具体动作；SubAgent 是”小脑”，能自主完成子任务。</p>
+</blockquote>
+<hr>
+<h2 id="六、总结：Tool-定义的分层设计"><a href="#六、总结：Tool-定义的分层设计" class="headerlink" title="六、总结：Tool 定义的分层设计"></a>六、总结：Tool 定义的分层设计</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">                  DeepAgent</span><br><span class="line">                 ┌─────────────────────────────────┐</span><br><span class="line">                 │  create_plan      ← 框架内置     │</span><br><span class="line">deep.New 自动    │  submit_result    ← 框架内置     │</span><br><span class="line">提供的 Tool      │  transfer_to_CodeAgent  ← 自动   │</span><br><span class="line">                 │  transfer_to_WebSearch  ← 自动   │</span><br><span class="line">                 ├─────────────────────────────────┤</span><br><span class="line">手动注册的 Tool  │  read_file        ← tools/read.go│</span><br><span class="line">                 │  tree             ← tools/tree.go│</span><br><span class="line">                 └──────────┬──────────────────────┘</span><br><span class="line">                            │ 委派任务</span><br><span class="line">            ┌───────────────┴──────────────┐</span><br><span class="line">            ▼                              ▼</span><br><span class="line">  CodeAgent (agents/)              WebSearchAgent (agents/)</span><br><span class="line">  ┌───────────────────┐           ┌────────────────────┐</span><br><span class="line">  │ bash              │           │ duckduckgo_search  │</span><br><span class="line">  │ tree              │           │ (eino-ext 提供)    │</span><br><span class="line">  │ edit_file         │           └────────────────────┘</span><br><span class="line">  │ read_file         │</span><br><span class="line">  │ python_runner     │</span><br><span class="line">  │ (全部在 tools/)    │</span><br><span class="line">  └───────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="🔑-分层设计要点"><a href="#🔑-分层设计要点" class="headerlink" title="🔑 分层设计要点"></a>🔑 分层设计要点</h3><table>
+<thead>
+<tr>
+<th align="left">层级</th>
+<th align="left">组件</th>
+<th align="left">职责</th>
+<th align="left">关键特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>框架层</strong></td>
+<td align="left"><code>deep.New()</code> 内置 Tool</td>
+<td align="left">计划生成、结果提交、子Agent委派</td>
+<td align="left">自动化编排，无需手动实现</td>
+</tr>
+<tr>
+<td align="left"><strong>工具层</strong></td>
+<td align="left"><code>tools/*.go</code></td>
+<td align="left">原子操作封装（读&#x2F;写&#x2F;执行）</td>
+<td align="left">WrapTool 包装 + JSON 修复 + 跨平台支持</td>
+</tr>
+<tr>
+<td align="left"><strong>智能体层</strong></td>
+<td align="left"><code>agents/*.go</code></td>
+<td align="left">复杂任务自主执行</td>
+<td align="left">独立模型配置 + 多轮迭代 + 上下文注入</td>
+</tr>
+</tbody></table>
+<h3 id="🎯-agents-的核心价值"><a href="#🎯-agents-的核心价值" class="headerlink" title="🎯 agents&#x2F; 的核心价值"></a>🎯 agents&#x2F; 的核心价值</h3><blockquote>
+<p><strong>将”能力”从单个 Tool 提升到”自主执行复杂任务的 Agent”级别</strong>。</p>
+</blockquote>
+<ul>
+<li><code>CodeAgent</code> 不是一个工具，而是一个拥有 <strong>5 个工具</strong>、能自主迭代 <strong>1000 轮</strong> 的独立智能体</li>
+<li>主 Agent 只需告诉它 <strong>“做什么”</strong>，不需要告诉它 <strong>“怎么做”</strong></li>
+<li>这正是 <strong>Plan-Execute 模式</strong> 的精髓：<strong>规划与执行分离，专业的人做专业的事</strong></li>
+</ul>
+<hr>
+<h2 id="🔑-关键要点速记"><a href="#🔑-关键要点速记" class="headerlink" title="🔑 关键要点速记"></a>🔑 关键要点速记</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────┬───────────────────────────────────────────┐</span><br><span class="line">│      要点       │                   说明                    │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ 两层工具分配    │ 主Agent只读，子Agent可写，职责隔离        │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ Tool三步定义    │ ToolInfo → InvokableTool → WrapTool       │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ WrapTool包装    │ 预处理(JSON修复)+后处理(结果格式化)        │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ 差异化配置      │ 主Agent工具无修复，CodeAgent工具有修复    │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ SubAgent≠Tool   │ Agent能自主多轮迭代，Tool只能单次调用     │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ 委派机制        │ 主Agent根据Description自动选择子Agent     │</span><br><span class="line">├─────────────────┼───────────────────────────────────────────┤</span><br><span class="line">│ 上下文注入      │ GenModelInput向Prompt注入工作目录/时间等  │</span><br><span class="line">└─────────────────┴───────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>📌 <strong>一句话总结</strong>：DeepAgent 的 Tool 体系通过 <strong>分层设计 + 装饰器包装 + 智能体委派</strong>，实现了”规划-执行”的可靠分离；理解 Tool 与 SubAgent 的本质区别，是构建可扩展多智能体系统的关键。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/02/eino-example-DeepAgents%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90-2/">http://example.com/2026/04/02/eino-example-DeepAgents%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90-2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/01/eino-example-deep%E5%A4%9Aagents%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86/" title="eino-example-DeepAgents项目分析（1/）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">eino-example-DeepAgents项目分析（1/）</div></div><div class="info-2"><div class="info-item-1">DeepAgent 项目分析 📁 项目路径：eino-examples/adk/multiagent/deep/🎯 核心模式：Plan-Execute（计划-执行） 多智能体编排   一、项目概览adk/multiagent/deep/ 是一个基于 Eino 框架 deep.New() 预构建 Agent 的多智能体 Excel&#x2F;文件处理系统。它演示了 Plan-Execute（计划-执行） 模式： 1主 Agent 制定分步计划 → 将每一步委派给专业化的子 Agent 执行  🔗 与参考文档 ch04 的关系   参考文档 ch04_tool_backend_filesystem.md 本项目 adk/multiagent/deep/    deep.New() 最简用法 deep.New() 高级用法   仅配置 Backend + StreamingShell 手动构建自定义 Tools 和 SubAgents   Agent 自动获得文件系统能力 展示多智能体编排能力   适合快速上手 适合生产级复杂任务    二、目录结构123456789101112...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DeepAgent-%E7%A4%BA%E4%BE%8B%EF%BC%9ATool-%E5%AE%9A%E4%B9%89%E4%BD%93%E7%B3%BB%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">DeepAgent 示例：Tool 定义体系详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%95%B4%E4%BD%93-Tool-%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">一、整体 Tool 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%A8-%E8%AE%BE%E8%AE%A1%E6%84%8F%E5%9B%BE"><span class="toc-number">1.1.1.</span> <span class="toc-text">🎨 设计意图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Tool-%E7%9A%84%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%B8%89%E6%AD%A5%E6%B3%95%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、Tool 的定义模式（三步法）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E5%AE%9A%E4%B9%89-ToolInfo%EF%BC%88%E5%85%83%E4%BF%A1%E6%81%AF%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">🔹 步骤 1：定义 ToolInfo（元信息）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E5%AE%9E%E7%8E%B0-InvokableTool-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.2.2.</span> <span class="toc-text">🔹 步骤 2：实现 InvokableTool 接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E7%94%A8-WrapTool-%E5%8C%85%E8%A3%85"><span class="toc-number">1.2.3.</span> <span class="toc-text">🔹 步骤 3：用 WrapTool 包装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%89%80%E6%9C%89-Tool-%E4%B8%80%E8%A7%88"><span class="toc-number">1.3.</span> <span class="toc-text">三、所有 Tool 一览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81WrapTool-%E5%8C%85%E8%A3%85%E6%9C%BA%E5%88%B6%EF%BC%88%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、WrapTool 包装机制（核心设计）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.1.</span> <span class="toc-text">🔹 处理流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E5%8C%85%E8%A3%85%E5%99%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.2.</span> <span class="toc-text">🔹 包装器实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E5%90%84-Tool-%E7%9A%84%E5%8C%85%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.3.</span> <span class="toc-text">🔹 各 Tool 的包装配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81agents-%E7%9B%AE%E5%BD%95%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.5.</span> <span class="toc-text">五、agents&#x2F; 目录的作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-CodeAgent%EF%BC%88agents-code-agent-go%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">🔹 CodeAgent（agents&#x2F;code_agent.go）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-WebSearchAgent%EF%BC%88agents-web-search-go%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">🔹 WebSearchAgent（agents&#x2F;web_search.go）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-%E5%AD%90-Agent-%E5%A6%82%E4%BD%95%E8%A2%AB%E4%BD%BF%E7%94%A8"><span class="toc-number">1.5.3.</span> <span class="toc-text">🔹 子 Agent 如何被使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-SubAgent-%E2%89%A0-Tool-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="toc-number">1.5.4.</span> <span class="toc-text">🔹 SubAgent ≠ Tool 的核心区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9ATool-%E5%AE%9A%E4%B9%89%E7%9A%84%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.6.</span> <span class="toc-text">六、总结：Tool 定义的分层设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%91-%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9"><span class="toc-number">1.6.1.</span> <span class="toc-text">🔑 分层设计要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%AF-agents-%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC"><span class="toc-number">1.6.2.</span> <span class="toc-text">🎯 agents&#x2F; 的核心价值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%91-%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9%E9%80%9F%E8%AE%B0"><span class="toc-number">1.7.</span> <span class="toc-text">🔑 关键要点速记</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/02/eino-example-DeepAgents%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90-2/" title="eino-example-DeepAgents项目分析(2/)">eino-example-DeepAgents项目分析(2/)</a><time datetime="2026-04-02T02:43:22.000Z" title="Created 2026-04-02 10:43:22">2026-04-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/01/eino-example-deep%E5%A4%9Aagents%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86/" title="eino-example-DeepAgents项目分析（1/）">eino-example-DeepAgents项目分析（1/）</a><time datetime="2026-04-01T12:09:24.000Z" title="Created 2026-04-01 20:09:24">2026-04-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8E%92%E5%BA%8F/" title="go-字符串排序">go-字符串排序</a><time datetime="2026-03-31T12:42:37.000Z" title="Created 2026-03-31 20:42:37">2026-03-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98Tag/" title="go-结构体成员Tag">go-结构体成员Tag</a><time datetime="2026-03-31T07:25:00.000Z" title="Created 2026-03-31 15:25:00">2026-03-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/31/go-%E7%BB%93%E6%9E%84%E4%BD%93%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E6%80%BB%E7%BB%93/" title="go-结构体核心概念总结">go-结构体核心概念总结</a><time datetime="2026-03-31T07:03:32.000Z" title="Created 2026-03-31 15:03:32">2026-03-31</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
