@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>go-map深度理解 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="代码如下，请分析为何值接收器方法可以直接改变原变量？ 123456789101112131415161718package url&#x2F;&#x2F; Values maps a string key to a list of values.type Values map[string][]string&#x2F;&#x2F; Get returns the first value associated with the given">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go-map深度理解">
+<meta property="og:url" content="http://example.com/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="代码如下，请分析为何值接收器方法可以直接改变原变量？ 123456789101112131415161718package url&#x2F;&#x2F; Values maps a string key to a list of values.type Values map[string][]string&#x2F;&#x2F; Get returns the first value associated with the given">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-06T12:45:15.000Z">
+<meta property="article:modified_time" content="2026-04-06T12:46:56.285Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "go-map深度理解",
+  "url": "http://example.com/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-04-06T12:45:15.000Z",
+  "dateModified": "2026-04-06T12:46:56.285Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'go-map深度理解',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">go-map深度理解</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">go-map深度理解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-06T12:45:15.000Z" title="Created 2026-04-06 20:45:15">2026-04-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-06T12:46:56.285Z" title="Updated 2026-04-06 20:46:56">2026-04-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>代码如下，请分析为何值接收器方法可以直接改变原变量？</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment">// Values maps a string key to a list of values.</span></span><br><span class="line"><span class="keyword">type</span> Values <span class="keyword">map</span>[<span class="type">string</span>][]<span class="type">string</span></span><br><span class="line"><span class="comment">// Get returns the first value associated with the given key,</span></span><br><span class="line"><span class="comment">// or &quot;&quot; if there are none.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v Values)</span></span> Get(key <span class="type">string</span>) <span class="type">string</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> vs := v[key]; <span class="built_in">len</span>(vs) &gt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> vs[<span class="number">0</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Add adds the value to key.</span></span><br><span class="line"><span class="comment">// It appends to any existing values associated with key.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v Values)</span></span> Add(key, value <span class="type">string</span>) &#123;</span><br><span class="line">    v[key] = <span class="built_in">append</span>(v[key], value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Map 本质上就是一个指针                                                                 </p>
+<p>  在 Go 内部，map 变量存的不是数据本身，而是一个指向底层哈希表的指针：                   </p>
+  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">m := url.Values&#123;<span class="string">&quot;lang&quot;</span>: &#123;<span class="string">&quot;en&quot;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">m  ──────►  底层哈希表</span><br><span class="line">(指针)       ┌──────────────────┐</span><br><span class="line">             │ <span class="string">&quot;lang&quot;</span> → [<span class="string">&quot;en&quot;</span>]  │</span><br><span class="line">             └──────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>  所以值拷贝拷的是什么？</p>
+<p>  当用值接收器调用方法时，Go 确实做了拷贝，但拷贝的是这个指针，不是底层数据：</p>
+  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v Values)</span></span> Add(key, value <span class="type">string</span>) &#123;</span><br><span class="line">    <span class="comment">// v 是 m 的拷贝，但 v 和 m 指向同一个底层哈希表</span></span><br><span class="line">    v[key] = <span class="built_in">append</span>(v[key], value)  <span class="comment">// 修改的是共享的底层数据</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">m  ──────┐</span><br><span class="line">         ├──►  底层哈希表（同一个！）</span><br><span class="line">v  ──────┘     ┌──────────────────┐</span><br><span class="line">(m的拷贝)       │ <span class="string">&quot;lang&quot;</span> → [<span class="string">&quot;en&quot;</span>]  │</span><br><span class="line">               │ <span class="string">&quot;item&quot;</span> → [<span class="string">&quot;1&quot;</span>]   │  ← 两边都能看到修改                                </span><br><span class="line">               └──────────────────┘</span><br></pre></td></tr></table></figure>
+<p>  对比 struct 就明白了                                      </p>
+  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// struct — 值拷贝是深拷贝，改不了原始值</span></span><br><span class="line"><span class="keyword">type</span> Point <span class="keyword">struct</span>&#123; X, Y <span class="type">float64</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Point)</span></span> Move(dx <span class="type">float64</span>) &#123;</span><br><span class="line">    p.X += dx   <span class="comment">// ❌ 改的是副本，原对象不变</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// map — 值拷贝只拷贝指针，底层数据共享</span></span><br><span class="line"><span class="keyword">type</span> Values <span class="keyword">map</span>[<span class="type">string</span>][]<span class="type">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v Values)</span></span> Add(key, value <span class="type">string</span>) &#123;</span><br><span class="line">    v[key] = <span class="built_in">append</span>(v[key], value)  <span class="comment">// ✅ 改的是共享的底层数据，原对象能看到</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>值拷贝拷的是什么</th>
+<th>修改能影响原始值？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>struct</td>
+<td>整个结构体的所有字段</td>
+<td>❌ 不能</td>
+</tr>
+<tr>
+<td>map</td>
+<td>指向底层哈希表的指针</td>
+<td>✅ 能</td>
+</tr>
+<tr>
+<td>slice</td>
+<td>指向底层数组的指针 + 长度 + 容量</td>
+<td>✅ 能（修改元素时）</td>
+</tr>
+<tr>
+<td>channel</td>
+<td>指向底层结构的指针</td>
+<td>✅ 能</td>
+</tr>
+</tbody></table>
+<p>  所以 map 用值接收器就够了？</p>
+<p>  对于 map 类型，值接收器和指针接收器效果几乎一样，因为值本身就是个指针。这就是为什么标准库里 url.Values 用的是值接收器——没必要再取一次指针的指针。</p>
+<p>  唯一的区别是：值接收器不能让 map 变量本身变成另一个 map（比如从 nil 变成非 nil），这也解释了最后一行为什么 panic：</p>
+  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">m = <span class="literal">nil</span></span><br><span class="line">m.Add(<span class="string">&quot;item&quot;</span>, <span class="string">&quot;3&quot;</span>)  <span class="comment">// panic!</span></span><br><span class="line"><span class="comment">// 因为 v 是 nil 的拷贝，往 nil map 里写入会 panic</span></span><br><span class="line"><span class="comment">// 而且即使不 panic，也无法让外面的 m 从 nil 变成非 nil</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>  一句话总结</p>
+<blockquote>
+<p>Map 变量本身就是个指针，值拷贝拷的是指针，所以值接收器也能修改底层数据——这不是例外，而是 map 的本质决定的。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/">http://example.com/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/06/go-%E7%BC%96%E8%AF%91%E5%99%A8%E9%9A%90%E5%BC%8F%E5%8F%96%E5%9C%B0%E5%9D%80/" title="go-编译器隐式取地址"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">go-编译器隐式取地址</div></div><div class="info-2"><div class="info-item-1">⏺ Go 编译器隐式取地址的完整细节      场景回顾                                                                                  ScaleBy 是指针接收器方法，按理说只有 *Point 才能调用：                                    1234func (p *Point) ScaleBy(factor float64) &#123;    p.X *= factor    p.Y *= factor&#125;    但你可以这样写：   12p := Point&#123;1, 2&#125;p.ScaleBy(2)          // p 是 Point，不是 *Point，居然能调用？    这是因为编译器帮你做了隐式转换，实际执行的是：   1(&amp;p).ScaleBy(2)       // 编译器自动取地址     隐式转换其实有两个方向   方向一：值调用指针方法 → 自动取地址 &amp;   12345p := Point&#...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/" title="go-map深度理解">go-map深度理解</a><time datetime="2026-04-06T12:45:15.000Z" title="Created 2026-04-06 20:45:15">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-%E7%BC%96%E8%AF%91%E5%99%A8%E9%9A%90%E5%BC%8F%E5%8F%96%E5%9C%B0%E5%9D%80/" title="go-编译器隐式取地址">go-编译器隐式取地址</a><time datetime="2026-04-06T12:28:37.000Z" title="Created 2026-04-06 20:28:37">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-%E6%96%B9%E6%B3%95%E5%AE%9A%E4%B9%89%E5%92%8C%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E5%AF%B9%E6%AF%94/" title="go-方法定义和函数定义对比">go-方法定义和函数定义对比</a><time datetime="2026-04-06T08:41:19.000Z" title="Created 2026-04-06 16:41:19">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-panic%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/" title="go-panic代码分析">go-panic代码分析</a><time datetime="2026-04-06T02:43:45.000Z" title="Created 2026-04-06 10:43:45">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/05/go-defer/" title="go-defer">go-defer</a><time datetime="2026-04-05T14:34:59.000Z" title="Created 2026-04-05 22:34:59">2026-04-05</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
