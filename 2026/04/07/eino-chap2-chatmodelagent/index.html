@@ -1,0 +1,456 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>eino-chap2-chatmodelagent | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Ch02 main.go 逐段详解整体架构总览先用一张图看清整个程序的结构： 123456789101112graph TD    A[main 函数] --&gt; B[解析命令行参数]    B --&gt; C[创建 ChatModel]    C --&gt; D[创建 ChatModelAgent]    D --&gt; E[创建 Runner]    E --&gt; F[进入多轮对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eino-chap2-chatmodelagent">
+<meta property="og:url" content="http://example.com/2026/04/07/eino-chap2-chatmodelagent/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Ch02 main.go 逐段详解整体架构总览先用一张图看清整个程序的结构： 123456789101112graph TD    A[main 函数] --&gt; B[解析命令行参数]    B --&gt; C[创建 ChatModel]    C --&gt; D[创建 ChatModelAgent]    D --&gt; E[创建 Runner]    E --&gt; F[进入多轮对">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-07T07:55:12.000Z">
+<meta property="article:modified_time" content="2026-04-07T07:55:21.005Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "eino-chap2-chatmodelagent",
+  "url": "http://example.com/2026/04/07/eino-chap2-chatmodelagent/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-04-07T07:55:12.000Z",
+  "dateModified": "2026-04-07T07:55:21.005Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/04/07/eino-chap2-chatmodelagent/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'eino-chap2-chatmodelagent',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">eino-chap2-chatmodelagent</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">eino-chap2-chatmodelagent</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-07T07:55:12.000Z" title="Created 2026-04-07 15:55:12">2026-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-07T07:55:21.005Z" title="Updated 2026-04-07 15:55:21">2026-04-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Ch02-main-go-逐段详解"><a href="#Ch02-main-go-逐段详解" class="headerlink" title="Ch02 main.go 逐段详解"></a>Ch02 main.go 逐段详解</h1><h2 id="整体架构总览"><a href="#整体架构总览" class="headerlink" title="整体架构总览"></a>整体架构总览</h2><p>先用一张图看清整个程序的结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    A[main 函数] --&gt; B[解析命令行参数]</span><br><span class="line">    B --&gt; C[创建 ChatModel]</span><br><span class="line">    C --&gt; D[创建 ChatModelAgent]</span><br><span class="line">    D --&gt; E[创建 Runner]</span><br><span class="line">    E --&gt; F[进入多轮对话循环]</span><br><span class="line">    F --&gt; G[读取用户输入]</span><br><span class="line">    G --&gt; H[追加到 history]</span><br><span class="line">    H --&gt; I[runner.Run 执行]</span><br><span class="line">    I --&gt; J[printAndCollectAssistantFromEvents&lt;br/&gt;消费事件流并打印]</span><br><span class="line">    J --&gt; K[追加 assistant 回复到 history]</span><br><span class="line">    K --&gt; G</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第一部分：导入包（第-18-32-行）"><a href="#第一部分：导入包（第-18-32-行）" class="headerlink" title="第一部分：导入包（第 18~32 行）"></a>第一部分：导入包（第 18~32 行）</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;bufio&quot;</span></span><br><span class="line">	<span class="string">&quot;context&quot;</span></span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;flag&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;io&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;strings&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/cloudwego/eino/adk&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/cloudwego/eino/schema&quot;</span></span><br><span class="line"></span><br><span class="line">	examplemodel <span class="string">&quot;github.com/cloudwego/eino-examples/adk/common/model&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>包</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bufio</code></td>
+<td>提供带缓冲的 I&#x2F;O，这里用 <code>bufio.NewScanner</code> 逐行读取用户输入</td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td>Go 的上下文机制，用于控制超时、取消等</td>
+</tr>
+<tr>
+<td><code>errors</code></td>
+<td>错误处理，这里用 <code>errors.Is(err, io.EOF)</code> 判断流是否结束</td>
+</tr>
+<tr>
+<td><code>flag</code></td>
+<td>命令行参数解析（第一章已学过）</td>
+</tr>
+<tr>
+<td><code>fmt</code></td>
+<td>格式化输出</td>
+</tr>
+<tr>
+<td><code>io</code></td>
+<td>提供 <code>io.EOF</code> 常量，表示”流结束”</td>
+</tr>
+<tr>
+<td><code>os</code></td>
+<td>操作系统交互，这里用 <code>os.Stdin</code>（标准输入）和 <code>os.Stdout</code>（标准输出）</td>
+</tr>
+<tr>
+<td><code>strings</code></td>
+<td>字符串操作，这里用 <code>strings.TrimSpace</code> 去除空白、<code>strings.Builder</code> 拼接字符串</td>
+</tr>
+<tr>
+<td><code>adk</code></td>
+<td><strong>Eino 的 ADK 包</strong>，提供 Agent、Runner、AgentEvent 等核心抽象</td>
+</tr>
+<tr>
+<td><code>schema</code></td>
+<td><strong>Eino 的数据模型包</strong>，提供 Message、Role 等基础类型</td>
+</tr>
+<tr>
+<td><code>examplemodel</code></td>
+<td><strong>示例项目的公共包</strong>，封装了 ChatModel 的创建逻辑</td>
+</tr>
+</tbody></table>
+<h3 id="💡-Go-语法知识：包别名"><a href="#💡-Go-语法知识：包别名" class="headerlink" title="💡 Go 语法知识：包别名"></a>💡 Go 语法知识：包别名</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">examplemodel <span class="string">&quot;github.com/cloudwego/eino-examples/adk/common/model&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>examplemodel</code> 是给这个包起的<strong>别名</strong>。因为这个包的名字是 <code>model</code>，但 Eino 框架里也有一个 <code>model</code> 包（<code>github.com/cloudwego/eino/components/model</code>），为了避免冲突，给它起了个别名 <code>examplemodel</code>。后面用 <code>examplemodel.NewChatModel()</code> 来调用。</p>
+<hr>
+<h2 id="第二部分：main-函数-——-初始化阶段（第-34-56-行）"><a href="#第二部分：main-函数-——-初始化阶段（第-34-56-行）" class="headerlink" title="第二部分：main 函数 —— 初始化阶段（第 34~56 行）"></a>第二部分：main 函数 —— 初始化阶段（第 34~56 行）</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> instruction <span class="type">string</span></span><br><span class="line">	flag.StringVar(&amp;instruction, <span class="string">&quot;instruction&quot;</span>, <span class="string">&quot;You are a helpful assistant.&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">	flag.Parse()</span><br><span class="line"></span><br><span class="line">	ctx := context.Background()</span><br><span class="line">	cm := examplemodel.NewChatModel()</span><br><span class="line"></span><br><span class="line">	agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig&#123;</span><br><span class="line">		Name:        <span class="string">&quot;Ch02ChatModelAgent&quot;</span>,</span><br><span class="line">		Description: <span class="string">&quot;A minimal ChatModelAgent with in-memory multi-turn history.&quot;</span>,</span><br><span class="line">		Instruction: instruction,</span><br><span class="line">		Model:       cm,</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		_, _ = fmt.Fprintln(os.Stderr, err)</span><br><span class="line">		os.Exit(<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	runner := adk.NewRunner(ctx, adk.RunnerConfig&#123;</span><br><span class="line">		Agent:           agent,</span><br><span class="line">		EnableStreaming: <span class="literal">true</span>,</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="逐行分析："><a href="#逐行分析：" class="headerlink" title="逐行分析："></a>逐行分析：</h3><h4 id="①-解析命令行参数"><a href="#①-解析命令行参数" class="headerlink" title="① 解析命令行参数"></a>① 解析命令行参数</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> instruction <span class="type">string</span></span><br><span class="line">flag.StringVar(&amp;instruction, <span class="string">&quot;instruction&quot;</span>, <span class="string">&quot;You are a helpful assistant.&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">flag.Parse()</span><br></pre></td></tr></table></figure>
+
+<p>和第一章一样，用 <code>flag</code> 包解析命令行参数。<code>instruction</code> 是系统提示词，默认值是 <code>&quot;You are a helpful assistant.&quot;</code>。</p>
+<h4 id="②-创建-ChatModel"><a href="#②-创建-ChatModel" class="headerlink" title="② 创建 ChatModel"></a>② 创建 ChatModel</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cm := examplemodel.NewChatModel()</span><br></pre></td></tr></table></figure>
+
+<p>调用公共包 <a href="/Users/zes/work/eino-examples/adk/common/model/chat_model.go">chat_model.go</a> 中的 <code>NewChatModel()</code> 函数。这个函数的逻辑和第一章的 <code>newChatModel</code> 几乎一样：</p>
+<ul>
+<li>读取环境变量 <code>MODEL_TYPE</code></li>
+<li>如果是 <code>&quot;ark&quot;</code>，创建 Ark（火山引擎&#x2F;豆包）的 ChatModel</li>
+<li>否则，创建 OpenAI 的 ChatModel</li>
+<li>返回类型是 <code>model.ToolCallingChatModel</code>（接口类型）</li>
+</ul>
+<blockquote>
+<p>💡 <strong>与第一章的区别</strong>：第一章是在 main.go 里直接写的 <code>newChatModel</code> 函数，第二章把它提取到了公共包里，方便后续章节复用。</p>
+</blockquote>
+<h4 id="③-创建-ChatModelAgent"><a href="#③-创建-ChatModelAgent" class="headerlink" title="③ 创建 ChatModelAgent"></a>③ 创建 ChatModelAgent</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">agent, err := adk.NewChatModelAgent(ctx, &amp;adk.ChatModelAgentConfig&#123;</span><br><span class="line">    Name:        <span class="string">&quot;Ch02ChatModelAgent&quot;</span>,</span><br><span class="line">    Description: <span class="string">&quot;A minimal ChatModelAgent with in-memory multi-turn history.&quot;</span>,</span><br><span class="line">    Instruction: instruction,</span><br><span class="line">    Model:       cm,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这是<strong>本章的核心新概念</strong>。<code>ChatModelAgent</code> 是对 <code>ChatModel</code> 的一层封装，把它从一个”组件”升级为一个”智能体”。</p>
+<table>
+<thead>
+<tr>
+<th>配置字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Name</code></td>
+<td><code>string</code></td>
+<td>Agent 的名字，用于日志、调试、事件标识</td>
+</tr>
+<tr>
+<td><code>Description</code></td>
+<td><code>string</code></td>
+<td>Agent 的描述，用于多 Agent 场景下的路由决策</td>
+</tr>
+<tr>
+<td><code>Instruction</code></td>
+<td><code>string</code></td>
+<td>系统提示词，会作为 SystemMessage 注入到对话中</td>
+</tr>
+<tr>
+<td><code>Model</code></td>
+<td><code>model.ToolCallingChatModel</code></td>
+<td>底层的 ChatModel 组件</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>💡 <strong>为什么要包一层？</strong> 文档中的类比很好：<code>ChatModel</code> 就像”数据库驱动”，<code>ChatModelAgent</code> 就像”业务逻辑层”。Agent 提供了统一的 <code>Run()</code> 接口、事件流输出、后续可扩展 tools&#x2F;middleware 等能力。</p>
+</blockquote>
+<h4 id="④-创建-Runner"><a href="#④-创建-Runner" class="headerlink" title="④ 创建 Runner"></a>④ 创建 Runner</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">runner := adk.NewRunner(ctx, adk.RunnerConfig&#123;</span><br><span class="line">    Agent:           agent,</span><br><span class="line">    EnableStreaming: <span class="literal">true</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>Runner</code> 是 Agent 的”执行器”。你可以把它理解为一个”遥控器”：</p>
+<ul>
+<li><code>Agent</code> 是”电视机”（有能力，但需要被操控）</li>
+<li><code>Runner</code> 是”遥控器”（负责启动、管理、控制 Agent 的执行）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>配置字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Agent</code></td>
+<td>要执行的 Agent</td>
+</tr>
+<tr>
+<td><code>EnableStreaming</code></td>
+<td>设为 <code>true</code> 表示启用流式输出（模型边生成边返回）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第三部分：main-函数-——-多轮对话循环（第-58-82-行）"><a href="#第三部分：main-函数-——-多轮对话循环（第-58-82-行）" class="headerlink" title="第三部分：main 函数 —— 多轮对话循环（第 58~82 行）"></a>第三部分：main 函数 —— 多轮对话循环（第 58~82 行）</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">history := <span class="built_in">make</span>([]*schema.Message, <span class="number">0</span>, <span class="number">16</span>)</span><br><span class="line">scanner := bufio.NewScanner(os.Stdin)</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">	_, _ = fmt.Fprint(os.Stdout, <span class="string">&quot;you&gt; &quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> !scanner.Scan() &#123;</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br><span class="line">	line := strings.TrimSpace(scanner.Text())</span><br><span class="line">	<span class="keyword">if</span> line == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br><span class="line">	history = <span class="built_in">append</span>(history, schema.UserMessage(line))</span><br><span class="line"></span><br><span class="line">	events := runner.Run(ctx, history)</span><br><span class="line">	content, err := printAndCollectAssistantFromEvents(events)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		_, _ = fmt.Fprintln(os.Stderr, err)</span><br><span class="line">		os.Exit(<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	history = <span class="built_in">append</span>(history, schema.AssistantMessage(content, <span class="literal">nil</span>))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> err := scanner.Err(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">	_, _ = fmt.Fprintln(os.Stderr, err)</span><br><span class="line">	os.Exit(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="逐行分析：-1"><a href="#逐行分析：-1" class="headerlink" title="逐行分析："></a>逐行分析：</h3><h4 id="①-初始化-history-和-scanner"><a href="#①-初始化-history-和-scanner" class="headerlink" title="① 初始化 history 和 scanner"></a>① 初始化 history 和 scanner</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">history := <span class="built_in">make</span>([]*schema.Message, <span class="number">0</span>, <span class="number">16</span>)</span><br><span class="line">scanner := bufio.NewScanner(os.Stdin)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>make([]*schema.Message, 0, 16)</code>：创建一个空的 Message 切片，初始长度为 0，预分配容量为 16。这个 <code>history</code> 就是<strong>对话历史</strong>，每一轮对话的用户消息和 AI 回复都会追加到这里。</li>
+<li><code>bufio.NewScanner(os.Stdin)</code>：创建一个从标准输入（键盘）逐行读取的扫描器。</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Go 语法知识：<code>make([]T, length, capacity)</code></strong></p>
+<ul>
+<li><code>length</code>：切片当前的元素个数（这里是 0，表示空切片）</li>
+<li><code>capacity</code>：切片底层数组的预分配大小（这里是 16，表示预留 16 个位置，避免频繁扩容）</li>
+<li>当 <code>append</code> 超过 capacity 时，Go 会自动扩容（通常翻倍）</li>
+</ul>
+</blockquote>
+<h4 id="②-对话循环"><a href="#②-对话循环" class="headerlink" title="② 对话循环"></a>② 对话循环</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">    _, _ = fmt.Fprint(os.Stdout, <span class="string">&quot;you&gt; &quot;</span>)  <span class="comment">// 打印提示符</span></span><br><span class="line">    <span class="keyword">if</span> !scanner.Scan() &#123;                    <span class="comment">// 读取一行输入</span></span><br><span class="line">        <span class="keyword">break</span>                               <span class="comment">// 如果读取失败（如 Ctrl+D），退出循环</span></span><br><span class="line">    &#125;</span><br><span class="line">    line := strings.TrimSpace(scanner.Text()) <span class="comment">// 去除首尾空白</span></span><br><span class="line">    <span class="keyword">if</span> line == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">        <span class="keyword">break</span>                               <span class="comment">// 空行退出</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个<strong>无限循环</strong>（<code>for {}</code>），每次循环就是一轮对话。退出条件有两个：</p>
+<ol>
+<li><code>scanner.Scan()</code> 返回 <code>false</code>（用户按了 Ctrl+D，表示输入结束）</li>
+<li>用户输入了空行</li>
+</ol>
+<h4 id="③-追加用户消息-→-执行-Agent-→-收集回复-→-追加-AI-消息"><a href="#③-追加用户消息-→-执行-Agent-→-收集回复-→-追加-AI-消息" class="headerlink" title="③ 追加用户消息 → 执行 Agent → 收集回复 → 追加 AI 消息"></a>③ 追加用户消息 → 执行 Agent → 收集回复 → 追加 AI 消息</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 把用户输入包装成 UserMessage，追加到 history</span></span><br><span class="line">history = <span class="built_in">append</span>(history, schema.UserMessage(line))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 调用 Runner 执行 Agent，传入完整的对话历史</span></span><br><span class="line">events := runner.Run(ctx, history)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 消费事件流，打印并收集 AI 的回复文本</span></span><br><span class="line">content, err := printAndCollectAssistantFromEvents(events)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    _, _ = fmt.Fprintln(os.Stderr, err)</span><br><span class="line">    os.Exit(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 把 AI 的回复包装成 AssistantMessage，追加到 history</span></span><br><span class="line">history = <span class="built_in">append</span>(history, schema.AssistantMessage(content, <span class="literal">nil</span>))</span><br></pre></td></tr></table></figure>
+
+<p>这就是文档中描述的<strong>多轮对话核心流程</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">第1轮：history = [User(&quot;你好&quot;)]</span><br><span class="line">       → runner.Run → AI回复&quot;你好！有什么可以帮你的？&quot;</span><br><span class="line">       → history = [User(&quot;你好&quot;), Assistant(&quot;你好！有什么可以帮你的？&quot;)]</span><br><span class="line"></span><br><span class="line">第2轮：history = [User(&quot;你好&quot;), Assistant(&quot;你好！有什么可以帮你的？&quot;), User(&quot;解释一下Go的goroutine&quot;)]</span><br><span class="line">       → runner.Run → AI回复&quot;goroutine是Go语言的轻量级线程...&quot;</span><br><span class="line">       → history = [User(&quot;你好&quot;), Assistant(&quot;你好！...&quot;), User(&quot;解释一下...&quot;), Assistant(&quot;goroutine是...&quot;)]</span><br></pre></td></tr></table></figure>
+
+<p>每次调用 <code>runner.Run(ctx, history)</code> 时，<strong>完整的对话历史</strong>都会传给模型，这样模型就能”记住”之前的对话内容。</p>
+<blockquote>
+<p>⚠️ <strong>注意</strong>：<code>runner.Run()</code> 返回的不是直接的文本，而是 <code>*adk.AsyncIterator[*adk.AgentEvent]</code>（事件流迭代器）。需要用 <code>printAndCollectAssistantFromEvents</code> 函数来消费它。</p>
+</blockquote>
+<h4 id="④-与第一章的对比"><a href="#④-与第一章的对比" class="headerlink" title="④ 与第一章的对比"></a>④ 与第一章的对比</h4><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>第一章 (ch01)</th>
+<th>第二章 (ch02)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>对话轮次</strong></td>
+<td>单轮（命令行参数传入问题）</td>
+<td>多轮（循环读取用户输入）</td>
+</tr>
+<tr>
+<td><strong>调用方式</strong></td>
+<td>直接调用 <code>cm.Stream()</code></td>
+<td>通过 <code>runner.Run()</code></td>
+</tr>
+<tr>
+<td><strong>返回类型</strong></td>
+<td><code>*schema.StreamReader[*schema.Message]</code></td>
+<td><code>*adk.AsyncIterator[*adk.AgentEvent]</code></td>
+</tr>
+<tr>
+<td><strong>历史管理</strong></td>
+<td>不需要（单轮）</td>
+<td>手动维护 <code>history</code> 切片</td>
+</tr>
+<tr>
+<td><strong>抽象层级</strong></td>
+<td>Component 层</td>
+<td>Agent + Runner 层</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第四部分：printAndCollectAssistantFromEvents-函数（第-86-135-行）"><a href="#第四部分：printAndCollectAssistantFromEvents-函数（第-86-135-行）" class="headerlink" title="第四部分：printAndCollectAssistantFromEvents 函数（第 86~135 行）"></a>第四部分：<code>printAndCollectAssistantFromEvents</code> 函数（第 86~135 行）</h2><p>这是本章最复杂的函数，负责<strong>消费事件流、打印 AI 回复、收集回复文本</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printAndCollectAssistantFromEvents</span><span class="params">(events *adk.AsyncIterator[*adk.AgentEvent])</span></span> (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> sb strings.Builder</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>参数</strong>：<code>events *adk.AsyncIterator[*adk.AgentEvent]</code> —— 事件流迭代器，由 <code>runner.Run()</code> 返回</li>
+<li><strong>返回值</strong>：<code>(string, error)</code> —— 收集到的 AI 回复文本 + 可能的错误</li>
+<li><code>strings.Builder</code>：高效的字符串拼接器，用于收集所有流式片段拼成完整回复</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Go 语法知识：<code>strings.Builder</code></strong><br>在 Go 中，字符串是不可变的。如果用 <code>s += &quot;abc&quot;</code> 反复拼接，每次都会创建新字符串，效率很低。<code>strings.Builder</code> 内部用 <code>[]byte</code> 缓冲区，最后一次性转成字符串，效率高得多。</p>
+</blockquote>
+<h3 id="①-外层循环：消费事件流"><a href="#①-外层循环：消费事件流" class="headerlink" title="① 外层循环：消费事件流"></a>① 外层循环：消费事件流</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">	event, ok := events.Next()</span><br><span class="line">	<span class="keyword">if</span> !ok &#123;</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>events.Next()</code> 是 <code>AsyncIterator</code> 的核心方法：</p>
+<ul>
+<li><strong>阻塞等待</strong>直到有新事件到来</li>
+<li>返回 <code>(event, true)</code> 表示拿到了一个事件</li>
+<li>返回 <code>(_, false)</code> 表示迭代器已关闭（所有事件都消费完了）</li>
+</ul>
+<h3 id="②-错误检查"><a href="#②-错误检查" class="headerlink" title="② 错误检查"></a>② 错误检查</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> event.Err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;&quot;</span>, event.Err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果事件中包含错误（比如模型 API 调用失败），直接返回错误。</p>
+<h3 id="③-过滤非-Assistant-消息"><a href="#③-过滤非-Assistant-消息" class="headerlink" title="③ 过滤非 Assistant 消息"></a>③ 过滤非 Assistant 消息</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> event.Output == <span class="literal">nil</span> || event.Output.MessageOutput == <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">continue</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mv := event.Output.MessageOutput</span><br><span class="line"><span class="keyword">if</span> mv.Role != schema.Assistant &#123;</span><br><span class="line">	<span class="keyword">continue</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>事件流中可能包含各种类型的事件（控制动作、工具调用结果等），这里只关心 <strong>Assistant 角色的消息输出</strong>。<code>mv</code> 是 <code>MessageVariant</code> 类型（消息变体），它可能是流式的，也可能是非流式的。</p>
+<h3 id="④-处理流式消息（IsStreaming-true）"><a href="#④-处理流式消息（IsStreaming-true）" class="headerlink" title="④ 处理流式消息（IsStreaming == true）"></a>④ 处理流式消息（<code>IsStreaming == true</code>）</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> mv.IsStreaming &#123;</span><br><span class="line">	mv.MessageStream.SetAutomaticClose()</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		frame, err := mv.MessageStream.Recv()</span><br><span class="line">		<span class="keyword">if</span> errors.Is(err, io.EOF) &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;&quot;</span>, err</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> frame != <span class="literal">nil</span> &amp;&amp; frame.Content != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">			sb.WriteString(frame.Content)</span><br><span class="line">			_, _ = fmt.Fprint(os.Stdout, frame.Content)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	_, _ = fmt.Fprintln(os.Stdout)</span><br><span class="line">	<span class="keyword">continue</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>EnableStreaming: true</code> 时，模型的回复会以<strong>流式</strong>方式到达。这段代码的逻辑是：</p>
+<ol>
+<li><p><strong><code>mv.MessageStream.SetAutomaticClose()</code></strong>：设置自动关闭。当流读完（遇到 EOF）后，自动释放资源。这样就不需要手动调用 <code>Close()</code> 了。</p>
+</li>
+<li><p><strong>内层循环</strong>：不断调用 <code>mv.MessageStream.Recv()</code> 读取每一个”帧”（chunk）：</p>
+<ul>
+<li><code>io.EOF</code>：流结束，退出内层循环</li>
+<li>其他错误：返回错误</li>
+<li>正常帧：把内容追加到 <code>sb</code>（用于收集完整文本），同时打印到屏幕</li>
+</ul>
+</li>
+<li><p><strong><code>fmt.Fprintln(os.Stdout)</code></strong>：流式输出完毕后打印一个换行符</p>
+</li>
+</ol>
+<blockquote>
+<p>💡 <strong>与第一章的对比</strong>：第一章直接调用 <code>cm.Stream()</code> 得到 <code>StreamReader</code>，然后循环 <code>Recv()</code>。第二章的流式处理逻辑本质上是一样的，只是被包在了 <code>AgentEvent</code> 里面。</p>
+</blockquote>
+<h3 id="⑤-处理非流式消息（IsStreaming-false）"><a href="#⑤-处理非流式消息（IsStreaming-false）" class="headerlink" title="⑤ 处理非流式消息（IsStreaming == false）"></a>⑤ 处理非流式消息（<code>IsStreaming == false</code>）</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> mv.Message != <span class="literal">nil</span> &#123;</span><br><span class="line">	sb.WriteString(mv.Message.Content)</span><br><span class="line">	_, _ = fmt.Fprintln(os.Stdout, mv.Message.Content)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	_, _ = fmt.Fprintln(os.Stdout)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果不是流式的（比如 <code>EnableStreaming</code> 设为 <code>false</code>），模型会一次性返回完整消息。直接取 <code>mv.Message.Content</code> 打印即可。</p>
+<h3 id="⑥-返回收集到的完整文本"><a href="#⑥-返回收集到的完整文本" class="headerlink" title="⑥ 返回收集到的完整文本"></a>⑥ 返回收集到的完整文本</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> sb.String(), <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
+
+<p>把 <code>strings.Builder</code> 中收集的所有内容转成字符串返回。这个字符串会被 <code>main</code> 函数用来构造 <code>AssistantMessage</code> 追加到 <code>history</code>。</p>
+<hr>
+<h2 id="完整执行流程图"><a href="#完整执行流程图" class="headerlink" title="完整执行流程图"></a>完整执行流程图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">    participant User as 用户 (键盘)</span><br><span class="line">    participant Main as main 函数</span><br><span class="line">    participant Runner as Runner</span><br><span class="line">    participant Agent as ChatModelAgent</span><br><span class="line">    participant Model as ChatModel (OpenAI/Ark)</span><br><span class="line"></span><br><span class="line">    Main-&gt;&gt;Main: 创建 ChatModel, Agent, Runner</span><br><span class="line">    Main-&gt;&gt;Main: history = []</span><br><span class="line"></span><br><span class="line">    loop 多轮对话</span><br><span class="line">        Main-&gt;&gt;User: 打印 &quot;you&gt; &quot;</span><br><span class="line">        User-&gt;&gt;Main: 输入 &quot;你好&quot;</span><br><span class="line">        Main-&gt;&gt;Main: history.append(UserMessage(&quot;你好&quot;))</span><br><span class="line">        Main-&gt;&gt;Runner: runner.Run(ctx, history)</span><br><span class="line">        Runner-&gt;&gt;Agent: agent.Run(ctx, input)</span><br><span class="line">        Agent-&gt;&gt;Model: cm.Stream(ctx, messages)</span><br><span class="line">        Model--&gt;&gt;Agent: StreamReader (流式)</span><br><span class="line">        Agent--&gt;&gt;Runner: AsyncIterator[AgentEvent]</span><br><span class="line">        Runner--&gt;&gt;Main: AsyncIterator[AgentEvent]</span><br><span class="line"></span><br><span class="line">        loop 消费事件流</span><br><span class="line">            Main-&gt;&gt;Main: events.Next()</span><br><span class="line">            Note over Main: 检查 event.Output.MessageOutput</span><br><span class="line">            Main-&gt;&gt;Main: mv.MessageStream.Recv()</span><br><span class="line">            Main-&gt;&gt;User: 打印 frame.Content (逐块)</span><br><span class="line">            Main-&gt;&gt;Main: sb.WriteString(frame.Content)</span><br><span class="line">        end</span><br><span class="line"></span><br><span class="line">        Main-&gt;&gt;Main: history.append(AssistantMessage(content))</span><br><span class="line">    end</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="关键概念总结"><a href="#关键概念总结" class="headerlink" title="关键概念总结"></a>关键概念总结</h2><h3 id="本章引入的三层抽象"><a href="#本章引入的三层抽象" class="headerlink" title="本章引入的三层抽象"></a>本章引入的三层抽象</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────┐</span><br><span class="line">│  Runner（执行器）                             │</span><br><span class="line">│  - 管理 Agent 的生命周期                      │</span><br><span class="line">│  - 提供 Run() / Query() 便捷方法              │</span><br><span class="line">│  - 支持 Checkpoint（后续章节）                 │</span><br><span class="line">├─────────────────────────────────────────────┤</span><br><span class="line">│  ChatModelAgent（智能体）                     │</span><br><span class="line">│  - 封装 ChatModel + Instruction              │</span><br><span class="line">│  - 统一输出为 AgentEvent 事件流               │</span><br><span class="line">│  - 后续可扩展 Tools / Middleware              │</span><br><span class="line">├─────────────────────────────────────────────┤</span><br><span class="line">│  ChatModel（组件）                            │</span><br><span class="line">│  - 底层模型调用（OpenAI / Ark）               │</span><br><span class="line">│  - Generate() / Stream()                     │</span><br><span class="line">└─────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<h3 id="与第一章的核心差异"><a href="#与第一章的核心差异" class="headerlink" title="与第一章的核心差异"></a>与第一章的核心差异</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>第一章</th>
+<th>第二章</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>抽象层级</td>
+<td>直接用 Component</td>
+<td>Component → Agent → Runner</td>
+</tr>
+<tr>
+<td>对话模式</td>
+<td>单轮（命令行参数）</td>
+<td>多轮（交互式循环）</td>
+</tr>
+<tr>
+<td>输出方式</td>
+<td><code>StreamReader</code></td>
+<td><code>AsyncIterator[AgentEvent]</code></td>
+</tr>
+<tr>
+<td>历史管理</td>
+<td>无</td>
+<td>手动维护 <code>history</code> 切片</td>
+</tr>
+<tr>
+<td>可扩展性</td>
+<td>低（需要自己编排）</td>
+<td>高（后续可加 Tools、Middleware 等）</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/07/eino-chap2-chatmodelagent/">http://example.com/2026/04/07/eino-chap2-chatmodelagent/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/07/eino-chap1/" title="eino-chap1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">eino-chap1</div></div><div class="info-2"><div class="info-item-1">12var instruction string                                                                            flag.StringVar(&amp;instruction, &quot;instruction&quot;, &quot;You are a helpful assistant.&quot;, &quot;&quot;)   string 确实是不可变的，但变量可以被重新赋值这是两个不同的概念：                                                                               1. string 值不可变 — 你不能修改一个 string 内部的某个字节，比如不能做 s[0] = &#39;A&#39;，这在 Go 中会编译报错。 2. string 变量可以重新赋值 — 变量 instruction 只是一个”盒子”，你随时可以往里放一个新的 string 值。 123s := &quot;hello&...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">54</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ch02-main-go-%E9%80%90%E6%AE%B5%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">Ch02 main.go 逐段详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E6%80%BB%E8%A7%88"><span class="toc-number">1.1.</span> <span class="toc-text">整体架构总览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E5%AF%BC%E5%85%A5%E5%8C%85%EF%BC%88%E7%AC%AC-18-32-%E8%A1%8C%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">第一部分：导入包（第 18~32 行）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-Go-%E8%AF%AD%E6%B3%95%E7%9F%A5%E8%AF%86%EF%BC%9A%E5%8C%85%E5%88%AB%E5%90%8D"><span class="toc-number">1.2.1.</span> <span class="toc-text">💡 Go 语法知识：包别名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9Amain-%E5%87%BD%E6%95%B0-%E2%80%94%E2%80%94-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%98%B6%E6%AE%B5%EF%BC%88%E7%AC%AC-34-56-%E8%A1%8C%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">第二部分：main 函数 —— 初始化阶段（第 34~56 行）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E8%A1%8C%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">逐行分析：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A0-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">① 解析命令行参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A1-%E5%88%9B%E5%BB%BA-ChatModel"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">② 创建 ChatModel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A2-%E5%88%9B%E5%BB%BA-ChatModelAgent"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">③ 创建 ChatModelAgent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A3-%E5%88%9B%E5%BB%BA-Runner"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">④ 创建 Runner</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9Amain-%E5%87%BD%E6%95%B0-%E2%80%94%E2%80%94-%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D%E5%BE%AA%E7%8E%AF%EF%BC%88%E7%AC%AC-58-82-%E8%A1%8C%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">第三部分：main 函数 —— 多轮对话循环（第 58~82 行）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E8%A1%8C%E5%88%86%E6%9E%90%EF%BC%9A-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">逐行分析：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A0-%E5%88%9D%E5%A7%8B%E5%8C%96-history-%E5%92%8C-scanner"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">① 初始化 history 和 scanner</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A1-%E5%AF%B9%E8%AF%9D%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">② 对话循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A2-%E8%BF%BD%E5%8A%A0%E7%94%A8%E6%88%B7%E6%B6%88%E6%81%AF-%E2%86%92-%E6%89%A7%E8%A1%8C-Agent-%E2%86%92-%E6%94%B6%E9%9B%86%E5%9B%9E%E5%A4%8D-%E2%86%92-%E8%BF%BD%E5%8A%A0-AI-%E6%B6%88%E6%81%AF"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">③ 追加用户消息 → 执行 Agent → 收集回复 → 追加 AI 消息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%91%A3-%E4%B8%8E%E7%AC%AC%E4%B8%80%E7%AB%A0%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">④ 与第一章的对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9AprintAndCollectAssistantFromEvents-%E5%87%BD%E6%95%B0%EF%BC%88%E7%AC%AC-86-135-%E8%A1%8C%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">第四部分：printAndCollectAssistantFromEvents 函数（第 86~135 行）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-%E5%A4%96%E5%B1%82%E5%BE%AA%E7%8E%AF%EF%BC%9A%E6%B6%88%E8%B4%B9%E4%BA%8B%E4%BB%B6%E6%B5%81"><span class="toc-number">1.5.1.</span> <span class="toc-text">① 外层循环：消费事件流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-%E9%94%99%E8%AF%AF%E6%A3%80%E6%9F%A5"><span class="toc-number">1.5.2.</span> <span class="toc-text">② 错误检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A2-%E8%BF%87%E6%BB%A4%E9%9D%9E-Assistant-%E6%B6%88%E6%81%AF"><span class="toc-number">1.5.3.</span> <span class="toc-text">③ 过滤非 Assistant 消息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A3-%E5%A4%84%E7%90%86%E6%B5%81%E5%BC%8F%E6%B6%88%E6%81%AF%EF%BC%88IsStreaming-true%EF%BC%89"><span class="toc-number">1.5.4.</span> <span class="toc-text">④ 处理流式消息（IsStreaming &#x3D;&#x3D; true）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A4-%E5%A4%84%E7%90%86%E9%9D%9E%E6%B5%81%E5%BC%8F%E6%B6%88%E6%81%AF%EF%BC%88IsStreaming-false%EF%BC%89"><span class="toc-number">1.5.5.</span> <span class="toc-text">⑤ 处理非流式消息（IsStreaming &#x3D;&#x3D; false）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A5-%E8%BF%94%E5%9B%9E%E6%94%B6%E9%9B%86%E5%88%B0%E7%9A%84%E5%AE%8C%E6%95%B4%E6%96%87%E6%9C%AC"><span class="toc-number">1.5.6.</span> <span class="toc-text">⑥ 返回收集到的完整文本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">1.6.</span> <span class="toc-text">完整执行流程图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%A6%82%E5%BF%B5%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">关键概念总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%BC%95%E5%85%A5%E7%9A%84%E4%B8%89%E5%B1%82%E6%8A%BD%E8%B1%A1"><span class="toc-number">1.7.1.</span> <span class="toc-text">本章引入的三层抽象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E7%AC%AC%E4%B8%80%E7%AB%A0%E7%9A%84%E6%A0%B8%E5%BF%83%E5%B7%AE%E5%BC%82"><span class="toc-number">1.7.2.</span> <span class="toc-text">与第一章的核心差异</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/07/eino-chap2-chatmodelagent/" title="eino-chap2-chatmodelagent">eino-chap2-chatmodelagent</a><time datetime="2026-04-07T07:55:12.000Z" title="Created 2026-04-07 15:55:12">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/07/eino-chap1/" title="eino-chap1">eino-chap1</a><time datetime="2026-04-07T02:44:06.000Z" title="Created 2026-04-07 10:44:06">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/" title="go-基于指针对象的方法-map深度理解">go-基于指针对象的方法-map深度理解</a><time datetime="2026-04-06T12:45:15.000Z" title="Created 2026-04-06 20:45:15">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-%E7%BC%96%E8%AF%91%E5%99%A8%E9%9A%90%E5%BC%8F%E5%8F%96%E5%9C%B0%E5%9D%80/" title="go-基于指针对象的方法-编译器隐式取地址">go-基于指针对象的方法-编译器隐式取地址</a><time datetime="2026-04-06T12:28:37.000Z" title="Created 2026-04-06 20:28:37">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-%E6%96%B9%E6%B3%95%E5%AE%9A%E4%B9%89%E5%92%8C%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E5%AF%B9%E6%AF%94/" title="go-方法声明-方法定义和函数定义对比">go-方法声明-方法定义和函数定义对比</a><time datetime="2026-04-06T08:41:19.000Z" title="Created 2026-04-06 16:41:19">2026-04-06</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
