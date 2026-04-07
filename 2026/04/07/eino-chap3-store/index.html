@@ -1,0 +1,396 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>eino-chap3-store | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="“框架层概念” vs “业务层概念”一句话总结 框架层概念 &#x3D; Eino 框架已经帮你写好的代码和抽象，你直接 import 来用 业务层概念 &#x3D; 你自己写的（或示例项目帮你写的）代码，用来满足你的具体业务需求   用一个生活类比来理解想象你在用微信开发框架做一个聊天应用：     框架层（微信SDK提供） 业务层（你自己写）    谁提供的 微信团队 你（开发者）   举例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eino-chap3-store">
+<meta property="og:url" content="http://example.com/2026/04/07/eino-chap3-store/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="“框架层概念” vs “业务层概念”一句话总结 框架层概念 &#x3D; Eino 框架已经帮你写好的代码和抽象，你直接 import 来用 业务层概念 &#x3D; 你自己写的（或示例项目帮你写的）代码，用来满足你的具体业务需求   用一个生活类比来理解想象你在用微信开发框架做一个聊天应用：     框架层（微信SDK提供） 业务层（你自己写）    谁提供的 微信团队 你（开发者）   举例">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-07T08:12:26.000Z">
+<meta property="article:modified_time" content="2026-04-07T08:12:34.050Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "eino-chap3-store",
+  "url": "http://example.com/2026/04/07/eino-chap3-store/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-04-07T08:12:26.000Z",
+  "dateModified": "2026-04-07T08:12:34.050Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/04/07/eino-chap3-store/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'eino-chap3-store',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.0.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">eino-chap3-store</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">eino-chap3-store</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-07T08:12:26.000Z" title="Created 2026-04-07 16:12:26">2026-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-07T08:12:34.050Z" title="Updated 2026-04-07 16:12:34">2026-04-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="“框架层概念”-vs-“业务层概念”"><a href="#“框架层概念”-vs-“业务层概念”" class="headerlink" title="“框架层概念” vs “业务层概念”"></a>“框架层概念” vs “业务层概念”</h1><h2 id="一句话总结"><a href="#一句话总结" class="headerlink" title="一句话总结"></a>一句话总结</h2><ul>
+<li><strong>框架层概念</strong> &#x3D; Eino 框架<strong>已经帮你写好的</strong>代码和抽象，你直接 <code>import</code> 来用</li>
+<li><strong>业务层概念</strong> &#x3D; <strong>你自己写的</strong>（或示例项目帮你写的）代码，用来满足你的具体业务需求</li>
+</ul>
+<hr>
+<h2 id="用一个生活类比来理解"><a href="#用一个生活类比来理解" class="headerlink" title="用一个生活类比来理解"></a>用一个生活类比来理解</h2><p>想象你在用<strong>微信开发框架</strong>做一个聊天应用：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>框架层（微信SDK提供）</th>
+<th>业务层（你自己写）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>谁提供的</strong></td>
+<td>微信团队</td>
+<td>你（开发者）</td>
+</tr>
+<tr>
+<td><strong>举例</strong></td>
+<td>发送消息API、接收消息API</td>
+<td>聊天记录保存到数据库、用户管理</td>
+</tr>
+<tr>
+<td><strong>能不能换</strong></td>
+<td>不能换（框架就是这样设计的）</td>
+<td>随便换（用MySQL还是Redis你自己决定）</td>
+</tr>
+<tr>
+<td><strong>所有人都一样吗</strong></td>
+<td>是的，所有开发者用同一套API</td>
+<td>不是，每个项目的业务逻辑都不同</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="在-Eino-项目中的具体对应"><a href="#在-Eino-项目中的具体对应" class="headerlink" title="在 Eino 项目中的具体对应"></a>在 Eino 项目中的具体对应</h2><h3 id="框架层概念（Eino-框架提供的）"><a href="#框架层概念（Eino-框架提供的）" class="headerlink" title="框架层概念（Eino 框架提供的）"></a>框架层概念（Eino 框架提供的）</h3><p>这些是你 <code>import</code> 进来就能用的，<strong>所有使用 Eino 的项目都一样</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;github.com/cloudwego/eino/adk&quot;</span>      <span class="comment">// 框架层</span></span><br><span class="line">    <span class="string">&quot;github.com/cloudwego/eino/schema&quot;</span>    <span class="comment">// 框架层</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>框架层概念</th>
+<th>说明</th>
+<th>代码中的体现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>schema.Message</code></td>
+<td>消息的标准格式（角色+内容）</td>
+<td><code>schema.UserMessage(line)</code></td>
+</tr>
+<tr>
+<td><code>adk.ChatModelAgent</code></td>
+<td>智能体抽象</td>
+<td><code>adk.NewChatModelAgent(...)</code></td>
+</tr>
+<tr>
+<td><code>adk.Runner</code></td>
+<td>Agent 的执行器</td>
+<td><code>runner.Run(ctx, history)</code></td>
+</tr>
+<tr>
+<td><code>adk.AgentEvent</code></td>
+<td>事件流中的事件单元</td>
+<td><code>events.Next()</code></td>
+</tr>
+<tr>
+<td><code>adk.AsyncIterator</code></td>
+<td>流式事件迭代器</td>
+<td><code>for { event, ok := events.Next() }</code></td>
+</tr>
+</tbody></table>
+<p>这些东西是 Eino 框架的<strong>核心设计</strong>，你不需要自己实现，也不能随意修改它们的行为。</p>
+<h3 id="业务层概念（示例项目自己写的）"><a href="#业务层概念（示例项目自己写的）" class="headerlink" title="业务层概念（示例项目自己写的）"></a>业务层概念（示例项目自己写的）</h3><p>这些是 <a href="/Users/zes/work/eino-examples/quickstart/chatwitheino/mem/store.go">mem&#x2F;store.go</a> 中<strong>示例项目自己实现的</strong>代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;github.com/cloudwego/eino-examples/quickstart/chatwitheino/mem&quot;</span>  <span class="comment">// 业务层</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>业务层概念</th>
+<th>说明</th>
+<th>代码中的体现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mem.Store</code></td>
+<td>管理多个会话的存储</td>
+<td><code>store, err := mem.NewStore(sessionDir)</code></td>
+</tr>
+<tr>
+<td><code>mem.Session</code></td>
+<td>一次对话会话</td>
+<td><code>session, err := store.GetOrCreate(sessionID)</code></td>
+</tr>
+<tr>
+<td><code>session.Append()</code></td>
+<td>追加消息到会话</td>
+<td><code>session.Append(userMsg)</code></td>
+</tr>
+<tr>
+<td><code>session.GetMessages()</code></td>
+<td>获取历史消息</td>
+<td><code>history := session.GetMessages()</code></td>
+</tr>
+<tr>
+<td>JSONL 文件格式</td>
+<td>消息的存储格式</td>
+<td>磁盘上的 <code>.jsonl</code> 文件</td>
+</tr>
+</tbody></table>
+<p>这些东西是<strong>这个示例项目自己设计的</strong>，Eino 框架完全不知道它们的存在。</p>
+<hr>
+<h2 id="从代码中直观感受"><a href="#从代码中直观感受" class="headerlink" title="从代码中直观感受"></a>从代码中直观感受</h2><p>看 <a href="/Users/zes/work/eino-examples/quickstart/chatwitheino/cmd/ch03/main.go">main.go</a> 中对话循环的核心代码（第 95~117 行）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ========== 业务层：保存用户消息 ==========</span></span><br><span class="line">userMsg := schema.UserMessage(line)</span><br><span class="line"><span class="keyword">if</span> err := session.Append(userMsg); err != <span class="literal">nil</span> &#123;   <span class="comment">// ← 业务层：持久化到 JSONL 文件</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 业务层 → 框架层的&quot;交接点&quot; ==========</span></span><br><span class="line">history := session.GetMessages()                    <span class="comment">// ← 业务层：从存储中取出消息列表</span></span><br><span class="line">events := runner.Run(ctx, history)                  <span class="comment">// ← 框架层：Runner 接收消息，调用模型</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 框架层：消费事件流 ==========</span></span><br><span class="line">content, err := printAndCollectAssistantFromEvents(events)  <span class="comment">// ← 框架层的 AgentEvent</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 框架层 → 业务层的&quot;交接点&quot; ==========</span></span><br><span class="line">assistantMsg := schema.AssistantMessage(content, <span class="literal">nil</span>)</span><br><span class="line"><span class="keyword">if</span> err := session.Append(assistantMsg); err != <span class="literal">nil</span> &#123;  <span class="comment">// ← 业务层：把回复持久化</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用一张流程图来看两层之间的<strong>边界</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">    subgraph 业务层[&quot;🟦 业务层（你自己写的）&quot;]</span><br><span class="line">        A[session.Append&lt;br/&gt;保存用户消息] --&gt; B[session.GetMessages&lt;br/&gt;取出历史消息]</span><br><span class="line">        E[session.Append&lt;br/&gt;保存AI回复]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph 框架层[&quot;🟩 框架层（Eino 提供的）&quot;]</span><br><span class="line">        C[runner.Run&lt;br/&gt;执行 Agent] --&gt; D[events.Next&lt;br/&gt;消费事件流]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    B --&gt;|&quot;history（消息列表）&quot;| C</span><br><span class="line">    D --&gt;|&quot;content（AI回复文本）&quot;| E</span><br><span class="line"></span><br><span class="line">    style 业务层 fill:#e3f2fd,stroke:#1565c0</span><br><span class="line">    style 框架层 fill:#e8f5e9,stroke:#2e7d32</span><br></pre></td></tr></table></figure>
+
+<p><strong>交接点就是 <code>[]*schema.Message</code>（消息列表）</strong>——这是两层之间唯一的”通信协议”。</p>
+<hr>
+<h2 id="为什么要区分这两层？"><a href="#为什么要区分这两层？" class="headerlink" title="为什么要区分这两层？"></a>为什么要区分这两层？</h2><h3 id="核心原因：框架不应该替你决定业务细节"><a href="#核心原因：框架不应该替你决定业务细节" class="headerlink" title="核心原因：框架不应该替你决定业务细节"></a>核心原因：<strong>框架不应该替你决定业务细节</strong></h3><p>Eino 框架的设计哲学是：</p>
+<blockquote>
+<p><strong>框架只负责”如何处理消息”，不管”如何存储消息”。</strong></p>
+</blockquote>
+<p>这意味着：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>谁负责</th>
+<th>为什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>消息怎么发给模型？</td>
+<td>框架层</td>
+<td>所有项目都一样</td>
+</tr>
+<tr>
+<td>流式输出怎么处理？</td>
+<td>框架层</td>
+<td>所有项目都一样</td>
+</tr>
+<tr>
+<td>对话历史存在哪里？</td>
+<td><strong>业务层</strong></td>
+<td>每个项目不同</td>
+</tr>
+<tr>
+<td>用什么格式存储？</td>
+<td><strong>业务层</strong></td>
+<td>每个项目不同</td>
+</tr>
+<tr>
+<td>Session 怎么管理？</td>
+<td><strong>业务层</strong></td>
+<td>每个项目不同</td>
+</tr>
+</tbody></table>
+<h3 id="实际好处：业务层可以随意替换"><a href="#实际好处：业务层可以随意替换" class="headerlink" title="实际好处：业务层可以随意替换"></a>实际好处：<strong>业务层可以随意替换</strong></h3><p>本章用的是 JSONL 文件存储，但你完全可以换成其他方案，<strong>框架层的代码一行都不用改</strong>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方案 1：JSONL 文件（本章的实现）</span></span><br><span class="line">store, _ := mem.NewStore(<span class="string">&quot;./data/sessions&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方案 2：如果你换成 MySQL（假设你自己实现了 mysqlmem 包）</span></span><br><span class="line"><span class="comment">// store, _ := mysqlmem.NewStore(&quot;root:password@tcp(127.0.0.1:3306)/chat&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方案 3：如果你换成 Redis（假设你自己实现了 redismem 包）</span></span><br><span class="line"><span class="comment">// store, _ := redismem.NewStore(&quot;redis://localhost:6379&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ↓↓↓ 以下代码完全不变 ↓↓↓</span></span><br><span class="line">session, _ := store.GetOrCreate(sessionID)</span><br><span class="line">history := session.GetMessages()</span><br><span class="line">events := runner.Run(ctx, history)    <span class="comment">// 框架层不关心 history 从哪来的</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="对比第二章和第三章"><a href="#对比第二章和第三章" class="headerlink" title="对比第二章和第三章"></a>对比第二章和第三章</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>第二章 (ch02)</th>
+<th>第三章 (ch03)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>历史存储</td>
+<td><code>history</code> 变量（内存）</td>
+<td><code>session</code>（JSONL 文件）</td>
+</tr>
+<tr>
+<td>进程退出后</td>
+<td>历史<strong>丢失</strong></td>
+<td>历史<strong>保留</strong></td>
+</tr>
+<tr>
+<td>能否恢复会话</td>
+<td>❌ 不能</td>
+<td>✅ <code>--session &lt;id&gt;</code> 恢复</td>
+</tr>
+<tr>
+<td>框架层代码</td>
+<td><code>runner.Run(ctx, history)</code></td>
+<td><code>runner.Run(ctx, history)</code></td>
+</tr>
+<tr>
+<td>框架层有变化吗？</td>
+<td>—</td>
+<td><strong>完全没变！</strong></td>
+</tr>
+</tbody></table>
+<p>注意最后一行：<strong>框架层的代码完全一样</strong>。变化的只是业务层——从”内存变量”换成了”JSONL 文件”。这就是分层的好处。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>框架层</th>
+<th>业务层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>谁写的</strong></td>
+<td>Eino 框架团队</td>
+<td>你（开发者）</td>
+</tr>
+<tr>
+<td><strong>在哪里</strong></td>
+<td><code>github.com/cloudwego/eino/...</code></td>
+<td>你的项目代码（如 <code>mem/store.go</code>）</td>
+</tr>
+<tr>
+<td><strong>能不能换</strong></td>
+<td>不能（框架的核心设计）</td>
+<td>随便换（JSONL→MySQL→Redis…）</td>
+</tr>
+<tr>
+<td><strong>本章的例子</strong></td>
+<td><code>adk.Runner</code>、<code>schema.Message</code>、<code>adk.AgentEvent</code></td>
+<td><code>mem.Store</code>、<code>mem.Session</code>、JSONL 文件</td>
+</tr>
+<tr>
+<td><strong>职责</strong></td>
+<td>处理消息、调用模型、返回回复</td>
+<td>存储消息、管理会话、持久化</td>
+</tr>
+</tbody></table>
+<p>一句话记住：<strong>框架管”算”，业务管”存”</strong>。两者通过 <code>[]*schema.Message</code>（消息列表）这个”接口”连接起来。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/07/eino-chap3-store/">http://example.com/2026/04/07/eino-chap3-store/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/07/eino-chap2-chatmodelagent/" title="eino-chap2-chatmodelagent"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">eino-chap2-chatmodelagent</div></div><div class="info-2"><div class="info-item-1">Ch02 main.go 逐段详解整体架构总览先用一张图看清整个程序的结构： 123456789101112graph TD    A[main 函数] --&gt; B[解析命令行参数]    B --&gt; C[创建 ChatModel]    C --&gt; D[创建 ChatModelAgent]    D --&gt; E[创建 Runner]    E --&gt; F[进入多轮对话循环]    F --&gt; G[读取用户输入]    G --&gt; H[追加到 history]    H --&gt; I[runner.Run 执行]    I --&gt; J[printAndCollectAssistantFromEvents&lt;br/&gt;消费事件流并打印]    J --&gt; K[追加 assistant 回复到 history]    K --&gt; G   第一部分：导入包（第 18~32 行）123456789101112131415import (	&quot;bufio&quot;	&quot;context&quot;	&q...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%80%9C%E6%A1%86%E6%9E%B6%E5%B1%82%E6%A6%82%E5%BF%B5%E2%80%9D-vs-%E2%80%9C%E4%B8%9A%E5%8A%A1%E5%B1%82%E6%A6%82%E5%BF%B5%E2%80%9D"><span class="toc-number">1.</span> <span class="toc-text">“框架层概念” vs “业务层概念”</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.</span> <span class="toc-text">一句话总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E4%B8%80%E4%B8%AA%E7%94%9F%E6%B4%BB%E7%B1%BB%E6%AF%94%E6%9D%A5%E7%90%86%E8%A7%A3"><span class="toc-number">1.2.</span> <span class="toc-text">用一个生活类比来理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8-Eino-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%85%B7%E4%BD%93%E5%AF%B9%E5%BA%94"><span class="toc-number">1.3.</span> <span class="toc-text">在 Eino 项目中的具体对应</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%86%E6%9E%B6%E5%B1%82%E6%A6%82%E5%BF%B5%EF%BC%88Eino-%E6%A1%86%E6%9E%B6%E6%8F%90%E4%BE%9B%E7%9A%84%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">框架层概念（Eino 框架提供的）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E5%B1%82%E6%A6%82%E5%BF%B5%EF%BC%88%E7%A4%BA%E4%BE%8B%E9%A1%B9%E7%9B%AE%E8%87%AA%E5%B7%B1%E5%86%99%E7%9A%84%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">业务层概念（示例项目自己写的）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9B%B4%E8%A7%82%E6%84%9F%E5%8F%97"><span class="toc-number">1.4.</span> <span class="toc-text">从代码中直观感受</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8C%BA%E5%88%86%E8%BF%99%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="toc-number">1.5.</span> <span class="toc-text">为什么要区分这两层？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%9B%A0%EF%BC%9A%E6%A1%86%E6%9E%B6%E4%B8%8D%E5%BA%94%E8%AF%A5%E6%9B%BF%E4%BD%A0%E5%86%B3%E5%AE%9A%E4%B8%9A%E5%8A%A1%E7%BB%86%E8%8A%82"><span class="toc-number">1.5.1.</span> <span class="toc-text">核心原因：框架不应该替你决定业务细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E5%A5%BD%E5%A4%84%EF%BC%9A%E4%B8%9A%E5%8A%A1%E5%B1%82%E5%8F%AF%E4%BB%A5%E9%9A%8F%E6%84%8F%E6%9B%BF%E6%8D%A2"><span class="toc-number">1.5.2.</span> <span class="toc-text">实际好处：业务层可以随意替换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%92%8C%E7%AC%AC%E4%B8%89%E7%AB%A0"><span class="toc-number">1.6.</span> <span class="toc-text">对比第二章和第三章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.7.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/07/eino-chap3-store/" title="eino-chap3-store">eino-chap3-store</a><time datetime="2026-04-07T08:12:26.000Z" title="Created 2026-04-07 16:12:26">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/07/eino-chap2-chatmodelagent/" title="eino-chap2-chatmodelagent">eino-chap2-chatmodelagent</a><time datetime="2026-04-07T07:55:12.000Z" title="Created 2026-04-07 15:55:12">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/07/eino-chap1/" title="eino-chap1">eino-chap1</a><time datetime="2026-04-07T02:44:06.000Z" title="Created 2026-04-07 10:44:06">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-map%E6%B7%B1%E5%BA%A6%E7%90%86%E8%A7%A3/" title="go-基于指针对象的方法-map深度理解">go-基于指针对象的方法-map深度理解</a><time datetime="2026-04-06T12:45:15.000Z" title="Created 2026-04-06 20:45:15">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/go-%E7%BC%96%E8%AF%91%E5%99%A8%E9%9A%90%E5%BC%8F%E5%8F%96%E5%9C%B0%E5%9D%80/" title="go-基于指针对象的方法-编译器隐式取地址">go-基于指针对象的方法-编译器隐式取地址</a><time datetime="2026-04-06T12:28:37.000Z" title="Created 2026-04-06 20:28:37">2026-04-06</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.0.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
